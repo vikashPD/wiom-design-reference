@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wiom CSP Home — 5 Design Ideas</title>
+<style>
+:root{
+  --pink:#D9008D;--pink-soft:#F5D6EA;--violet:#4A1B6E;--violet-lite:#7B4DA8;
+  --ground:#FBF6F9;--surface:#FFFFFF;--surface-2:#F6EEF3;--ink:#201823;--ink-2:#6B5C67;--ink-3:#9A8B95;
+  --hair:#EADFE7;--hair-strong:#D8C8D3;
+  --info:#7C4DCC;--positive:#1F9D57;--warning:#E08A00;--critical:#D33A3A;
+  --info-bg:#EEE7FB;--positive-bg:#E2F4EA;--warning-bg:#FBF0DC;--critical-bg:#FBE4E4;--neutral-bg:#EDE6EB;
+  --radius:16px;--shadow:0 1px 3px rgba(32,24,35,.06),0 8px 24px -12px rgba(32,24,35,.16);
+  --mono:ui-monospace,"Cascadia Code","Consolas","SF Mono",monospace;
+  --sans:"Segoe UI",system-ui,-apple-system,"Roboto",sans-serif;
+}
+*{box-sizing:border-box;margin:0;}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:1140px;margin:0 auto;padding:0 24px 100px;}
+
+header{padding:52px 0 0;}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--pink);margin-bottom:14px;font-weight:600;}
+h1{font-size:clamp(28px,4.2vw,44px);line-height:1.08;letter-spacing:-.025em;font-weight:800;margin-bottom:18px;max-width:20ch;text-wrap:balance;}
+.lede{font-size:17px;color:var(--ink-2);max-width:58ch;}
+.lede b{color:var(--ink);font-weight:650;}
+
+/* nav */
+.docnav{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--ground) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--hair);margin-top:28px;display:flex;gap:6px;overflow-x:auto;padding:10px 0;scrollbar-width:none;}
+.docnav::-webkit-scrollbar{display:none;}
+.docbtn{font-family:var(--sans);font-size:13.5px;font-weight:650;white-space:nowrap;border:1px solid var(--hair);background:var(--surface);color:var(--ink-2);cursor:pointer;padding:9px 16px;border-radius:10px;transition:.15s;display:flex;align-items:center;gap:8px;}
+.docbtn .num{font-family:var(--mono);font-size:10px;background:var(--surface-2);border-radius:6px;padding:2px 6px;color:var(--ink-3);}
+.docbtn:hover{color:var(--ink);border-color:var(--hair-strong);}
+.docbtn[aria-selected="true"]{background:var(--pink);color:#fff;border-color:var(--pink);}
+.docbtn[aria-selected="true"] .num{background:rgba(255,255,255,.2);color:#fff;}
+.doc{display:none;}.doc.active{display:block;animation:fade .3s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+/* idea header */
+.idea-head{padding:40px 0 0;}
+.idea-num{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--pink);letter-spacing:.1em;margin-bottom:8px;}
+.idea-title{font-size:clamp(22px,3vw,32px);font-weight:800;letter-spacing:-.02em;margin-bottom:10px;max-width:24ch;}
+.idea-sub{font-size:16px;color:var(--ink-2);max-width:58ch;margin-bottom:24px;}
+.idea-sub b{color:var(--ink);font-weight:650;}
+
+/* sections */
+.sec{margin:40px 0 18px;display:flex;align-items:center;gap:14px;}
+.sec h3{font-size:19px;font-weight:750;letter-spacing:-.01em;}
+.sec .rule{flex:1;height:1px;background:var(--hair);}
+.sec .k{font-family:var(--mono);font-size:11px;color:var(--pink);letter-spacing:.1em;}
+
+/* layout */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;}
+@media(max-width:800px){.grid2{grid-template-columns:1fr;}}
+.card{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow);}
+.card h4{font-size:15px;font-weight:700;margin-bottom:10px;}
+.card p{font-size:14px;color:var(--ink-2);margin-bottom:10px;line-height:1.6;}.card p:last-child{margin-bottom:0;}
+.card p b{color:var(--ink);font-weight:650;}
+.co{border-radius:var(--radius);padding:16px 20px;font-size:13.5px;line-height:1.6;margin-top:16px;}
+.co b{font-weight:700;}
+.co-pink{background:var(--pink-soft);border:1px solid color-mix(in srgb,var(--pink) 25%,transparent);}.co-pink b{color:var(--pink);}
+.co-warn{background:var(--warning-bg);border:1px solid color-mix(in srgb,var(--warning) 30%,transparent);}.co-warn b{color:var(--warning);}
+.co-info{background:var(--info-bg);border:1px solid color-mix(in srgb,var(--info) 25%,transparent);}.co-info b{color:var(--info);}
+.co-pos{background:var(--positive-bg);border:1px solid color-mix(in srgb,var(--positive) 25%,transparent);}.co-pos b{color:var(--positive);}
+
+/* comparison */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--hair);border-radius:var(--radius);overflow:hidden;margin:16px 0;}
+.vs-col{padding:20px;}
+.vs-col:first-child{border-right:1px solid var(--hair);background:var(--surface-2);}
+.vs-col:last-child{background:var(--surface);}
+.vs-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:12px;font-weight:600;}
+@media(max-width:700px){.vs{grid-template-columns:1fr;}.vs-col:first-child{border-right:none;border-bottom:1px solid var(--hair);}}
+
+/* ===== PHONE WIREFRAMES ===== */
+.phone-wrap{display:flex;justify-content:center;gap:28px;flex-wrap:wrap;margin:20px 0;}
+.phone{width:340px;background:var(--surface);border:1.5px solid var(--hair-strong);border-radius:32px;box-shadow:var(--shadow),0 16px 48px -16px rgba(32,24,35,.18);overflow:hidden;flex:none;}
+.phone.sm{width:310px;}
+.ph-status{background:var(--violet);color:#fff;font-family:var(--mono);font-size:9px;letter-spacing:.1em;padding:6px 18px 4px;display:flex;justify-content:space-between;opacity:.9;}
+.ph-header{background:var(--violet);color:#fff;padding:8px 16px 14px;display:flex;align-items:center;gap:10px;}
+.ph-burger{display:flex;flex-direction:column;gap:3px;}.ph-burger span{width:16px;height:1.5px;background:#fff;border-radius:2px;opacity:.9;}
+.ph-name{flex:1;font-weight:700;font-size:14px;}.ph-role{font-size:10px;opacity:.75;margin-left:4px;}
+.ph-bell{font-size:14px;opacity:.7;}
+.ph-body{padding:12px;display:flex;flex-direction:column;gap:10px;background:var(--surface);min-height:380px;}
+
+/* scorecard */
+.ph-score{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.ph-chip{background:var(--surface-2);border:1px solid var(--hair);border-radius:10px;padding:8px 10px;}
+.ph-chip .cl{font-size:9px;color:var(--ink-3);}
+.ph-chip .cv{font-weight:800;font-size:15px;margin-top:2px;font-variant-numeric:tabular-nums;}
+.ph-chip .cs{font-size:8px;color:var(--warning);margin-top:1px;}
+
+/* feed cards */
+.fc{display:flex;border:1px solid #E8E4F0;border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.04);}
+.fc .stripe{width:4px;flex:none;}
+.fc .body{padding:9px 11px;flex:1;min-width:0;}
+.fc .l1{font-size:11.5px;font-weight:650;color:#161021;display:flex;align-items:center;gap:5px;white-space:nowrap;overflow:hidden;}
+.fc .l1 .loc{color:#9A8B95;font-weight:400;}
+.fc .l2{font-size:10.5px;margin-top:4px;display:inline-block;border-radius:5px;}
+.fc .badge{background:#D9008D;color:#fff;font-size:8px;font-weight:700;border-radius:100px;padding:1px 5px;margin-left:auto;flex:none;}
+.st-def{background:#D7D3E0;}.st-warn{background:#B85C00;}.st-neg{background:#D92130;}
+.l2-n{color:#161021;}.l2-u{color:#B85C00;background:#FFF2BF;padding:2px 7px;}.l2-o{color:#D92130;background:#FFE5E7;padding:2px 7px;}
+
+/* section headers in phone */
+.ph-sec{display:flex;align-items:center;gap:8px;padding:2px 0;margin-top:2px;}
+.ph-sec .dot{width:8px;height:8px;border-radius:50%;flex:none;}
+.ph-sec .txt{font-size:10px;font-weight:700;letter-spacing:.03em;}
+.ph-sec .cnt{font-family:var(--mono);font-size:9px;color:var(--ink-3);margin-left:auto;}
+.ph-sec .line{flex:1;height:1px;background:var(--hair);}
+
+/* hero card */
+.hero-card{background:linear-gradient(135deg,#FFF0F7,#FFF8FB);border:1.5px solid color-mix(in srgb,var(--pink) 30%,transparent);border-radius:12px;padding:12px 14px;position:relative;box-shadow:0 2px 8px rgba(217,0,141,.1);}
+.hero-label{font-family:var(--mono);font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--pink);margin-bottom:6px;}
+.hero-title{font-weight:700;font-size:13px;color:#161021;}
+.hero-sub{font-size:11px;color:var(--ink-2);margin-top:3px;}
+.hero-cta{display:inline-block;background:var(--pink);color:#fff;font-size:10.5px;font-weight:700;padding:6px 16px;border-radius:8px;margin-top:8px;}
+.hero-timer{font-family:var(--mono);font-size:10px;color:#B85C00;background:#FFF2BF;padding:2px 7px;border-radius:5px;margin-top:4px;display:inline-block;}
+
+/* action indicator */
+.fc-act{border-left:none;position:relative;}
+.fc-act .act-mark{position:absolute;right:10px;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:4px;}
+.act-arrow{color:var(--pink);font-size:14px;font-weight:700;}
+.act-chip{font-size:8px;font-weight:700;color:var(--pink);background:var(--pink-soft);padding:2px 7px;border-radius:100px;white-space:nowrap;}
+.pass-chip{font-size:8px;font-weight:600;color:var(--ink-3);background:var(--surface-2);padding:2px 7px;border-radius:100px;white-space:nowrap;}
+.mon-chip{font-size:8px;font-weight:600;color:var(--info);background:var(--info-bg);padding:2px 7px;border-radius:100px;white-space:nowrap;}
+
+/* inline cta */
+.fc-inline{position:relative;}
+.fc-inline .cta-btn{display:inline-block;background:var(--pink);color:#fff;font-size:9px;font-weight:700;padding:4px 12px;border-radius:6px;margin-top:5px;}
+.fc-inline .pass-status{display:inline-flex;align-items:center;gap:4px;font-size:9px;color:var(--ink-3);margin-top:5px;}
+.fc-inline .spin{display:inline-block;width:8px;height:8px;border:1.5px solid var(--hair);border-top-color:var(--info);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* group card */
+.gc{display:flex;align-items:center;gap:9px;padding:10px 12px;background:#fff;border:1px solid #E8E4F0;border-left:4px dashed #D8C8D3;border-radius:10px;}
+.gc .gic{width:28px;height:28px;border-radius:8px;background:#F1E5FF;display:grid;place-items:center;font-size:13px;flex:none;}
+.gc .gt{font-weight:700;font-size:11.5px;color:#161021;}
+.gc .gs{font-size:9.5px;color:#5C5570;margin-top:1px;}
+.gc .gdot{width:6px;height:6px;border-radius:50%;background:#D9008D;display:inline-block;margin-left:3px;}
+.gc .chev{margin-left:auto;color:#9A8B95;font-size:16px;}
+
+/* toast */
+.ph-toast{margin:4px 8px 10px;background:#201823;color:#FBF6F9;border-radius:8px;padding:7px 12px;font-size:9.5px;text-align:center;opacity:.92;}
+
+/* effort/impact */
+.ei{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--hair);border-radius:var(--radius);overflow:hidden;margin:16px 0;}
+.ei-cell{padding:16px 20px;text-align:center;}
+.ei-cell:first-child{border-right:1px solid var(--hair);}
+.ei-label{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px;font-weight:600;}
+.ei-val{font-size:20px;font-weight:800;letter-spacing:-.02em;}
+.ei-note{font-size:11px;color:var(--ink-3);margin-top:4px;}
+
+/* annotations */
+.ann{position:relative;margin:24px 0 16px;}
+.ann-line{position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px;}
+.ann-body{padding-left:18px;}
+.ann-body h5{font-size:14px;font-weight:700;margin-bottom:4px;}
+.ann-body p{font-size:13px;color:var(--ink-2);margin-bottom:6px;line-height:1.6;}.ann-body p:last-child{margin-bottom:0;}
+.ann-body p b{color:var(--ink);font-weight:600;}
+
+footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--hair);font-size:12px;color:var(--ink-3);font-family:var(--mono);}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <p class="eyebrow">Wiom CSP · Home Page Improvement Ideas</p>
+  <h1>5 ways to make the CSP instantly know what to do.</h1>
+  <p class="lede">Each idea includes a <b>wireframe</b>, a before/after comparison, what changes, what doesn't, and feasibility. All ideas work within the existing server-driven architecture.</p>
+  <nav class="docnav" role="tablist">
+    <button class="docbtn" role="tab" aria-selected="true" data-doc="idea1"><span class="num">01</span> Split feed</button>
+    <button class="docbtn" role="tab" aria-selected="false" data-doc="idea2"><span class="num">02</span> Hero card</button>
+    <button class="docbtn" role="tab" aria-selected="false" data-doc="idea3"><span class="num">03</span> Action markers</button>
+    <button class="docbtn" role="tab" aria-selected="false" data-doc="idea4"><span class="num">04</span> Smart sections</button>
+    <button class="docbtn" role="tab" aria-selected="false" data-doc="idea5"><span class="num">05</span> Inline CTA</button>
+  </nav>
+</header>
+
+<!-- ================================================================ -->
+<!-- IDEA 1 — SPLIT FEED -->
+<!-- ================================================================ -->
+<div class="doc active" id="idea1">
+  <div class="idea-head">
+    <div class="idea-num">IDEA 01</div>
+    <div class="idea-title">Split the feed: "Your actions" on top, "In progress" below.</div>
+    <div class="idea-sub">Instead of one mixed list, separate cards into <b>things CSP must do</b> and <b>things that are being handled</b>. The CSP opens the app and instantly sees only their pending work at the top.</div>
+  </div>
+
+  <div class="sec"><h3>Before vs After</h3><span class="rule"></span></div>
+  <div class="phone-wrap">
+    <!-- BEFORE -->
+    <div>
+      <div style="text-align:center;font-family:var(--mono);font-size:10px;color:var(--ink-3);margin-bottom:8px;letter-spacing:.1em;">CURRENT — MIXED FEED</div>
+      <div class="phone sm">
+        <div class="ph-status"><span>9:41</span><span>100%</span></div>
+        <div class="ph-header"><div class="ph-burger"><span></span><span></span><span></span></div><div class="ph-name">Sharma Traders<span class="ph-role">· मालिक</span></div><span class="ph-bell">🔔</span></div>
+        <div class="ph-body">
+          <div class="ph-score">
+            <div class="ph-chip"><div class="cl">कनेक्शन</div><div class="cv">142<span style="font-size:10px;color:var(--ink-3)">/160</span></div></div>
+            <div class="ph-chip"><div class="cl">कमाई</div><div class="cv">₹18,400</div><div class="cs">₹2k बोनस रिस्क में</div></div>
+          </div>
+          <div class="fc"><div class="stripe st-warn"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #4821 <span class="loc">· Kirari</span><span class="badge">2</span></div><div class="l2 l2-u">2 घंटे में टिकट हट जाएगी</div></div></div>
+          <div class="fc"><div class="stripe st-def"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #5102 <span class="loc">· Nangloi</span></div><div class="l2 l2-n">वेरिफाई हो रहा है</div></div></div>
+          <div class="fc"><div class="stripe st-neg"></div><div class="body"><div class="l1">🔧 रिस्टोर · #3287 <span class="loc">· Mundka</span><span class="badge">1</span></div><div class="l2 l2-o">तुरंत ध्यान दें</div></div></div>
+          <div class="fc"><div class="stripe st-def"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #4990 <span class="loc">· Kirari</span></div><div class="l2 l2-n">राम काम कर रहे हैं</div></div></div>
+          <div class="fc"><div class="stripe st-warn"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #5201 <span class="loc">· Peeragarhi</span></div><div class="l2 l2-u">स्लॉट चुनना बाकी</div></div></div>
+          <div class="gc"><span class="gic">📦</span><div><div class="gt">3 पिकअप<span class="gdot"></span></div><div class="gs">1 डेडलाइन के पास</div></div><span class="chev">›</span></div>
+          <div style="text-align:center;font-size:9px;color:var(--ink-3);padding:6px 0;font-family:var(--mono);">CSP must scroll through all cards to find what needs action ↑</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AFTER -->
+    <div>
+      <div style="text-align:center;font-family:var(--mono);font-size:10px;color:var(--pink);margin-bottom:8px;letter-spacing:.1em;">IDEA 01 — SPLIT FEED</div>
+      <div class="phone sm">
+        <div class="ph-status"><span>9:41</span><span>100%</span></div>
+        <div class="ph-header"><div class="ph-burger"><span></span><span></span><span></span></div><div class="ph-name">Sharma Traders<span class="ph-role">· मालिक</span></div><span class="ph-bell">🔔</span></div>
+        <div class="ph-body">
+          <div class="ph-score">
+            <div class="ph-chip"><div class="cl">कनेक्शन</div><div class="cv">142<span style="font-size:10px;color:var(--ink-3)">/160</span></div></div>
+            <div class="ph-chip"><div class="cl">कमाई</div><div class="cv">₹18,400</div><div class="cs">₹2k बोनस रिस्क में</div></div>
+          </div>
+          <!-- ACTION SECTION -->
+          <div class="ph-sec"><div class="dot" style="background:var(--pink);"></div><div class="txt" style="color:var(--pink);">आपका काम</div><div class="cnt">3 बाकी</div><div class="line"></div></div>
+          <div class="fc"><div class="stripe st-warn"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #4821 <span class="loc">· Kirari</span><span class="badge">2</span></div><div class="l2 l2-u">2 घंटे में टिकट हट जाएगी</div></div></div>
+          <div class="fc"><div class="stripe st-neg"></div><div class="body"><div class="l1">🔧 रिस्टोर · #3287 <span class="loc">· Mundka</span><span class="badge">1</span></div><div class="l2 l2-o">तुरंत ध्यान दें</div></div></div>
+          <div class="fc"><div class="stripe st-warn"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #5201 <span class="loc">· Peeragarhi</span></div><div class="l2 l2-u">स्लॉट चुनना बाकी</div></div></div>
+          <!-- PASSIVE SECTION -->
+          <div class="ph-sec" style="margin-top:6px;"><div class="dot" style="background:var(--info);"></div><div class="txt" style="color:var(--info);">हो रहा है</div><div class="cnt">3</div><div class="line"></div></div>
+          <div class="fc" style="opacity:.7;"><div class="stripe st-def"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #5102 <span class="loc">· Nangloi</span></div><div class="l2 l2-n">वेरिफाई हो रहा है</div></div></div>
+          <div class="fc" style="opacity:.7;"><div class="stripe st-def"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #4990 <span class="loc">· Kirari</span></div><div class="l2 l2-n">राम काम कर रहे हैं</div></div></div>
+          <div class="gc" style="opacity:.7;"><span class="gic">📦</span><div><div class="gt">3 पिकअप<span class="gdot"></span></div><div class="gs">1 डेडलाइन के पास</div></div><span class="chev">›</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec"><h3>What changes</h3><span class="rule"></span></div>
+  <div class="grid3">
+    <div class="ann"><div class="ann-line" style="background:var(--positive);"></div><div class="ann-body"><h5>"आपका काम" section at the top</h5><p>Cards where <b>CSP must act</b> — propose slot, accept complaint, acknowledge pickup, start work. Sorted by urgency within this group.</p></div></div>
+    <div class="ann"><div class="ann-line" style="background:var(--info);"></div><div class="ann-body"><h5>"हो रहा है" section below</h5><p>Cards where <b>system, customer, or teammate is handling it</b> — verification pending, customer confirming, delegated work. Slightly dimmed to show lower priority.</p></div></div>
+    <div class="ann"><div class="ann-line" style="background:var(--pink);"></div><div class="ann-body"><h5>Counts in section headers</h5><p>"3 बाकी" tells CSP exactly how many actions they have <b>before scrolling</b>. When count = 0, the section shows "कोई काम नहीं" (no actions) — the reward for finishing everything.</p></div></div>
+  </div>
+
+  <div class="sec"><h3>How it classifies cards</h3><span class="rule"></span></div>
+  <div class="card">
+    <h4>The classification rule</h4>
+    <p>The server already sends <b>isPassive</b> and <b>isCspActionable</b> on every task. The rule is simple:</p>
+    <p><b>Action section:</b> <span style="color:var(--pink);">isPassive = false AND the card has a CTA action</span></p>
+    <p><b>In-progress section:</b> <span style="color:var(--info);">isPassive = true OR no CTA available OR state is a wait/monitor state</span></p>
+    <p>If a delegated task becomes <b>overdue</b>, it moves from "in progress" to "action" — because now the CSP needs to intervene.</p>
+  </div>
+
+  <div class="sec"><h3>Feasibility</h3><span class="rule"></span></div>
+  <div class="ei">
+    <div class="ei-cell"><div class="ei-label">Effort</div><div class="ei-val" style="color:var(--positive);">Low</div><div class="ei-note">Client-side sort in HomeScreen.kt</div></div>
+    <div class="ei-cell"><div class="ei-label">Impact</div><div class="ei-val" style="color:var(--pink);">High</div><div class="ei-note">CSP sees action count in 0.5 seconds</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h4>What's needed</h4><p>App change only. Sort tasks into two lists before rendering. Add section headers. No API change — all classification data already exists in the feed.</p></div>
+    <div class="card"><h4>Risk</h4><p>Overrides server sort order within each section. Passive cards get less attention — fine for verifications, but escalations that flip from passive to action need to move up immediately on next refresh.</p></div>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- IDEA 2 — HERO CARD -->
+<!-- ================================================================ -->
+<div class="doc" id="idea2">
+  <div class="idea-head">
+    <div class="idea-num">IDEA 02</div>
+    <div class="idea-title">Hero card: the single most urgent action, front and center.</div>
+    <div class="idea-sub">A promoted, visually distinct card at the very top that answers <b>"what should I do RIGHT NOW?"</b> with the task detail AND a direct CTA button. The CSP doesn't even need to scroll.</div>
+  </div>
+
+  <div class="sec"><h3>Wireframe</h3><span class="rule"></span></div>
+  <div class="phone-wrap">
+    <div>
+      <div style="text-align:center;font-family:var(--mono);font-size:10px;color:var(--pink);margin-bottom:8px;letter-spacing:.1em;">IDEA 02 — HERO CARD AT TOP</div>
+      <div class="phone">
+        <div class="ph-status"><span>9:41</span><span>100%</span></div>
+        <div class="ph-header"><div class="ph-burger"><span></span><span></span><span></span></div><div class="ph-name">Sharma Traders<span class="ph-role">· मालिक</span></div><span class="ph-bell">🔔</span></div>
+        <div class="ph-body">
+          <div class="ph-score">
+            <div class="ph-chip"><div class="cl">कनेक्शन</div><div class="cv">142<span style="font-size:10px;color:var(--ink-3)">/160</span></div></div>
+            <div class="ph-chip"><div class="cl">कमाई</div><div class="cv">₹18,400</div><div class="cs">₹2k बोनस रिस्क में</div></div>
+          </div>
+          <!-- HERO -->
+          <div class="hero-card">
+            <div class="hero-label">अभी करें</div>
+            <div class="hero-title">⏰ इंस्टॉलेशन · #4821 · Kirari</div>
+            <div class="hero-sub">ग्राहक इंतज़ार कर रहा है — स्लॉट चुनें</div>
+            <div class="hero-timer">2 घंटे में टिकट हट जाएगी</div>
+            <div><div class="hero-cta">स्लॉट चुनें →</div></div>
+          </div>
+          <div style="text-align:center;font-size:8px;color:var(--ink-3);font-family:var(--mono);padding:0;">+2 और काम बाकी</div>
+          <!-- rest of feed -->
+          <div class="fc"><div class="stripe st-neg"></div><div class="body"><div class="l1">🔧 रिस्टोर · #3287 <span class="loc">· Mundka</span><span class="badge">1</span></div><div class="l2 l2-o">तुरंत ध्यान दें</div></div></div>
+          <div class="fc"><div class="stripe st-warn"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #5201 <span class="loc">· Peeragarhi</span></div><div class="l2 l2-u">स्लॉट चुनना बाकी</div></div></div>
+          <div class="fc" style="opacity:.65;"><div class="stripe st-def"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #5102 <span class="loc">· Nangloi</span></div><div class="l2 l2-n">वेरिफाई हो रहा है</div></div></div>
+          <div class="gc" style="opacity:.65;"><span class="gic">📦</span><div><div class="gt">3 पिकअप<span class="gdot"></span></div><div class="gs">1 डेडलाइन के पास</div></div><span class="chev">›</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec"><h3>What makes the hero card different from regular cards</h3><span class="rule"></span></div>
+  <div class="grid3">
+    <div class="ann"><div class="ann-line" style="background:var(--pink);"></div><div class="ann-body"><h5>Distinct visual treatment</h5><p>Pink gradient background, larger padding, branded border. It looks different from every other card — the CSP's eye goes here first, every time.</p></div></div>
+    <div class="ann"><div class="ann-line" style="background:var(--pink);"></div><div class="ann-body"><h5>"अभी करें" label</h5><p>Hindi label at the top: "Do now". Removes ambiguity — this isn't information, it's a <b>call to action</b>.</p></div></div>
+    <div class="ann"><div class="ann-line" style="background:var(--pink);"></div><div class="ann-body"><h5>CTA button on the card</h5><p>The primary action button is <b>right here</b> — no need to drill down. "स्लॉट चुनें →" opens the slot sheet directly. One tap to act.</p></div></div>
+    <div class="ann"><div class="ann-line" style="background:var(--pink);"></div><div class="ann-body"><h5>Context line</h5><p>"ग्राहक इंतज़ार कर रहा है" — explains <b>why</b> this is urgent, not just <b>what</b> the task is. Motivates action.</p></div></div>
+    <div class="ann"><div class="ann-line" style="background:var(--pink);"></div><div class="ann-body"><h5>"+N और काम बाकी" counter</h5><p>Below the hero: tells CSP how many more action items are waiting. Creates a sense of queue progress.</p></div></div>
+    <div class="ann"><div class="ann-line" style="background:var(--ink-3);"></div><div class="ann-body"><h5>Completion state</h5><p>When all actions are done, the hero space shows a <b>positive message</b>: "✅ सब काम हो गया" (all done). The reward for clearing the queue.</p></div></div>
+  </div>
+
+  <div class="sec"><h3>How it picks the hero</h3><span class="rule"></span></div>
+  <div class="card">
+    <p>The hero is the <b>first card from the action group</b> (sorted by server urgency). Priority order:</p>
+    <p><b>1.</b> Overdue tasks (red stripe, OVERDUE threshold) — deadline already passed</p>
+    <p><b>2.</b> Urgent tasks with live countdown (P41/P74/pickup SLA timer running)</p>
+    <p><b>3.</b> Tasks needing immediate acceptance (PENDING_ACCEPTANCE, RESPOND_NOW)</p>
+    <p><b>4.</b> Regular action tasks (slot proposal, executor assignment, etc.)</p>
+    <p>When CSP completes the hero action, it morphs optimistically → the next highest-priority task slides into the hero spot.</p>
+  </div>
+
+  <div class="sec"><h3>Feasibility</h3><span class="rule"></span></div>
+  <div class="ei">
+    <div class="ei-cell"><div class="ei-label">Effort</div><div class="ei-val" style="color:var(--warning);">Medium</div><div class="ei-note">New composable + classification logic</div></div>
+    <div class="ei-cell"><div class="ei-label">Impact</div><div class="ei-val" style="color:var(--pink);">Very High</div><div class="ei-note">#1 priority visible in 0 seconds</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h4>What's needed</h4><p>New HeroCard composable. Client-side priority classification. CTA routing from the hero card (reuses existing sheet/drilldown logic). Context line copy — ideally server-sent, or client-generated from existing fields.</p></div>
+    <div class="card"><h4>Risk</h4><p>Only shows 1 task. CSPs with 2 equally urgent tasks might miss the second. Mitigated by the "+N more" counter and the regular feed below. Also: the hero takes vertical space — less room for the rest of the feed on small screens.</p></div>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- IDEA 3 — ACTION MARKERS -->
+<!-- ================================================================ -->
+<div class="doc" id="idea3">
+  <div class="idea-head">
+    <div class="idea-num">IDEA 03</div>
+    <div class="idea-title">Action markers: a visual tag on every card that says "act" or "waiting".</div>
+    <div class="idea-sub">The smallest change with the most leverage. Add a <b>tiny chip or indicator</b> on each card that tells the CSP at a glance whether they need to act on this one or not — without changing the card layout.</div>
+  </div>
+
+  <div class="sec"><h3>Before vs After</h3><span class="rule"></span></div>
+  <div class="phone-wrap">
+    <div>
+      <div style="text-align:center;font-family:var(--mono);font-size:10px;color:var(--ink-3);margin-bottom:8px;letter-spacing:.1em;">CURRENT — NO INDICATOR</div>
+      <div class="phone sm">
+        <div class="ph-status"><span>9:41</span><span>100%</span></div>
+        <div class="ph-header"><div class="ph-burger"><span></span><span></span><span></span></div><div class="ph-name">Sharma Traders<span class="ph-role">· मालिक</span></div><span class="ph-bell">🔔</span></div>
+        <div class="ph-body" style="min-height:340px;">
+          <div class="fc"><div class="stripe st-warn"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #4821 <span class="loc">· Kirari</span><span class="badge">2</span></div><div class="l2 l2-u">2 घंटे में टिकट हट जाएगी</div></div></div>
+          <div class="fc"><div class="stripe st-def"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #5102 <span class="loc">· Nangloi</span></div><div class="l2 l2-n">वेरिफाई हो रहा है</div></div></div>
+          <div class="fc"><div class="stripe st-neg"></div><div class="body"><div class="l1">🔧 रिस्टोर · #3287 <span class="loc">· Mundka</span><span class="badge">1</span></div><div class="l2 l2-o">तुरंत ध्यान दें</div></div></div>
+          <div class="fc"><div class="stripe st-def"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #4990 <span class="loc">· Kirari</span></div><div class="l2 l2-n">राम काम कर रहे हैं</div></div></div>
+          <div class="fc"><div class="stripe st-warn"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #5201 <span class="loc">· Peeragarhi</span></div><div class="l2 l2-u">स्लॉट चुनना बाकी</div></div></div>
+          <div style="text-align:center;font-size:9px;color:var(--ink-3);padding:8px 0;font-family:var(--mono);">All cards look the same — which ones need me?</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div style="text-align:center;font-family:var(--mono);font-size:10px;color:var(--pink);margin-bottom:8px;letter-spacing:.1em;">IDEA 03 — ACTION MARKERS</div>
+      <div class="phone sm">
+        <div class="ph-status"><span>9:41</span><span>100%</span></div>
+        <div class="ph-header"><div class="ph-burger"><span></span><span></span><span></span></div><div class="ph-name">Sharma Traders<span class="ph-role">· मालिक</span></div><span class="ph-bell">🔔</span></div>
+        <div class="ph-body" style="min-height:340px;">
+          <div class="fc"><div class="stripe st-warn"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #4821 <span class="loc">· Kirari</span> <span class="act-chip">स्लॉट चुनें →</span></div><div class="l2 l2-u">2 घंटे में टिकट हट जाएगी</div></div></div>
+          <div class="fc"><div class="stripe st-def"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #5102 <span class="loc">· Nangloi</span> <span class="pass-chip">⟳ वेरिफाई</span></div><div class="l2 l2-n">वेरिफाई हो रहा है</div></div></div>
+          <div class="fc"><div class="stripe st-neg"></div><div class="body"><div class="l1">🔧 रिस्टोर · #3287 <span class="loc">· Mundka</span> <span class="act-chip">शुरू करें →</span></div><div class="l2 l2-o">तुरंत ध्यान दें</div></div></div>
+          <div class="fc"><div class="stripe st-def"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #4990 <span class="loc">· Kirari</span> <span class="mon-chip">👤 राम</span></div><div class="l2 l2-n">राम काम कर रहे हैं</div></div></div>
+          <div class="fc"><div class="stripe st-warn"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #5201 <span class="loc">· Peeragarhi</span> <span class="act-chip">स्लॉट चुनें →</span></div><div class="l2 l2-u">स्लॉट चुनना बाकी</div></div></div>
+          <div style="text-align:center;font-size:9px;color:var(--ink-3);padding:8px 0;font-family:var(--mono);">Now I can see which ones need me ↑</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec"><h3>The three marker types</h3><span class="rule"></span></div>
+  <div class="grid3">
+    <div class="card" style="border-left:4px solid var(--pink);">
+      <h4><span class="act-chip">स्लॉट चुनें →</span> Action chip</h4>
+      <p>Pink chip with arrow. Shows the <b>specific action</b> needed: "स्लॉट चुनें", "शुरू करें", "स्वीकार करें". Uses existing <b>ctaLabelKey</b> from server. CSP knows exactly what to do without opening the card.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--ink-3);">
+      <h4><span class="pass-chip">⟳ वेरिफाई</span> Wait chip</h4>
+      <p>Grey chip with spinner-style icon. Communicates: "system is handling this, you don't need to do anything." Uses short version of status text.</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--info);">
+      <h4><span class="mon-chip">👤 राम</span> Delegated chip</h4>
+      <p>Purple chip with person icon + teammate name. Communicates: "your team member is on it." Uses existing <b>executorName</b> from server.</p>
+    </div>
+  </div>
+
+  <div class="sec"><h3>Feasibility</h3><span class="rule"></span></div>
+  <div class="ei">
+    <div class="ei-cell"><div class="ei-label">Effort</div><div class="ei-val" style="color:var(--positive);">Very Low</div><div class="ei-note">Add one chip to TaskCard.kt</div></div>
+    <div class="ei-cell"><div class="ei-label">Impact</div><div class="ei-val" style="color:var(--warning);">Medium</div><div class="ei-note">Scannable but doesn't change structure</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h4>What's needed</h4><p>A single conditional chip in the card renderer. Server already sends ctaLabelKey, isPassive, executorName. No API change. Smallest possible design change.</p></div>
+    <div class="card"><h4>Risk</h4><p>Line-1 is already dense (icon + type + ID + locality + badge). Adding a chip could cause text truncation on small screens. Needs careful sizing and overflow handling.</p></div>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- IDEA 4 — SMART SECTIONS -->
+<!-- ================================================================ -->
+<div class="doc" id="idea4">
+  <div class="idea-head">
+    <div class="idea-num">IDEA 04</div>
+    <div class="idea-title">Smart sections: group by urgency with counts.</div>
+    <div class="idea-sub">More granular than the 2-way split of Idea 1. Four labeled sections that tell the complete story: <b>do now</b>, <b>do today</b>, <b>team is handling</b>, <b>waiting on system</b>. The section headers alone give the CSP a full picture.</div>
+  </div>
+
+  <div class="sec"><h3>Wireframe</h3><span class="rule"></span></div>
+  <div class="phone-wrap">
+    <div>
+      <div style="text-align:center;font-family:var(--mono);font-size:10px;color:var(--pink);margin-bottom:8px;letter-spacing:.1em;">IDEA 04 — SMART SECTIONS</div>
+      <div class="phone">
+        <div class="ph-status"><span>9:41</span><span>100%</span></div>
+        <div class="ph-header"><div class="ph-burger"><span></span><span></span><span></span></div><div class="ph-name">Sharma Traders<span class="ph-role">· मालिक</span></div><span class="ph-bell">🔔</span></div>
+        <div class="ph-body">
+          <div class="ph-score">
+            <div class="ph-chip"><div class="cl">कनेक्शन</div><div class="cv">142<span style="font-size:10px;color:var(--ink-3)">/160</span></div></div>
+            <div class="ph-chip"><div class="cl">कमाई</div><div class="cv">₹18,400</div></div>
+          </div>
+          <!-- URGENT -->
+          <div class="ph-sec"><div class="dot" style="background:var(--critical);"></div><div class="txt" style="color:var(--critical);">अभी करें</div><div class="cnt">2 ज़रूरी</div><div class="line"></div></div>
+          <div class="fc"><div class="stripe st-neg"></div><div class="body"><div class="l1">🔧 रिस्टोर · #3287 <span class="loc">· Mundka</span><span class="badge">1</span></div><div class="l2 l2-o">तुरंत ध्यान दें</div></div></div>
+          <div class="fc"><div class="stripe st-warn"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #4821 <span class="loc">· Kirari</span><span class="badge">2</span></div><div class="l2 l2-u">2 घंटे में टिकट हट जाएगी</div></div></div>
+          <!-- TODAY -->
+          <div class="ph-sec" style="margin-top:6px;"><div class="dot" style="background:var(--pink);"></div><div class="txt" style="color:var(--pink);">आज करना है</div><div class="cnt">1</div><div class="line"></div></div>
+          <div class="fc"><div class="stripe st-warn"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #5201 <span class="loc">· Peeragarhi</span></div><div class="l2 l2-n">स्लॉट चुनना बाकी</div></div></div>
+          <!-- TEAM -->
+          <div class="ph-sec" style="margin-top:6px;"><div class="dot" style="background:var(--warning);"></div><div class="txt" style="color:var(--warning);">टीम पर</div><div class="cnt">1</div><div class="line"></div></div>
+          <div class="fc" style="opacity:.7;"><div class="stripe st-def"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #4990 <span class="loc">· Kirari</span></div><div class="l2 l2-n">राम काम कर रहे हैं</div></div></div>
+          <!-- WAITING -->
+          <div class="ph-sec" style="margin-top:6px;"><div class="dot" style="background:var(--ink-3);"></div><div class="txt" style="color:var(--ink-3);">इंतज़ार में</div><div class="cnt">1</div><div class="line"></div></div>
+          <div class="fc" style="opacity:.55;"><div class="stripe st-def"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #5102 <span class="loc">· Nangloi</span></div><div class="l2 l2-n">वेरिफाई हो रहा है</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec"><h3>The four sections</h3><span class="rule"></span></div>
+  <div class="grid2">
+    <div class="card" style="border-left:4px solid var(--critical);">
+      <h4>🔴 अभी करें — Do now</h4>
+      <p>Overdue tasks + tasks with active countdown timers + tasks needing immediate response (PENDING_ACCEPTANCE, RESPOND_NOW). These have <b>crossed or are approaching a deadline</b>.</p>
+      <p><b>Feeling:</b> Urgency. "These can't wait."</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--pink);">
+      <h4>🩷 आज करना है — Do today</h4>
+      <p>Action-required tasks without immediate urgency — slot proposals with plenty of time, executor assignments, work that can happen within the day.</p>
+      <p><b>Feeling:</b> Important but not panicking. "Get to these when you can."</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--warning);">
+      <h4>🟡 टीम पर — On team</h4>
+      <p>Delegated to a teammate. CSP can see status but can't directly act. Shows teammate name. If a teammate goes overdue, the card moves UP to "अभी करें".</p>
+      <p><b>Feeling:</b> Awareness. "Someone's handling it, I'm just keeping an eye."</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--ink-3);">
+      <h4>⚫ इंतज़ार में — Waiting</h4>
+      <p>System verification, customer confirmation, processing. Slightly dimmed. CSP can safely ignore these until they move.</p>
+      <p><b>Feeling:</b> Peace. "Nothing for me to do here."</p>
+    </div>
+  </div>
+
+  <div class="co co-pink" style="margin-top:16px;"><b>The "at a glance" moment →</b> When CSP opens the app, they read the section headers alone: <b>"2 ज़रूरी · 1 आज · 1 टीम · 1 इंतज़ार"</b>. That's 5 numbers that tell the entire story of their workday. Without reading a single card.</div>
+
+  <div class="sec"><h3>Feasibility</h3><span class="rule"></span></div>
+  <div class="ei">
+    <div class="ei-cell"><div class="ei-label">Effort</div><div class="ei-val" style="color:var(--warning);">Medium</div><div class="ei-note">Classification logic + dynamic section rendering</div></div>
+    <div class="ei-cell"><div class="ei-label">Impact</div><div class="ei-val" style="color:var(--pink);">Very High</div><div class="ei-note">Full workday picture in 1 second</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h4>What's needed</h4><p>Classification logic to bucket tasks into 4 groups using existing fields (thresholdState, isPassive, executorName, isCspActionable). Section header composable with counts. Opacity dimming for lower priority sections.</p></div>
+    <div class="card"><h4>Risk</h4><p>More sections = more scrolling. If CSP has 10 urgent tasks, the "do today" section pushes way down. Empty sections should collapse entirely. Also: 4 categories is more cognitive load than 2 (Idea 1). For some CSPs, "urgent" vs "today" distinction might be confusing.</p></div>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- IDEA 5 — INLINE CTA -->
+<!-- ================================================================ -->
+<div class="doc" id="idea5">
+  <div class="idea-head">
+    <div class="idea-num">IDEA 05</div>
+    <div class="idea-title">Inline CTA: put the action button directly on the card.</div>
+    <div class="idea-sub">Break the "no buttons on feed" rule. For simple, unambiguous actions, show the CTA right on the card. <b>Cards with buttons = "do something". Cards without buttons = "just watching."</b> The visual split is instant and obvious.</div>
+  </div>
+
+  <div class="sec"><h3>Before vs After</h3><span class="rule"></span></div>
+  <div class="phone-wrap">
+    <div>
+      <div style="text-align:center;font-family:var(--mono);font-size:10px;color:var(--ink-3);margin-bottom:8px;letter-spacing:.1em;">CURRENT — NO BUTTONS</div>
+      <div class="phone sm">
+        <div class="ph-status"><span>9:41</span><span>100%</span></div>
+        <div class="ph-header"><div class="ph-burger"><span></span><span></span><span></span></div><div class="ph-name">Sharma Traders<span class="ph-role">· मालिक</span></div><span class="ph-bell">🔔</span></div>
+        <div class="ph-body" style="min-height:340px;">
+          <div class="fc"><div class="stripe st-warn"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #4821 <span class="loc">· Kirari</span><span class="badge">2</span></div><div class="l2 l2-u">2 घंटे में टिकट हट जाएगी</div></div></div>
+          <div class="fc"><div class="stripe st-def"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #5102 <span class="loc">· Nangloi</span></div><div class="l2 l2-n">वेरिफाई हो रहा है</div></div></div>
+          <div class="fc"><div class="stripe st-neg"></div><div class="body"><div class="l1">🔧 रिस्टोर · #3287 <span class="loc">· Mundka</span><span class="badge">1</span></div><div class="l2 l2-o">तुरंत ध्यान दें</div></div></div>
+          <div class="fc"><div class="stripe st-def"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #4990 <span class="loc">· Kirari</span></div><div class="l2 l2-n">राम काम कर रहे हैं</div></div></div>
+          <div style="text-align:center;font-size:9px;color:var(--ink-3);padding:8px 0;font-family:var(--mono);">Which ones have something for me to do?</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div style="text-align:center;font-family:var(--mono);font-size:10px;color:var(--pink);margin-bottom:8px;letter-spacing:.1em;">IDEA 05 — INLINE CTA</div>
+      <div class="phone sm">
+        <div class="ph-status"><span>9:41</span><span>100%</span></div>
+        <div class="ph-header"><div class="ph-burger"><span></span><span></span><span></span></div><div class="ph-name">Sharma Traders<span class="ph-role">· मालिक</span></div><span class="ph-bell">🔔</span></div>
+        <div class="ph-body" style="min-height:340px;">
+          <div class="fc fc-inline"><div class="stripe st-warn"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #4821 <span class="loc">· Kirari</span><span class="badge">2</span></div><div class="l2 l2-u">2 घंटे में टिकट हट जाएगी</div><div class="cta-btn">स्लॉट चुनें →</div></div></div>
+          <div class="fc fc-inline"><div class="stripe st-def"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #5102 <span class="loc">· Nangloi</span></div><div class="l2 l2-n">वेरिफाई हो रहा है</div><div class="pass-status"><span class="spin"></span> वेरिफाई हो रहा है...</div></div></div>
+          <div class="fc fc-inline"><div class="stripe st-neg"></div><div class="body"><div class="l1">🔧 रिस्टोर · #3287 <span class="loc">· Mundka</span><span class="badge">1</span></div><div class="l2 l2-o">तुरंत ध्यान दें</div><div class="cta-btn">स्वीकार करें →</div></div></div>
+          <div class="fc fc-inline"><div class="stripe st-def"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #4990 <span class="loc">· Kirari</span></div><div class="l2 l2-n">राम काम कर रहे हैं</div><div class="pass-status">👤 राम · काम कर रहे हैं</div></div></div>
+          <div style="text-align:center;font-size:9px;color:var(--pink);padding:8px 0;font-family:var(--mono);">Pink buttons = my work. Grey = not mine. ↑</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec"><h3>What shows on action cards vs passive cards</h3><span class="rule"></span></div>
+  <div class="vs">
+    <div class="vs-col">
+      <div class="vs-label">ACTION CARDS — line 3 shows CTA</div>
+      <p style="font-size:13px;color:var(--ink-2);margin-bottom:12px;">A <b>third line</b> appears with a pink button. The button label comes from the server's existing <b>ctaLabelKey</b>.</p>
+      <div class="fc fc-inline" style="margin-bottom:8px;"><div class="stripe st-warn"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #4821</div><div class="l2 l2-u">2 घंटे बाकी</div><div class="cta-btn">स्लॉट चुनें →</div></div></div>
+      <div class="fc fc-inline"><div class="stripe st-neg"></div><div class="body"><div class="l1">🔧 रिस्टोर · #3287</div><div class="l2 l2-o">तुरंत ध्यान दें</div><div class="cta-btn">स्वीकार करें →</div></div></div>
+      <p style="font-size:12px;color:var(--ink-3);margin-top:8px;">Tapping the button opens the same sheet/action as the drilldown CTA. Tapping the card body still opens the full drilldown for details.</p>
+    </div>
+    <div class="vs-col">
+      <div class="vs-label">PASSIVE CARDS — line 3 shows status</div>
+      <p style="font-size:13px;color:var(--ink-2);margin-bottom:12px;">A <b>third line</b> shows a grey status indicator — subtle, informative, clearly not a button.</p>
+      <div class="fc fc-inline" style="margin-bottom:8px;"><div class="stripe st-def"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #5102</div><div class="l2 l2-n">Nangloi</div><div class="pass-status"><span class="spin"></span> वेरिफाई हो रहा है...</div></div></div>
+      <div class="fc fc-inline"><div class="stripe st-def"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #4990</div><div class="l2 l2-n">Kirari</div><div class="pass-status">👤 राम · काम कर रहे हैं</div></div></div>
+      <p style="font-size:12px;color:var(--ink-3);margin-top:8px;">The spinner animation subtly communicates "something is happening." The person icon shows delegation. Both say: "not your turn."</p>
+    </div>
+  </div>
+
+  <div class="sec"><h3>Which actions are "simple enough" for inline</h3><span class="rule"></span></div>
+  <div class="card">
+    <h4>The rule: if the action opens a <b>sheet or direct action</b>, it can be inline. If it requires a <b>full drilldown</b>, it can't.</h4>
+    <p><b>Can be inline:</b> "स्लॉट चुनें" (opens sheet) · "स्वीकार करें" (direct action) · "शुरू करें" (direct action) · "Acknowledge" (direct action)</p>
+    <p><b>Should NOT be inline:</b> "Start wizard" (opens 33-screen flow) · Complex proof steps · Anything requiring context from the drilldown</p>
+    <p>The server already flags this via <b>executionMode</b>: DIRECT and ACTION_SHEET can be inline. DRILLDOWN_REQUIRED stays drilldown-only.</p>
+  </div>
+
+  <div class="sec"><h3>Feasibility</h3><span class="rule"></span></div>
+  <div class="ei">
+    <div class="ei-cell"><div class="ei-label">Effort</div><div class="ei-val" style="color:var(--warning);">Medium-High</div><div class="ei-note">Card layout change + tap target management</div></div>
+    <div class="ei-cell"><div class="ei-label">Impact</div><div class="ei-val" style="color:var(--pink);">Very High</div><div class="ei-note">Action vs passive is visually obvious + saves 1 tap</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h4>What's needed</h4><p>Third line in TaskCard composable. CTA routing from the card level (reuses existing morph + sheet logic). Separate tap targets for card body (→ drilldown) vs CTA button (→ action). Passive status line for non-action cards.</p></div>
+    <div class="card"><h4>Risk</h4><p>Cards become taller (3 lines instead of 2). Less cards visible per screen. Accidental CTA taps are possible — needs adequate spacing. The "no buttons on feed" design principle was intentional — breaking it changes the character of the page from "triage list" to "action list".</p></div>
+  </div>
+
+  <div class="co co-pink" style="margin-top:16px;"><b>The biggest payoff →</b> This is the only idea that both <b>visually differentiates</b> action from passive AND <b>reduces taps</b>. The CSP can acknowledge a pickup, accept a restore, and propose a slot — all from the feed, without opening a single drilldown. Three actions that currently take 6+ taps → 3 taps.</div>
+</div>
+
+<!-- ================================================================ -->
+<!-- COMBINING IDEAS -->
+<!-- ================================================================ -->
+<div style="margin-top:60px;padding-top:32px;border-top:2px solid var(--hair);">
+  <h2 style="font-size:clamp(22px,3vw,30px);font-weight:800;letter-spacing:-.02em;margin-bottom:12px;">How they combine: the recommended stack</h2>
+  <p style="font-size:16px;color:var(--ink-2);max-width:60ch;margin-bottom:24px;">These ideas aren't mutually exclusive. Here's how they layer from least to most ambitious:</p>
+
+  <div class="grid2">
+    <div class="card" style="border:2px solid var(--positive);">
+      <h4 style="color:var(--positive);">Quick win — ship this week</h4>
+      <p><b>Idea 1 (split feed)</b> + <b>Idea 3 (action markers)</b></p>
+      <p>Split into 2 sections with counts + add action/passive chips on each card. Together, these give the CSP two levels of clarity: section counts for the big picture, chips for per-card scanning.</p>
+      <p style="margin-top:8px;font-size:13px;color:var(--positive);font-weight:600;">Low effort. High impact. No API change.</p>
+    </div>
+    <div class="card" style="border:2px solid var(--pink);">
+      <h4 style="color:var(--pink);">Full vision — next milestone</h4>
+      <p><b>Idea 4 (smart sections)</b> + <b>Idea 2 (hero card)</b> + <b>Idea 5 (inline CTA)</b></p>
+      <p>4 urgency groups give the full workday picture. Hero card at top for #1 priority with a direct CTA. Inline buttons on action cards save taps. Passive cards show spinner/person status.</p>
+      <p style="margin-top:8px;font-size:13px;color:var(--pink);font-weight:600;">Medium effort. Very high impact. Transforms the home page from triage list to action dashboard.</p>
+    </div>
+  </div>
+
+  <div class="phone-wrap" style="margin-top:28px;">
+    <div>
+      <div style="text-align:center;font-family:var(--mono);font-size:10px;color:var(--pink);margin-bottom:8px;letter-spacing:.1em;">COMBINED VISION — ALL IDEAS TOGETHER</div>
+      <div class="phone">
+        <div class="ph-status"><span>9:41</span><span>100%</span></div>
+        <div class="ph-header"><div class="ph-burger"><span></span><span></span><span></span></div><div class="ph-name">Sharma Traders<span class="ph-role">· मालिक</span></div><span class="ph-bell">🔔</span></div>
+        <div class="ph-body">
+          <div class="ph-score">
+            <div class="ph-chip"><div class="cl">कनेक्शन</div><div class="cv">142<span style="font-size:10px;color:var(--ink-3)">/160</span></div></div>
+            <div class="ph-chip"><div class="cl">कमाई</div><div class="cv">₹18,400</div></div>
+          </div>
+          <!-- HERO -->
+          <div class="hero-card">
+            <div class="hero-label">अभी करें</div>
+            <div class="hero-title">🔧 रिस्टोर · #3287 · Mundka</div>
+            <div class="hero-sub">ग्राहक का इंटरनेट बंद है — तुरंत स्वीकार करें</div>
+            <div><div class="hero-cta">स्वीकार करें →</div></div>
+          </div>
+          <!-- URGENT SECTION -->
+          <div class="ph-sec"><div class="dot" style="background:var(--critical);"></div><div class="txt" style="color:var(--critical);">और ज़रूरी</div><div class="cnt">1</div><div class="line"></div></div>
+          <div class="fc fc-inline"><div class="stripe st-warn"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #4821 <span class="loc">· Kirari</span><span class="badge">2</span></div><div class="l2 l2-u">2 घंटे बाकी</div><div class="cta-btn">स्लॉट चुनें →</div></div></div>
+          <!-- TODAY SECTION -->
+          <div class="ph-sec" style="margin-top:4px;"><div class="dot" style="background:var(--pink);"></div><div class="txt" style="color:var(--pink);">आज करना है</div><div class="cnt">1</div><div class="line"></div></div>
+          <div class="fc fc-inline"><div class="stripe st-def"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #5201 <span class="loc">· Peeragarhi</span></div><div class="l2 l2-n">स्लॉट चुनना बाकी</div><div class="cta-btn">स्लॉट चुनें →</div></div></div>
+          <!-- TEAM SECTION -->
+          <div class="ph-sec" style="margin-top:4px;"><div class="dot" style="background:var(--warning);"></div><div class="txt" style="color:var(--warning);">टीम पर</div><div class="cnt">1</div><div class="line"></div></div>
+          <div class="fc fc-inline" style="opacity:.7;"><div class="stripe st-def"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #4990 <span class="loc">· Kirari</span></div><div class="l2 l2-n">Kirari</div><div class="pass-status">👤 राम · काम कर रहे हैं</div></div></div>
+          <!-- WAITING SECTION -->
+          <div class="ph-sec" style="margin-top:4px;"><div class="dot" style="background:var(--ink-3);"></div><div class="txt" style="color:var(--ink-3);">इंतज़ार में</div><div class="cnt">1</div><div class="line"></div></div>
+          <div class="fc fc-inline" style="opacity:.55;"><div class="stripe st-def"></div><div class="body"><div class="l1">⏰ इंस्टॉल · #5102 <span class="loc">· Nangloi</span></div><div class="l2 l2-n">Nangloi</div><div class="pass-status"><span class="spin"></span> वेरिफाई हो रहा है...</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Wiom CSP Home — 5 Design Ideas · All wireframes are representative · Hindi labels from actual app strings
+</footer>
+</div>
+
+<script>
+(function(){
+  var docs=[].slice.call(document.querySelectorAll('.doc'));
+  var dbtns=[].slice.call(document.querySelectorAll('.docbtn'));
+  function selectDoc(id){
+    docs.forEach(function(d){d.classList.toggle('active',d.id===id);});
+    dbtns.forEach(function(b){b.setAttribute('aria-selected',String(b.dataset.doc===id));});
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  dbtns.forEach(function(b){b.addEventListener('click',function(){selectDoc(b.dataset.doc);});});
+})();
+</script>
+</body>
+</html>

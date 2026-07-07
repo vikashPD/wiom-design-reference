@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wiom CSP — Design Reference Hub</title>
+<style>
+:root{--pink:#D9008D;--pink-soft:#F5D6EA;--violet:#4A1B6E;--ground:#FBF6F9;--surface:#FFFFFF;--surface-2:#F6EEF3;--ink:#201823;--ink-2:#6B5C67;--ink-3:#9A8B95;--hair:#EADFE7;--radius:16px;--shadow:0 1px 3px rgba(32,24,35,.06),0 8px 24px -12px rgba(32,24,35,.16);--sans:"Segoe UI",system-ui,-apple-system,"Roboto",sans-serif;--mono:ui-monospace,"Cascadia Code","Consolas","SF Mono",monospace;}
+*{box-sizing:border-box;margin:0;}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+.hub{max-width:640px;width:100%;}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--pink);margin-bottom:14px;font-weight:600;}
+h1{font-size:clamp(28px,5vw,42px);line-height:1.1;letter-spacing:-.025em;font-weight:800;margin-bottom:12px;}
+.sub{font-size:16px;color:var(--ink-2);margin-bottom:36px;max-width:48ch;}
+.sub b{color:var(--ink);font-weight:650;}
+a.doc{display:block;background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:22px 24px;box-shadow:var(--shadow);text-decoration:none;color:var(--ink);transition:.2s;margin-bottom:14px;}
+a.doc:hover{border-color:var(--pink);box-shadow:0 2px 6px rgba(217,0,141,.12),var(--shadow);transform:translateY(-1px);}
+a.doc .num{font-family:var(--mono);font-size:11px;color:var(--pink);letter-spacing:.12em;font-weight:600;margin-bottom:6px;}
+a.doc h2{font-size:19px;font-weight:750;letter-spacing:-.01em;margin-bottom:6px;}
+a.doc p{font-size:14px;color:var(--ink-2);line-height:1.5;}
+a.doc .arrow{float:right;color:var(--pink);font-size:22px;margin-top:-4px;transition:.2s;}
+a.doc:hover .arrow{transform:translateX(3px);}
+footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3);}
+</style>
+</head>
+<body>
+<div class="hub">
+  <p class="eyebrow">Wiom CSP App</p>
+  <h1>Design Reference Hub</h1>
+  <p class="sub">Three documents mapping the CSP home page — <b>how it works today</b>, <b>every state and signal</b>, and <b>5 ideas to improve it</b>.</p>
+
+  <a class="doc" href="home-structure.html">
+    <span class="arrow">&rsaquo;</span>
+    <div class="num">DOCUMENT 01</div>
+    <h2>Home Page Structure & Task Logic</h2>
+    <p>The original reference — screen layout (7 numbered elements), task card engine, per-task-family logic (install, restore, recharge, pickup), and every visual state with real app colours.</p>
+  </a>
+
+  <a class="doc" href="state-atlas.html">
+    <span class="arrow">&rsaquo;</span>
+    <div class="num">DOCUMENT 02</div>
+    <h2>Designer's State Atlas</h2>
+    <p>How the CSP reads the page, every task journey step-by-step (action vs wait vs monitor), the 7 communication channels, where the current UX helps and where it fails.</p>
+  </a>
+
+  <a class="doc" href="ideas.html">
+    <span class="arrow">&rsaquo;</span>
+    <div class="num">DOCUMENT 03</div>
+    <h2>5 Improvement Ideas with Wireframes</h2>
+    <p>Split feed, hero card, action markers, smart sections, inline CTA — each with before/after phone wireframes, feasibility ratings, and a combined vision.</p>
+  </a>
+
+  <footer>Built from wiom-csp-app codebase analysis</footer>
+</div>
+</body>
+</html>

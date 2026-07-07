@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wiom CSP Home — Designer's State Atlas</title>
+<style>
+:root{
+  --pink:#D9008D;--pink-soft:#F5D6EA;--violet:#4A1B6E;
+  --ground:#FBF6F9;--surface:#FFFFFF;--surface-2:#F6EEF3;--ink:#201823;--ink-2:#6B5C67;--ink-3:#9A8B95;
+  --hair:#EADFE7;--hair-strong:#D8C8D3;
+  --info:#7C4DCC;--positive:#1F9D57;--warning:#E08A00;--critical:#D33A3A;
+  --info-bg:#EEE7FB;--positive-bg:#E2F4EA;--warning-bg:#FBF0DC;--critical-bg:#FBE4E4;--neutral-bg:#EDE6EB;
+  --radius:16px;--shadow:0 1px 3px rgba(32,24,35,.06),0 8px 24px -12px rgba(32,24,35,.16);
+  --mono:ui-monospace,"Cascadia Code","Consolas","SF Mono",monospace;
+  --sans:"Segoe UI",system-ui,-apple-system,"Roboto",sans-serif;
+  --act:#D9008D;--act-bg:#F5D6EA;
+  --wait:#7C4DCC;--wait-bg:#EEE7FB;
+  --mon:#E08A00;--mon-bg:#FBF0DC;
+  --done:#9A8B95;--done-bg:#EDE6EB;
+}
+*{box-sizing:border-box;margin:0;}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px 100px;}
+
+/* masthead */
+header{padding:52px 0 0;}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--pink);margin-bottom:14px;font-weight:600;}
+h1{font-size:clamp(30px,4.5vw,48px);line-height:1.06;letter-spacing:-.025em;font-weight:800;margin-bottom:18px;max-width:18ch;text-wrap:balance;}
+.lede{font-size:17px;color:var(--ink-2);max-width:60ch;}
+.lede b{color:var(--ink);font-weight:650;}
+
+/* nav */
+.docnav{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--ground) 88%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--hair);margin-top:28px;display:flex;gap:6px;overflow-x:auto;padding:10px 0;}
+.docbtn{font-family:var(--sans);font-size:14px;font-weight:650;white-space:nowrap;border:1px solid var(--hair);background:var(--surface);color:var(--ink-2);cursor:pointer;padding:9px 18px;border-radius:10px;transition:.15s;}
+.docbtn:hover{color:var(--ink);border-color:var(--hair-strong);}
+.docbtn[aria-selected="true"]{background:var(--pink);color:#fff;border-color:var(--pink);}
+.doc{display:none;}.doc.active{display:block;animation:fade .3s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+/* section markers */
+.sec{margin:52px 0 20px;display:flex;align-items:center;gap:14px;}
+.sec h3{font-size:21px;font-weight:780;letter-spacing:-.01em;}
+.sec .rule{flex:1;height:1px;background:var(--hair);}
+.sec .k{font-family:var(--mono);font-size:11px;color:var(--pink);letter-spacing:.12em;text-transform:uppercase;}
+
+/* cards */
+.card{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow);}
+.card h4{font-size:16px;font-weight:700;margin-bottom:10px;}
+.card p{font-size:14.5px;color:var(--ink-2);margin-bottom:10px;}.card p:last-child{margin-bottom:0;}
+.card p b{color:var(--ink);font-weight:650;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;}
+@media(max-width:760px){.grid2,.grid3{grid-template-columns:1fr;}}
+
+/* callouts */
+.co{border-radius:var(--radius);padding:18px 22px;font-size:14px;line-height:1.6;}
+.co b{font-weight:700;}
+.co-pink{background:var(--pink-soft);border:1px solid color-mix(in srgb,var(--pink) 25%,transparent);}.co-pink b{color:var(--pink);}
+.co-warn{background:var(--warning-bg);border:1px solid color-mix(in srgb,var(--warning) 30%,transparent);}.co-warn b{color:var(--warning);}
+.co-info{background:var(--info-bg);border:1px solid color-mix(in srgb,var(--info) 25%,transparent);}.co-info b{color:var(--info);}
+.co-pos{background:var(--positive-bg);border:1px solid color-mix(in srgb,var(--positive) 25%,transparent);}.co-pos b{color:var(--positive);}
+
+/* pills */
+.pill{font-family:var(--mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;padding:4px 10px;border-radius:100px;display:inline-block;font-weight:600;}
+.pill-act{background:var(--act-bg);color:var(--act);}
+.pill-wait{background:var(--wait-bg);color:var(--wait);}
+.pill-mon{background:var(--mon-bg);color:var(--mon);}
+.pill-done{background:var(--done-bg);color:var(--done);}
+
+/* tables */
+.tbl{overflow-x:auto;border:1px solid var(--hair);border-radius:var(--radius);background:var(--surface);}
+table{border-collapse:collapse;width:100%;font-size:13.5px;}
+th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--hair);vertical-align:top;}
+thead th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);font-weight:600;background:var(--surface-2);white-space:nowrap;}
+tbody tr:last-child td{border-bottom:none;}
+td b{color:var(--ink);font-weight:650;}
+
+/* journey */
+.journey{position:relative;padding-left:36px;margin:14px 0;}
+.journey::before{content:"";position:absolute;left:13px;top:12px;bottom:12px;width:2px;background:var(--hair);}
+.jstep{position:relative;padding:14px 0;}
+.jstep + .jstep{border-top:none;}
+.jdot{position:absolute;left:-36px;top:16px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff;z-index:2;font-family:var(--mono);}
+.jdot.act{background:var(--act);}.jdot.wait{background:var(--wait);}.jdot.mon{background:var(--mon);}.jdot.done{background:var(--done);}
+.jt{font-weight:700;font-size:15px;margin-bottom:3px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.jd{font-size:14px;color:var(--ink-2);}
+.jd b{color:var(--ink);font-weight:600;}
+.jcard{margin-top:10px;background:var(--surface-2);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--ink-2);}
+.jcard b{color:var(--ink);font-weight:600;}
+
+/* signal blocks */
+.sig{display:flex;gap:14px;align-items:flex-start;padding:14px 18px;border-radius:12px;font-size:13.5px;margin:8px 0;}
+.sig-icon{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;flex:none;font-size:16px;}
+.sig-body{flex:1;min-width:0;}
+.sig-body .st{font-weight:700;font-size:14px;margin-bottom:2px;}
+.sig-body .sd{color:var(--ink-2);}
+
+/* mini card mock */
+.mock{border:1px solid var(--hair);border-radius:12px;overflow:hidden;background:#fff;box-shadow:var(--shadow);max-width:400px;}
+.mock-stripe{width:4px;background:var(--ms,#D7D3E0);}
+.mock-body{padding:10px 14px;display:flex;gap:8px;align-items:flex-start;}
+.mock-inner{flex:1;min-width:0;}
+.mock .ml1{font-size:13px;font-weight:650;color:#161021;display:flex;align-items:center;gap:6px;}
+.mock .ml2{font-size:12px;margin-top:5px;display:inline-block;border-radius:6px;padding:2px 0;}
+.mock .badge{background:#D9008D;color:#fff;font-size:10px;font-weight:700;border-radius:100px;padding:1px 7px;margin-left:auto;flex:none;}
+.mock-row{display:flex;}
+.ml2-normal{color:#161021;}.ml2-urgent{color:#B85C00;background:#FFF2BF;padding:2px 8px;}.ml2-overdue{color:#D92130;background:#FFE5E7;padding:2px 8px;}
+.ms-warn{--ms:#B85C00;}.ms-neg{--ms:#D92130;}.ms-def{--ms:#D7D3E0;}
+
+/* tabs */
+.tabbar{position:sticky;top:52px;z-index:20;background:color-mix(in srgb,var(--ground) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--hair);margin-top:18px;display:flex;gap:4px;overflow-x:auto;padding:8px 0;}
+.tab{font-family:var(--sans);font-size:13.5px;font-weight:600;white-space:nowrap;border:none;background:transparent;color:var(--ink-2);cursor:pointer;padding:8px 14px;border-radius:100px;transition:.15s;}
+.tab:hover{color:var(--ink);background:var(--surface-2);}
+.tab[aria-selected="true"]{background:var(--pink);color:#fff;}
+.panel{display:none;padding-top:24px;}.panel.active{display:block;animation:fade .25s ease;}
+
+footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--hair);font-size:12px;color:var(--ink-3);font-family:var(--mono);}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <p class="eyebrow">Wiom CSP App · Designer's Reference</p>
+  <h1>The CSP's home page: what they see, what they do, and when.</h1>
+  <p class="lede">A design decision guide — <b>no code</b>. How the partner reads their work queue, how cards communicate urgency, what each task journey feels like, and where the current design helps or fails them.</p>
+  <nav class="docnav" role="tablist">
+    <button class="docbtn" role="tab" aria-selected="true" data-doc="reading">How CSP reads the page</button>
+    <button class="docbtn" role="tab" aria-selected="false" data-doc="journeys">Task journeys</button>
+    <button class="docbtn" role="tab" aria-selected="false" data-doc="signals">Communication system</button>
+    <button class="docbtn" role="tab" aria-selected="false" data-doc="decisions">Design decisions</button>
+  </nav>
+</header>
+
+<!-- ================================================================ -->
+<!-- DOC 1 — HOW CSP READS THE PAGE -->
+<!-- ================================================================ -->
+<div class="doc active" id="reading">
+  <div style="padding:36px 0 8px;">
+    <h2 style="font-size:clamp(24px,3vw,32px);font-weight:800;letter-spacing:-.02em;margin-bottom:12px;max-width:22ch;">The home page is the CSP's entire workday in one scroll.</h2>
+    <p style="font-size:16px;color:var(--ink-2);max-width:60ch;">A CSP partner (field technician / shop owner) opens this app 15–30 times a day. The home page answers one question: <b>"What do I do next?"</b> Everything below is designed to help them triage — scan, pick the most urgent task, act, come back.</p>
+  </div>
+
+  <div class="sec"><span class="k">R1</span><h3>What the CSP sees, top to bottom</h3><span class="rule"></span></div>
+  <div class="grid2">
+    <div class="card">
+      <h4>1. Purple header bar</h4>
+      <p>Business name + role (मालिक / member). Hamburger for drawer (wallet, team, support). <b>Always visible, never scrolls.</b></p>
+      <p><b>Message to CSP:</b> "This is your workspace. You're logged in."</p>
+    </div>
+    <div class="card">
+      <h4>2. Scorecard strip (4 chips)</h4>
+      <p>Connections (142/160), earnings (₹18,400), quality (● अच्छी), work status (खुला). Pink dot if something changed since last visit.</p>
+      <p><b>Message to CSP:</b> "Here's how you're performing overall."</p>
+    </div>
+    <div class="card">
+      <h4>3. Urgent alerts (banners)</h4>
+      <p>Yellow/orange warnings like "2 नेटबॉक्स की पुष्टि बाकी · 31घं बचे". Info notices from the company. Only 1 at a time; extras say "+2 more".</p>
+      <p><b>Message to CSP:</b> "Stop. This needs attention before anything else."</p>
+    </div>
+    <div class="card">
+      <h4>4. Task feed (the core)</h4>
+      <p>Individual cards for each job — installs, restores, pickups, recharges. Sorted by the server (most urgent first). Each card = one job, two lines, no buttons.</p>
+      <p><b>Message to CSP:</b> "Here's your work queue. Tap to act."</p>
+    </div>
+  </div>
+
+  <div class="co co-pink" style="margin-top:20px;"><b>The fundamental pattern →</b> The home page is a <b>read-only triage surface</b>. Cards show information and urgency. <b>All action happens after a tap</b> — inside drilldowns, sheets, or wizards. There is no inline editing, no swipe-to-act, no buttons on cards.</div>
+
+  <div class="sec"><span class="k">R2</span><h3>How a CSP scans urgency in 2 seconds</h3><span class="rule"></span></div>
+  <p style="font-size:15px;color:var(--ink-2);margin-bottom:20px;max-width:60ch;">The CSP doesn't read every card. They <b>scan</b>. Three visual signals tell them what's urgent without reading text:</p>
+
+  <div class="grid3">
+    <div class="card">
+      <h4>Left stripe colour</h4>
+      <div class="mock ms-def"><div class="mock-row"><div class="mock-stripe"></div><div class="mock-body"><div class="mock-inner"><div class="ml1">इंस्टॉलेशन · #4821</div><div class="ml2 ml2-normal">सब ठीक है</div></div></div></div></div>
+      <p style="margin-top:10px"><b>Grey</b> = normal, no rush</p>
+      <div class="mock ms-warn" style="margin-top:8px"><div class="mock-row"><div class="mock-stripe"></div><div class="mock-body"><div class="mock-inner"><div class="ml1">इंस्टॉलेशन · #4821</div><div class="ml2 ml2-urgent">जल्दी करें</div></div></div></div></div>
+      <p style="margin-top:10px"><b>Orange</b> = needs attention soon</p>
+      <div class="mock ms-neg" style="margin-top:8px"><div class="mock-row"><div class="mock-stripe"></div><div class="mock-body"><div class="mock-inner"><div class="ml1">इंस्टॉलेशन · #4821</div><div class="ml2 ml2-overdue">देरी हो गई</div></div></div></div></div>
+      <p style="margin-top:10px"><b>Red</b> = overdue or failed</p>
+    </div>
+    <div class="card">
+      <h4>Line-2 tint</h4>
+      <p>The second line of the card changes background colour to match urgency:</p>
+      <p><span style="color:#161021">● <b>No background</b></span> = normal status text</p>
+      <p><span style="display:inline-block;background:#FFF2BF;color:#B85C00;padding:2px 8px;border-radius:6px;font-size:13px">आज का स्लॉट · जल्दी करें</span> = urgent, needs action soon</p>
+      <p><span style="display:inline-block;background:#FFE5E7;color:#D92130;padding:2px 8px;border-radius:6px;font-size:13px">समय सीमा पार</span> = overdue, deadline passed</p>
+      <p style="margin-top:8px;">These two signals (stripe + line-2) are <b>set independently</b> by the server. A card can have a grey stripe with an urgent line.</p>
+    </div>
+    <div class="card">
+      <h4>Pink badge</h4>
+      <div class="mock ms-warn"><div class="mock-row"><div class="mock-stripe"></div><div class="mock-body"><div class="mock-inner"><div class="ml1">इंस्टॉलेशन · #4821 · Kirari <span class="badge">2</span></div><div class="ml2 ml2-normal">कनेक्शन का इंतज़ार</div></div></div></div></div>
+      <p style="margin-top:10px"><b>Pink count badge</b> = "this task updated X times since you last looked." Appears on the right. Clears when CSP opens the drilldown.</p>
+      <p>If the server changes the task again later, the badge <b>reappears</b>.</p>
+    </div>
+  </div>
+
+  <div class="sec"><span class="k">R3</span><h3>The four types of cards on the feed</h3><span class="rule"></span></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Card type</th><th>Looks like</th><th>Tap behaviour</th><th>Used for</th></tr></thead>
+    <tbody>
+      <tr><td><b>Individual task card</b></td><td>Icon · type · #ID · locality on line 1. Status/timer on line 2. Left colour stripe. Optional badge.</td><td>Opens full-screen drilldown with all details and actions</td><td>Installations, restores, shifting</td></tr>
+      <tr><td><b>Group card</b></td><td>"3 पिकअप" with router icon, rotating summary, pink dot, chevron ›</td><td>Opens pickup list screen (always, even for 1 item)</td><td>NetBox pickups — always grouped</td></tr>
+      <tr><td><b>Batch card</b></td><td>"6 रिचार्ज · कल तक" with dashed border, chevron ›</td><td>Opens recharge or return flow</td><td>Recharges, NetBox returns</td></tr>
+      <tr><td><b>Incident card</b></td><td>(Built but currently empty — server sends none)</td><td>—</td><td>Future: outage/incident reporting</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="sec"><span class="k">R4</span><h3>What the CSP can NOT see or do from the home feed</h3><span class="rule"></span></div>
+  <div class="grid2">
+    <div class="card">
+      <h4>Cannot act on the feed</h4>
+      <p>No buttons, no swipe actions, no inline edits. Every action requires tapping into a card first. <b>The feed is read-only.</b></p>
+    </div>
+    <div class="card">
+      <h4>Cannot see live updates</h4>
+      <p>If the server changes a task while the CSP stares at the screen, <b>nothing updates</b> until they pull-to-refresh or tap something. There is no real-time push.</p>
+    </div>
+    <div class="card">
+      <h4>Cannot reorder tasks</h4>
+      <p>Server decides the order. No filters, no search, no sort options. The CSP sees what the server prioritises.</p>
+    </div>
+    <div class="card">
+      <h4>Cannot act offline</h4>
+      <p>All action buttons are disabled offline. A warning banner appears: "इंटरनेट नहीं है". CSP can still <b>read</b> the cached feed.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- DOC 2 — TASK JOURNEYS -->
+<!-- ================================================================ -->
+<div class="doc" id="journeys">
+  <div style="padding:36px 0 8px;">
+    <h2 style="font-size:clamp(24px,3vw,32px);font-weight:800;letter-spacing:-.02em;margin-bottom:12px;max-width:22ch;">Every task, from the CSP's point of view.</h2>
+    <p style="font-size:16px;color:var(--ink-2);max-width:60ch;">Each journey shows what the CSP sees at every stage — when they need to act (<span class="pill pill-act">ACT</span>), when they just wait (<span class="pill pill-wait">WAIT</span>), when they monitor a teammate (<span class="pill pill-mon">MONITOR</span>), or when it's done (<span class="pill pill-done">DONE</span>).</p>
+  </div>
+
+  <div class="tabbar" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-tab="j-install">Installation</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="j-restore">Service complaint</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="j-pickup">NetBox pickup</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="j-shifting">Shifting</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="j-recharge">Recharge</button>
+  </div>
+
+  <!-- INSTALLATION JOURNEY -->
+  <section class="panel active" id="j-install" role="tabpanel">
+    <h3 style="font-size:19px;font-weight:750;margin-bottom:4px;">Installation journey</h3>
+    <p style="color:var(--ink-2);font-size:14px;margin-bottom:16px;">A new customer wants internet. CSP must book a time, go to the site, install the NetBox, set up the ISP account, and get the customer's approval code. ~33 screens in the on-site wizard.</p>
+
+    <div class="co co-warn" style="margin-bottom:16px;"><b>Two clocks are ticking →</b> A <b>slot timer</b> (amber) counts down the window to propose a time — card disappears if CSP doesn't respond. A <b>removal timer</b> (red) counts down 72 hours before a stale booking is auto-cancelled.</div>
+
+    <div class="journey">
+      <div class="jstep">
+        <span class="jdot act">1</span>
+        <div class="jt"><span class="pill pill-act">CSP acts</span> Pick a time slot</div>
+        <div class="jd">A new install card appears on the feed with an <b>amber countdown</b>: "X घंटे में टिकट हट जाएगी". CSP taps → opens a sheet to pick <b>Today or Tomorrow</b>. After submitting, the card changes to "waiting for customer to confirm".</div>
+        <div class="jcard"><b>Card shows:</b> Orange stripe · amber countdown timer on line 2 · "इंस्टॉलेशन" type<br><b>Drilldown banner:</b> ⚠️ Warning tone — "समय चुनना बाकी है"<br><b>What CSP taps:</b> Slot proposal sheet → pick day</div>
+      </div>
+      <div class="jstep">
+        <span class="jdot wait">2</span>
+        <div class="jt"><span class="pill pill-wait">CSP waits</span> Customer confirms the slot</div>
+        <div class="jd">CSP can't do anything here. The customer is choosing a time. Card shows neutral text, grey stripe.</div>
+        <div class="jcard"><b>Card shows:</b> Grey stripe · normal text<br><b>Drilldown banner:</b> ℹ️ Info tone — "कनेक्शन के कन्फ़र्मेशन का इंतज़ार"<br><b>No action available</b></div>
+      </div>
+      <div class="jstep">
+        <span class="jdot act">3</span>
+        <div class="jt"><span class="pill pill-act">CSP acts</span> Assign who does the install</div>
+        <div class="jd">Slot confirmed. CSP now picks <b>who</b> does it — themselves or a team member. If self → they'll run the wizard. If teammate → card becomes "delegated" and CSP monitors.</div>
+        <div class="jcard"><b>Card shows:</b> Grey stripe · "स्लॉट पक्का हुआ"<br><b>Drilldown banner:</b> ✅ Positive — "स्लॉट पक्का हुआ"<br><b>What CSP taps:</b> Executor assignment sheet → pick self or team member</div>
+      </div>
+      <div class="jstep">
+        <span class="jdot act">4</span>
+        <div class="jt"><span class="pill pill-act">CSP acts</span> Go to site and run the wizard</div>
+        <div class="jd">If self-assigned: CSP taps "Start work" → launches the 33-screen on-site wizard. Steps: PAYG consent → arrival → selfie → Aadhaar KYC → payment → power-up → ISP account → device photos → provisioning → speed test → customer's Happy Code.</div>
+        <div class="jcard"><b>Card shows:</b> Grey stripe · "इंस्टॉलेशन पक्का हुआ"<br><b>Drilldown banner:</b> ✅ Positive — "टेक्निशियन तय हो गया" or "इंस्टॉलेशन पक्का हुआ"<br><b>What CSP taps:</b> "Start work" → wizard opens</div>
+      </div>
+      <div class="jstep">
+        <span class="jdot mon">—</span>
+        <div class="jt"><span class="pill pill-mon">OR: CSP monitors</span> Teammate is doing it</div>
+        <div class="jd">If delegated: card changes to "{name} ने इंस्टॉलेशन अभी शुरू नहीं किया" → then "{name} काम कर रहे हैं". CSP can <b>call the teammate</b> but can't act directly. If the teammate is late, card turns red: <b>"{name} ने देरी कर दी"</b> — CSP can now <b>change the technician</b>.</div>
+        <div class="jcard"><b>Card shows:</b> No CTA, passive. Grey stripe → red stripe if overdue.<br><b>Drilldown banner:</b> ℹ️ Info tone → ❌ Negative if overdue<br><b>CSP can:</b> Call teammate · Change technician (only when overdue)</div>
+      </div>
+      <div class="jstep">
+        <span class="jdot wait">5</span>
+        <div class="jt"><span class="pill pill-wait">CSP waits</span> System verifies the installation</div>
+        <div class="jd">After wizard completes, the system verifies everything. CSP sees "इंस्टॉलेशन वेरिफाई हो रहा है". Nothing to do.</div>
+        <div class="jcard"><b>Card shows:</b> Passive, no CTA<br><b>Drilldown banner:</b> ℹ️ Info — "इंस्टॉलेशन वेरिफाई हो रहा है"</div>
+      </div>
+      <div class="jstep">
+        <span class="jdot done">✓</span>
+        <div class="jt"><span class="pill pill-done">Done</span> Installation complete</div>
+        <div class="jd">"इंस्टॉलेशन पूरा हुआ — ₹X मिले". Card leaves the feed when CSP closes the drilldown.</div>
+        <div class="jcard"><b>Drilldown banner:</b> ✅ Positive — "इंस्टॉलेशन पूरा हुआ — {amount} मिले"<br><b>Card removed</b> from feed on drilldown close</div>
+      </div>
+    </div>
+
+    <div class="co co-info" style="margin-top:16px;"><b>Rescue path →</b> If slot fails or customer doesn't confirm, card goes to "NEEDS_RESCHEDULING" (⚠️ warning) and CSP picks a new time. If things go really wrong, CSP can "exit" the install (report failed) — card turns red and eventually leaves.</div>
+  </section>
+
+  <!-- RESTORE JOURNEY -->
+  <section class="panel" id="j-restore" role="tabpanel">
+    <h3 style="font-size:19px;font-weight:750;margin-bottom:4px;">Service complaint journey</h3>
+    <p style="color:var(--ink-2);font-size:14px;margin-bottom:16px;">A customer's internet is down, slow, or the device is faulty. CSP must accept the complaint, diagnose, prove the fix, and resolve. Can escalate or swap the device.</p>
+
+    <div class="journey">
+      <div class="jstep">
+        <span class="jdot act">1</span>
+        <div class="jt"><span class="pill pill-act">CSP acts</span> Accept the complaint</div>
+        <div class="jd">New complaint appears with <b>urgent orange stripe</b>. CSP must respond fast. Two choices: <b>"I'll handle it"</b> (auto-accept + start work) or <b>"Send to team"</b> (assign a teammate).</div>
+        <div class="jcard"><b>Card shows:</b> Orange stripe · urgent line-2<br><b>Drilldown banner:</b> ⚠️ Warning — "तुरंत ध्यान दें"<br><b>What CSP taps:</b> "रिज़ॉल्व हो गया" (self) or "टीम को भेजें" (team picker)</div>
+      </div>
+      <div class="jstep">
+        <span class="jdot act">2</span>
+        <div class="jt"><span class="pill pill-act">CSP acts</span> Diagnose and prove the fix</div>
+        <div class="jd">CSP sees guided proof steps — one at a time, server-driven. Each step is a verification check (system check, customer confirm). Once all steps pass, the <b>"Resolve" button unlocks</b>.</div>
+        <div class="jcard"><b>Drilldown banner:</b> ℹ️ Info — "काम जारी है"<br><b>Optional:</b> Diagnose fault (device ID + fault code) · Launch swap from kebab menu<br><b>What CSP taps:</b> Proof step actions → then "Resolve"</div>
+      </div>
+      <div class="jstep">
+        <span class="jdot wait">3</span>
+        <div class="jt"><span class="pill pill-wait">CSP waits</span> System verifies</div>
+        <div class="jd">"जाँच हो रही है". Backend runs verification. CSP waits.</div>
+        <div class="jcard"><b>Drilldown banner:</b> ℹ️ Info — "जाँच हो रही है"<br><b>No action available</b></div>
+      </div>
+      <div class="jstep">
+        <span class="jdot done">✓</span>
+        <div class="jt"><span class="pill pill-done">Done</span> Resolved</div>
+        <div class="jd">"समस्या ठीक हो गई". Card removed on drilldown close.</div>
+      </div>
+    </div>
+
+    <div class="sec"><h3>What can go sideways</h3><span class="rule"></span></div>
+    <div class="grid3">
+      <div class="card" style="border-left:4px solid var(--critical);">
+        <h4>Escalation</h4>
+        <p>If CSP takes too long, complaint escalates. <b>"एस्केलेट हुआ — आपकी कार्रवाई ज़रूरी"</b> (CSP can still act) or <b>"Wiom ने ले लिया है"</b> (platform takeover, CSP locked out).</p>
+      </div>
+      <div class="card" style="border-left:4px solid var(--critical);">
+        <h4>Customer denies fix</h4>
+        <p><b>"ग्राहक ने मना किया"</b> — customer says it's not fixed. CSP can retry proof or launch a swap.</p>
+      </div>
+      <div class="card" style="border-left:4px solid var(--mon);">
+        <h4>Delegation + overdue</h4>
+        <p>If teammate is assigned but late: <b>"समय निकल गया"</b> (red). CSP can recall the task and take over, or reassign.</p>
+      </div>
+    </div>
+
+    <div class="co co-pink" style="margin-top:16px;"><b>SLA timer →</b> A deadline pill shows urgency on the card. Under 4 hours = amber. Past deadline = red "देरी हो गई". Unlike install timers, this one does <b>NOT disappear</b> at zero — it stays red as a permanent warning.</div>
+  </section>
+
+  <!-- PICKUP JOURNEY -->
+  <section class="panel" id="j-pickup" role="tabpanel">
+    <h3 style="font-size:19px;font-weight:750;margin-bottom:4px;">NetBox pickup journey</h3>
+    <p style="color:var(--ink-2);font-size:14px;margin-bottom:16px;">A customer disconnected. CSP must go collect the NetBox device within 24 hours. Pickups are <b>always grouped</b> into one card — even a single pickup shows as "1 पिकअप".</p>
+
+    <div class="co co-warn" style="margin-bottom:16px;"><b>Different from other tasks →</b> No individual cards on the feed. CSP sees one group card → taps → sees the pickup list → taps a row → sees the drilldown. The group card shows a <b>rotating summary</b> that alternates every 3 seconds between "nearing deadline" and "yet to assign".</div>
+
+    <div class="journey">
+      <div class="jstep">
+        <span class="jdot act">1</span>
+        <div class="jt"><span class="pill pill-act">CSP acts</span> Acknowledge the pickup</div>
+        <div class="jd">CSP opens the drilldown and taps <b>"Acknowledge"</b>. The card instantly updates to "work started". The <b>24-hour SLA countdown</b> is ticking on the group card.</div>
+        <div class="jcard"><b>Group card shows:</b> Router icon · "{n} पिकअप" · rotating summary · pink dot if unread<br><b>Drilldown banner:</b> ⚠️ Warning — "डिवाइस वापस लेना बाकी है"<br><b>What CSP taps:</b> "Acknowledge" button</div>
+      </div>
+      <div class="jstep">
+        <span class="jdot act">2</span>
+        <div class="jt"><span class="pill pill-act">CSP acts</span> Take photos or scan serial</div>
+        <div class="jd">Two paths:<br><b>Fast path:</b> Scan the serial number on the device → OCR matches → device confirmed instantly, no photos needed.<br><b>Photo path:</b> Take front photo → back photo → review with GPS stamp → upload → submit.</div>
+        <div class="jcard"><b>Drilldown shows:</b> Instructions + photo capture UI<br><b>Alternative:</b> "Report unable" with 5 reason options → cancels the pickup</div>
+      </div>
+      <div class="jstep">
+        <span class="jdot wait">3</span>
+        <div class="jt"><span class="pill pill-wait">CSP waits</span> Photos under review</div>
+        <div class="jd">"फ़ोटो भेज दी गई". CSP can see their submitted photos + OCR/GPS indicators. <b>No action available</b> — all buttons hidden.</div>
+        <div class="jcard"><b>Drilldown shows:</b> Photo thumbnails · OCR verified pill · GPS recorded pill<br><b>No CTA bar</b></div>
+      </div>
+      <div class="jstep">
+        <span class="jdot act">⟲</span>
+        <div class="jt"><span class="pill pill-act">IF REJECTED:</span> CSP resubmits</div>
+        <div class="jd"><b>"फ़ोटो रिजेक्ट हुआ"</b> — server rejected the photos. Shows rejection reason + attempt count ("Attempt 1 of 2"). CSP takes new photos. First rejection = ⚠️ warning tone. Max attempts reached = ❌ negative tone.</div>
+      </div>
+      <div class="jstep">
+        <span class="jdot done">✓</span>
+        <div class="jt"><span class="pill pill-done">Done</span> Device recovered</div>
+        <div class="jd">"रिकवरी पूरी हुई — ₹X मिले". Pickup leaves the group. If it was the last one, the group card disappears.</div>
+      </div>
+    </div>
+
+    <div class="co co-pink" style="margin-top:16px;"><b>The 24h SLA countdown →</b> Appears as "04:12:39" on the group card in amber. Under 4 hours → urgent. At zero → flips to red "समय सीमा पार" but does <b>NOT hide</b>. The card stays. Server auto-closes the ticket at ~48 hours.</div>
+  </section>
+
+  <!-- SHIFTING JOURNEY -->
+  <section class="panel" id="j-shifting" role="tabpanel">
+    <h3 style="font-size:19px;font-weight:750;margin-bottom:4px;">Shifting journey</h3>
+    <p style="color:var(--ink-2);font-size:14px;margin-bottom:16px;">Customer wants to move the NetBox — either to another room (within premises) or to a new address (new premises). Simpler than install/restore.</p>
+
+    <div class="journey">
+      <div class="jstep">
+        <span class="jdot act">1</span>
+        <div class="jt"><span class="pill pill-act">CSP acts</span> Accept and do the shifting</div>
+        <div class="jd">Card appears with shifting request. CSP assigns someone, goes to site, and marks <b>"शिफ्टिंग पूरी हो गई"</b> or <b>"Not Serviceable"</b> if the area can't be served.</div>
+        <div class="jcard"><b>Drilldown banner:</b> ℹ️ Info — "ग्राहक ने नेट बॉक्स को दूसरे कमरे में लगाने की रिक्वेस्ट की है" (within) / "...नए पते पर..." (new premises)<br><b>What CSP taps:</b> Choose person → "शिफ्टिंग पूरी हो गई" or "Not Serviceable"</div>
+      </div>
+      <div class="jstep">
+        <span class="jdot wait">2</span>
+        <div class="jt"><span class="pill pill-wait">CSP waits</span> Customer verifies</div>
+        <div class="jd">"जाँच हो रही है — ग्राहक से पुष्टि का इंतज़ार". The customer needs to confirm the shifting worked.</div>
+      </div>
+      <div class="jstep">
+        <span class="jdot done">✓</span>
+        <div class="jt"><span class="pill pill-done">Done</span> Verified</div>
+        <div class="jd">"शिफ्टिंग सफल — वेरिफ़ाई हो गया". Card leaves the feed.</div>
+      </div>
+    </div>
+    <p style="color:var(--ink-2);font-size:14px;margin-top:8px;">If CSP takes too long → escalation (SLA breach, red). If CSP declines → "आपने सर्विस देने से मना कर दिया है" (negative, terminal).</p>
+  </section>
+
+  <!-- RECHARGE JOURNEY -->
+  <section class="panel" id="j-recharge" role="tabpanel">
+    <h3 style="font-size:19px;font-weight:750;margin-bottom:4px;">Recharge journey</h3>
+    <p style="color:var(--ink-2);font-size:14px;margin-bottom:16px;">Renew customers' ISP plans and collect commission. Shows as a <b>batch card</b> on the feed — never as individual cards. Two flows depending on the CSP's type.</p>
+
+    <div class="co co-info" style="margin-bottom:16px;"><b>No money changes hands in the app.</b> The customer pays their ISP directly. The CSP just confirms "I recharged these customers" and the app calculates + releases the <b>partner's commission</b>.</div>
+
+    <div class="grid2">
+      <div class="card">
+        <h4>Standard flow</h4>
+        <div class="journey" style="padding-left:30px;">
+          <div class="jstep"><span class="jdot act" style="left:-30px;width:22px;height:22px;font-size:10px;">1</span><div class="jt" style="font-size:14px;"><span class="pill pill-act">ACT</span> See batch card</div><div class="jd">"6 रिचार्ज · कल तक" on the feed. CSP taps.</div></div>
+          <div class="jstep"><span class="jdot act" style="left:-30px;width:22px;height:22px;font-size:10px;">2</span><div class="jt" style="font-size:14px;"><span class="pill pill-act">ACT</span> Select customers</div><div class="jd">Multi-select from pending list. Some may be in a "migration group" (50→100 Mbps upgrade).</div></div>
+          <div class="jstep"><span class="jdot act" style="left:-30px;width:22px;height:22px;font-size:10px;">3</span><div class="jt" style="font-size:14px;"><span class="pill pill-act">ACT</span> Confirm + claim</div><div class="jd">Confirm recharge → app calculates commission → release earnings.</div></div>
+          <div class="jstep"><span class="jdot done" style="left:-30px;width:22px;height:22px;font-size:10px;">✓</span><div class="jt" style="font-size:14px;"><span class="pill pill-done">DONE</span> Commission released</div><div class="jd">Money goes to wallet. If more pending, list refreshes. If none, returns home.</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <h4>Auto-recharge flow</h4>
+        <div class="journey" style="padding-left:30px;">
+          <div class="jstep"><span class="jdot act" style="left:-30px;width:22px;height:22px;font-size:10px;">1</span><div class="jt" style="font-size:14px;"><span class="pill pill-act">ACT</span> Check connections</div><div class="jd">See pending list + saved ISP portal.</div></div>
+          <div class="jstep"><span class="jdot act" style="left:-30px;width:22px;height:22px;font-size:10px;">2</span><div class="jt" style="font-size:14px;"><span class="pill pill-act">ACT</span> Validate ISP login</div><div class="jd">CSP enters portal URL + credentials.</div></div>
+          <div class="jstep"><span class="jdot wait" style="left:-30px;width:22px;height:22px;font-size:10px;">⟳</span><div class="jt" style="font-size:14px;"><span class="pill pill-wait">WAIT</span> App renews on portal</div><div class="jd">App performs the renewal itself. Polls ~2 minutes for confirmation.</div></div>
+          <div class="jstep"><span class="jdot done" style="left:-30px;width:22px;height:22px;font-size:10px;">✓</span><div class="jt" style="font-size:14px;"><span class="pill pill-done">DONE</span> Commission collected</div><div class="jd">Shows earned amount + session total.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ================================================================ -->
+<!-- DOC 3 — COMMUNICATION SYSTEM -->
+<!-- ================================================================ -->
+<div class="doc" id="signals">
+  <div style="padding:36px 0 8px;">
+    <h2 style="font-size:clamp(24px,3vw,32px);font-weight:800;letter-spacing:-.02em;margin-bottom:12px;max-width:22ch;">How the app talks to the CSP.</h2>
+    <p style="font-size:16px;color:var(--ink-2);max-width:60ch;">Every piece of the home page is a communication channel. Here's what each signal means and how they combine to create a sense of urgency, progress, or safety.</p>
+  </div>
+
+  <div class="sec"><span class="k">S1</span><h3>The 4 emotional tones</h3><span class="rule"></span></div>
+  <p style="color:var(--ink-2);font-size:15px;margin-bottom:20px;max-width:60ch;">The app uses 4 tones across banners and drilldowns. Each has a distinct background, icon colour, and emotional meaning:</p>
+
+  <div class="grid2">
+    <div class="sig" style="background:#FFF8E1;">
+      <div class="sig-icon" style="background:#E65100;color:#fff;">⚠</div>
+      <div class="sig-body"><div class="st" style="color:#E65100;">Warning — "You need to act"</div><div class="sd">Something needs CSP attention. A deadline is approaching, a slot hasn't been picked, a complaint needs acceptance. The CSP should act now or soon.</div></div>
+    </div>
+    <div class="sig" style="background:#F1E5FF;">
+      <div class="sig-icon" style="background:#6D17CE;color:#fff;">ℹ</div>
+      <div class="sig-body"><div class="st" style="color:#6D17CE;">Info — "Something is in motion"</div><div class="sd">The system is processing, someone is working on it, verification is running. CSP doesn't need to act. Just awareness that things are moving.</div></div>
+    </div>
+    <div class="sig" style="background:#E1FAED;">
+      <div class="sig-icon" style="background:#008043;color:#fff;">✓</div>
+      <div class="sig-body"><div class="st" style="color:#008043;">Positive — "This went well"</div><div class="sd">Slot confirmed, technician assigned, installation complete, money earned. Confirmation and reward. The good news.</div></div>
+    </div>
+    <div class="sig" style="background:#FFE5E7;">
+      <div class="sig-icon" style="background:#D92130;color:#fff;">✕</div>
+      <div class="sig-body"><div class="st" style="color:#D92130;">Negative — "Something went wrong"</div><div class="sd">Deadline passed, teammate overdue, customer denied fix, installation failed, escalation. The red flag. Often means CSP must intervene to fix it.</div></div>
+    </div>
+  </div>
+
+  <div class="co co-pink" style="margin-top:14px;"><b>Important →</b> The <b>drilldown banner</b> (inside the task detail) uses these 4 tones with hardcoded rules per state. The <b>feed card</b> (on the home scroll) uses a <b>different</b> colour system — the stripe + line-2 tint comes from the server, not from these tones. They are <b>independent signals</b>. This means a card on the feed can look "normal" but the drilldown can show a warning.</div>
+
+  <div class="sec"><span class="k">S2</span><h3>The 7 communication channels</h3><span class="rule"></span></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Channel</th><th>Where</th><th>What it communicates</th><th>Who controls it</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><b>Left stripe colour</b></td>
+        <td>Feed card</td>
+        <td><b>Grey</b> = normal. <b>Orange</b> = needs attention. <b>Red</b> = overdue/failed. First thing the eye hits on a card.</td>
+        <td>Server decides per task. Can change without app update.</td>
+      </tr>
+      <tr>
+        <td><b>Line-2 text + tint</b></td>
+        <td>Feed card, second line</td>
+        <td>The status message. Can be plain text, amber-highlighted text, red-highlighted text, or a live countdown timer.</td>
+        <td>Server sends the text + urgency level. Timer display is app-side.</td>
+      </tr>
+      <tr>
+        <td><b>Pink badge</b></td>
+        <td>Feed card, right side</td>
+        <td>"This task changed X times since you last looked." Draws the eye to updated tasks.</td>
+        <td>Server tracks versions. App clears on drilldown open.</td>
+      </tr>
+      <tr>
+        <td><b>Countdown timer</b></td>
+        <td>Feed card line-2 (replaces text)</td>
+        <td>Live ticking clock. "You have X time left." Creates immediate urgency.</td>
+        <td>Server sets the deadline. App ticks the clock locally.</td>
+      </tr>
+      <tr>
+        <td><b>Drilldown banner</b></td>
+        <td>Top of drilldown screen</td>
+        <td>The full status explanation. Uses one of the 4 tones + icon + Hindi text.</td>
+        <td>App decides based on task state. Requires app update to change.</td>
+      </tr>
+      <tr>
+        <td><b>Alert banner</b></td>
+        <td>Feed, above cards</td>
+        <td>One urgent message: NetBox confirmation needed, policy change, offline warning. Scrolls with feed.</td>
+        <td>Server sends content + dismissibility. Offline banner is app-injected.</td>
+      </tr>
+      <tr>
+        <td><b>Toast</b></td>
+        <td>Bottom of screen, floating</td>
+        <td>Brief confirmation after an action: "काम शुरू हुआ", "स्लॉट भेज दिया". Disappears automatically.</td>
+        <td>App shows after every action. Ephemeral.</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <div class="sec"><span class="k">S3</span><h3>When the app goes silent (and the CSP is left guessing)</h3><span class="rule"></span></div>
+  <p style="color:var(--ink-2);font-size:15px;margin-bottom:16px;max-width:60ch;">There are moments where the app <b>stops communicating</b> and the CSP has no feedback. These are design pain points:</p>
+  <div class="grid3">
+    <div class="card" style="border-left:4px solid var(--critical);">
+      <h4>No real-time updates</h4>
+      <p>If a task changes server-side while CSP is looking at the feed, <b>nothing happens on screen</b>. No push, no poll, no indicator. CSP must pull-to-refresh or re-open the app to see changes.</p>
+      <p><b>CSP experience:</b> "Did anything change? I don't know until I swipe down."</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--warning);">
+      <h4>Passive states have no progress</h4>
+      <p>When waiting for customer confirmation or system verification, the card just sits there with static text. No progress bar, no "checking..." animation, no ETA.</p>
+      <p><b>CSP experience:</b> "Is the system actually doing something? How long will this take?"</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--warning);">
+      <h4>Delegation has limited visibility</h4>
+      <p>When CSP delegates to a teammate, they only see "not started" → "in progress" → "overdue". No intermediate steps, no progress percentage, no ETA from the teammate.</p>
+      <p><b>CSP experience:</b> "My teammate is 'working on it' — but is he at step 2 or step 9?"</p>
+    </div>
+  </div>
+
+  <div class="sec"><span class="k">S4</span><h3>How the "instant response" illusion works</h3><span class="rule"></span></div>
+  <p style="color:var(--ink-2);font-size:15px;margin-bottom:16px;max-width:60ch;">When the CSP taps an action button, the card changes <b>instantly</b> — before the server even knows. This is the "optimistic update" pattern. Here's what the CSP experiences:</p>
+  <div class="grid2">
+    <div class="card">
+      <h4>What CSP sees</h4>
+      <p><b>1.</b> Taps "Acknowledge" on a pickup</p>
+      <p><b>2.</b> Card instantly changes to "work started" — stripe colour may change, line-2 text updates, CTA disappears</p>
+      <p><b>3.</b> Toast appears: "acknowledged"</p>
+      <p><b>4.</b> Nothing else visible happens (server confirms in background)</p>
+      <p>It feels instant. No spinner, no "saving..." state.</p>
+    </div>
+    <div class="card">
+      <h4>What happens if it fails</h4>
+      <p>If the network call fails:</p>
+      <p><b>1.</b> The card <b>silently reverts</b> to its previous state on the next feed refresh</p>
+      <p><b>2.</b> An error toast appears</p>
+      <p><b>Design gap:</b> There's no explicit "failed to save" state. The card just goes back to where it was, which can be confusing if the CSP already moved on mentally.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- DOC 4 — DESIGN DECISIONS -->
+<!-- ================================================================ -->
+<div class="doc" id="decisions">
+  <div style="padding:36px 0 8px;">
+    <h2 style="font-size:clamp(24px,3vw,32px);font-weight:800;letter-spacing:-.02em;margin-bottom:12px;max-width:22ch;">What this means for design decisions.</h2>
+    <p style="font-size:16px;color:var(--ink-2);max-width:60ch;">Synthesis of everything above into actionable design context — the summary split of action vs passive, where the current UX helps or fails, and what constraints you're working within.</p>
+  </div>
+
+  <div class="sec"><span class="k">D1</span><h3>The action vs passive summary</h3><span class="rule"></span></div>
+  <p style="color:var(--ink-2);font-size:15px;margin-bottom:20px;max-width:60ch;">Across all task types, here's what the CSP experiences. Use this as a lens for any redesign: <b>action states are where the UX matters most</b> — that's where the CSP makes decisions.</p>
+
+  <div class="grid3">
+    <div class="card" style="border-left:4px solid var(--act);">
+      <h4 style="color:var(--act);">🔴 CSP must act (15 moments)</h4>
+      <p><b>Install:</b> Pick a slot · Assign executor · Start the wizard · Re-pick slot if failed · Change technician if overdue</p>
+      <p><b>Restore:</b> Accept complaint · Start work · Run proof steps · Resolve · Handle escalation · Handle customer denial · Recall overdue teammate</p>
+      <p><b>Pickup:</b> Acknowledge · Take photos / scan serial · Resubmit if rejected</p>
+      <p><b>Shifting:</b> Accept + complete the shifting</p>
+      <p><b>Recharge:</b> Select customers · Confirm + claim commission</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--wait);">
+      <h4 style="color:var(--wait);">🟣 CSP waits (10 moments)</h4>
+      <p><b>Install:</b> Customer choosing slot · Scheduling system working · Wizard submitted · System verifying</p>
+      <p><b>Restore:</b> System verifying · Platform takeover (locked out)</p>
+      <p><b>Pickup:</b> Photos under review · Verification pending</p>
+      <p><b>Shifting:</b> Customer confirming · SLA escalated</p>
+      <p><b>Recharge:</b> Auto-recharge processing</p>
+    </div>
+    <div class="card" style="border-left:4px solid var(--mon);">
+      <h4 style="color:var(--mon);">🟡 CSP monitors teammate (5 moments)</h4>
+      <p><b>Install:</b> Teammate hasn't started · Teammate working · Teammate overdue</p>
+      <p><b>Restore:</b> Technician assigned · Teammate not started / in progress</p>
+      <p style="font-size:13px;color:var(--ink-3);margin-top:8px;">Can see status + call teammate. Can recall/reassign only when overdue.</p>
+    </div>
+  </div>
+
+  <div class="sec"><span class="k">D2</span><h3>Where the current design helps the CSP</h3><span class="rule"></span></div>
+  <div class="grid2">
+    <div class="card">
+      <h4>✅ Urgency is instantly scannable</h4>
+      <p>The stripe + tint system means a CSP can scan 10 cards in 2 seconds and spot the urgent ones. Red/orange stripes jump out. This is the strongest design choice on the page.</p>
+    </div>
+    <div class="card">
+      <h4>✅ Actions feel instant</h4>
+      <p>Optimistic morphs mean tapping "Acknowledge" feels like 0ms. No spinners, no waiting. The CSP moves fast through their queue.</p>
+    </div>
+    <div class="card">
+      <h4>✅ Server-driven flexibility</h4>
+      <p>Text, colours, order, and CTA config all come from the server. The operations team can change messaging, urgency, and priority without waiting for an app release.</p>
+    </div>
+    <div class="card">
+      <h4>✅ One card type renders everything</h4>
+      <p>The generic card renderer means new task types can be added without any app change. The CSP sees a consistent visual language across all work types.</p>
+    </div>
+  </div>
+
+  <div class="sec"><span class="k">D3</span><h3>Where the current design fails the CSP</h3><span class="rule"></span></div>
+  <div class="grid2">
+    <div class="card" style="border-top:3px solid var(--critical);">
+      <h4>❌ No way to distinguish action from passive on the feed</h4>
+      <p>A card that needs CSP action looks <b>identical</b> to a card where they're just waiting. Both have the same two-line layout, same card shape, same tap behaviour. The CSP must tap into every card to find out if they need to do something.</p>
+      <p><b>Impact:</b> CSPs waste taps. They open drilldowns for tasks where there's nothing to do, then back out. With 15+ cards, this adds up.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--critical);">
+      <h4>❌ No progress indicators for waits</h4>
+      <p>When waiting for verification, customer confirmation, or system processing, the card shows static text. No spinner, no progress bar, no "estimated time". The CSP has no idea if it's been 5 seconds or 5 hours.</p>
+      <p><b>Impact:</b> CSPs pull-to-refresh anxiously during wait states, wondering if the system is stuck.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--warning);">
+      <h4>⚠️ No filtering or search</h4>
+      <p>CSP can't filter by task type (show only pickups), status (show only urgent), or search by customer/ID. With 15+ cards, finding a specific task means scrolling through everything.</p>
+      <p><b>Impact:</b> When a customer calls asking about their specific install, CSP scrolls through the entire feed to find it.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--warning);">
+      <h4>⚠️ Stale data with no awareness</h4>
+      <p>The feed only refreshes on pull or action. No background refresh, no "last updated X min ago" indicator. CSP doesn't know if they're looking at fresh or 30-minute-old data.</p>
+      <p><b>Impact:</b> CSP might miss time-sensitive changes. A pickup deadline could pass without the card updating.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--warning);">
+      <h4>⚠️ Delegation is a black box</h4>
+      <p>When work is delegated, CSP sees 3 states: not started → working → overdue. No intermediate steps from the 33-screen wizard, no progress percentage, no location of the teammate.</p>
+      <p><b>Impact:</b> CSP can't help a stuck teammate or gauge if they'll finish on time.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--warning);">
+      <h4>⚠️ Silent failure on optimistic rollback</h4>
+      <p>If an action fails after the card already visually updated, it quietly reverts. The CSP might think they acknowledged a pickup but it didn't actually go through.</p>
+      <p><b>Impact:</b> CSPs may miss failed actions, leading to missed SLAs.</p>
+    </div>
+  </div>
+
+  <div class="sec"><span class="k">D4</span><h3>What you can and can't change</h3><span class="rule"></span></div>
+  <div class="grid2">
+    <div class="card" style="background:var(--positive-bg);">
+      <h4>Can change without app release</h4>
+      <p><b>Card text and labels</b> — server sends all copy</p>
+      <p><b>Card urgency signals</b> — stripe colour + line-2 tint are server-driven</p>
+      <p><b>Feed order</b> — server sorts, can re-prioritise</p>
+      <p><b>CTA availability</b> — server controls which states show buttons</p>
+      <p><b>Banner messages</b> — content, severity, dismissibility from server</p>
+      <p><b>New task types</b> — add a new family with server config only</p>
+      <p><b>Auto-dismiss timing</b> — server controls duration</p>
+    </div>
+    <div class="card" style="background:var(--critical-bg);">
+      <h4>Requires app release to change</h4>
+      <p><b>Card layout</b> — the 2-line, no-button card structure</p>
+      <p><b>Drilldown banners</b> — state-to-tone mapping is hardcoded</p>
+      <p><b>Grouping rules</b> — pickups always grouped, recharges always batched</p>
+      <p><b>Icon set</b> — only 5 icons mapped (home, healing, router, bolt, warning)</p>
+      <p><b>Timer behaviour</b> — which timers appear in which states</p>
+      <p><b>Colour palette</b> — all hex values are in the app code</p>
+      <p><b>Page structure</b> — header → strip → banner → feed order is fixed</p>
+      <p><b>Navigation pattern</b> — tap-to-drilldown, no inline actions</p>
+    </div>
+  </div>
+
+  <div class="sec"><span class="k">D5</span><h3>Known issues for design awareness</h3><span class="rule"></span></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Issue</th><th>What's happening</th><th>Design impact</th></tr></thead>
+    <tbody>
+      <tr><td><b>"Today is install day" banner</b></td><td>The banner "आज इंस्टॉलेशन का दिन है" exists in the code but the flag that triggers it is never set</td><td>This warning banner is unreachable — CSPs never see it. If intended, it's a bug. If not, it's dead UI.</td></tr>
+      <tr><td><b>Escalation badge invisible</b></td><td>Restore complaints have an escalation tier field but it's never rendered in the restore drilldown</td><td>CSP can't see how severely a complaint has been escalated (only that it was escalated).</td></tr>
+      <tr><td><b>Deprecated warning colour in use</b></td><td>The orange "#B85C00" for urgent states is marked deprecated in the token file but still actively used on cards</td><td>Design debt — if you redesign tokens, this colour needs explicit migration.</td></tr>
+      <tr><td><b>No dark mode</b></td><td>All colours are light-mode only. No dark-mode spec exists.</td><td>Night-time field workers see a bright white screen.</td></tr>
+      <tr><td><b>Incident cards built but empty</b></td><td>The incident card component exists but the server never sends incident data</td><td>If you're designing for outage scenarios, the container exists but has never been used.</td></tr>
+      <tr><td><b>Photo upload is stubbed</b></td><td>NetBox pickup photo upload returns a fake URL — not connected to real storage yet</td><td>The photo flow UI is designed and built but the backend integration is incomplete.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="co co-pink" style="margin-top:24px;">
+    <b>The core design question →</b> The home page is built for <b>triage</b> — scan, pick the most urgent task, act, come back. The server drives priority and urgency. The app renders a generic card for everything. This architecture is powerful for flexibility but weak for <b>differentiation</b> — all cards look the same, action vs passive isn't visible, and wait states feel dead. A redesign can address these gaps <b>without breaking the server-driven architecture</b> — add visual cues for "your action needed" vs "waiting", add progress indicators for passive states, and add a "last refreshed" timestamp. These are all client-side rendering changes that don't touch the API contract.
+  </div>
+</div>
+
+<footer>
+  Generated from Wiom CSP codebase analysis · All Hindi labels from actual app strings · State classifications verified against HomeViewModel, drilldown files, and API contracts
+</footer>
+</div>
+
+<script>
+(function(){
+  var docs=[].slice.call(document.querySelectorAll('.doc'));
+  var dbtns=[].slice.call(document.querySelectorAll('.docbtn'));
+  function selectDoc(id){
+    docs.forEach(function(d){d.classList.toggle('active',d.id===id);});
+    dbtns.forEach(function(b){b.setAttribute('aria-selected',String(b.dataset.doc===id));});
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  dbtns.forEach(function(b,i){
+    b.addEventListener('click',function(){selectDoc(b.dataset.doc);});
+  });
+  document.querySelectorAll('.tabbar').forEach(function(bar){
+    var doc=bar.closest('.doc');
+    var tabs=[].slice.call(bar.querySelectorAll('.tab'));
+    var panels=[].slice.call(doc.querySelectorAll('.panel'));
+    function selectTab(id){
+      tabs.forEach(function(t){t.setAttribute('aria-selected',String(t.dataset.tab===id));});
+      panels.forEach(function(p){p.classList.toggle('active',p.id===id);});
+    }
+    tabs.forEach(function(t){
+      t.addEventListener('click',function(){selectTab(t.dataset.tab);var top=bar.getBoundingClientRect().top+window.scrollY-58;window.scrollTo({top:Math.max(0,top),behavior:'smooth'});});
+    });
+  });
+})();
+</script>
+</body>
+</html>

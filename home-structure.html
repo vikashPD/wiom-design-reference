@@ -1,0 +1,900 @@
+<title>Wiom CSP — Home & Task Card Reference</title>
+<style>
+  :root{
+    --pink:#D9008D;--pink-soft:#F5D6EA;--violet:#4A1B6E;--violet-lite:#6C3A96;
+    --ground:#FBF6F9;--surface:#FFFFFF;--surface-2:#F6EEF3;--ink:#201823;--ink-2:#6B5C67;--ink-3:#9A8B95;
+    --hair:#EADFE7;--hair-strong:#D8C8D3;
+    --info:#7C4DCC;--positive:#1F9D57;--warning:#E08A00;--critical:#D33A3A;
+    --info-bg:#EEE7FB;--positive-bg:#E2F4EA;--warning-bg:#FBF0DC;--critical-bg:#FBE4E4;--neutral-bg:#EDE6EB;
+    --radius:14px;--shadow:0 1px 2px rgba(32,24,35,.05),0 8px 24px -12px rgba(32,24,35,.18);
+    --mono:ui-monospace,"Cascadia Code","Consolas","SF Mono",monospace;
+    --sans:"Segoe UI",system-ui,-apple-system,"Roboto",sans-serif;
+    --sp-warn-bg:#FFF8E1;--sp-warn-ic:#E65100;--sp-info-bg:#F1E5FF;--sp-info-ic:#6D17CE;
+    --sp-pos-bg:#E1FAED;--sp-pos-ic:#008043;--sp-neg-bg:#FFE5E7;--sp-neg-ic:#D92130;
+    --sp-title:#161021;--sp-sub:#5C5570;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--pink:#FF3DAE;--pink-soft:#3A1330;--violet:#7A47AE;--violet-lite:#9B6FD0;
+      --ground:#141016;--surface:#1E1721;--surface-2:#271E2B;--ink:#F3E9F0;--ink-2:#B7A7B4;--ink-3:#7E6E7B;
+      --hair:#33283A;--hair-strong:#453751;--info:#A588E6;--positive:#4FC985;--warning:#F0AE4A;--critical:#F06A6A;
+      --info-bg:#241A3A;--positive-bg:#10281C;--warning-bg:#2E2410;--critical-bg:#301717;--neutral-bg:#241C29;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px -14px rgba(0,0,0,.7);}
+  }
+  :root[data-theme="light"]{--pink:#D9008D;--pink-soft:#F5D6EA;--violet:#4A1B6E;--violet-lite:#6C3A96;
+    --ground:#FBF6F9;--surface:#FFFFFF;--surface-2:#F6EEF3;--ink:#201823;--ink-2:#6B5C67;--ink-3:#9A8B95;
+    --hair:#EADFE7;--hair-strong:#D8C8D3;--info:#7C4DCC;--positive:#1F9D57;--warning:#E08A00;--critical:#D33A3A;
+    --info-bg:#EEE7FB;--positive-bg:#E2F4EA;--warning-bg:#FBF0DC;--critical-bg:#FBE4E4;--neutral-bg:#EDE6EB;
+    --shadow:0 1px 2px rgba(32,24,35,.05),0 8px 24px -12px rgba(32,24,35,.18);}
+  :root[data-theme="dark"]{--pink:#FF3DAE;--pink-soft:#3A1330;--violet:#7A47AE;--violet-lite:#9B6FD0;
+    --ground:#141016;--surface:#1E1721;--surface-2:#271E2B;--ink:#F3E9F0;--ink-2:#B7A7B4;--ink-3:#7E6E7B;
+    --hair:#33283A;--hair-strong:#453751;--info:#A588E6;--positive:#4FC985;--warning:#F0AE4A;--critical:#F06A6A;
+    --info-bg:#241A3A;--positive-bg:#10281C;--warning-bg:#2E2410;--critical-bg:#301717;--neutral-bg:#241C29;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px -14px rgba(0,0,0,.7);}
+
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px 96px;}
+
+  /* ---- masthead + doc nav ---- */
+  header.masthead{padding:46px 0 0;}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--pink);margin:0 0 14px;font-weight:600;}
+  h1{font-size:clamp(28px,4.2vw,48px);line-height:1.02;letter-spacing:-.02em;font-weight:800;margin:0 0 16px;text-wrap:balance;max-width:16ch;}
+  .lede{font-size:17px;color:var(--ink-2);max-width:64ch;margin:0;}
+  .lede b{color:var(--ink);font-weight:650;}
+  .docnav{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--ground) 90%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--hair);margin:28px 0 0;display:flex;gap:6px;overflow-x:auto;padding:10px 0;}
+  .docbtn{font-family:var(--sans);font-size:14.5px;font-weight:650;white-space:nowrap;border:1px solid var(--hair);background:var(--surface);color:var(--ink-2);cursor:pointer;padding:9px 17px;border-radius:10px;display:flex;align-items:center;gap:9px;transition:background .15s,color .15s,border-color .15s;}
+  .docbtn .n{font-family:var(--mono);font-size:11px;opacity:.6;}
+  .docbtn:hover{color:var(--ink);border-color:var(--hair-strong);}
+  .docbtn[aria-selected="true"]{background:var(--pink);color:#fff;border-color:var(--pink);}
+  .docbtn[aria-selected="true"] .n{opacity:.85;}
+  .docbtn:focus-visible{outline:2px solid var(--pink);outline-offset:2px;}
+
+  .doc{display:none;}
+  .doc.active{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion:reduce){.doc.active,.panel.active{animation:none;}}
+
+  .doc-intro{padding:34px 0 8px;}
+  .doc-intro h2.dh{font-size:clamp(24px,3vw,34px);font-weight:800;letter-spacing:-.02em;margin:0 0 12px;text-wrap:balance;max-width:20ch;}
+  .doc-intro p{font-size:16px;color:var(--ink-2);max-width:66ch;margin:0;}
+  .doc-intro p b{color:var(--ink);font-weight:650;}
+  .doc-intro code{font-family:var(--mono);font-size:13px;background:var(--surface-2);padding:1px 5px;border-radius:5px;}
+
+  /* ---- sub tabs (logic + visual) ---- */
+  .tabbar{position:sticky;top:53px;z-index:20;background:color-mix(in srgb,var(--ground) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--hair);margin:18px 0 0;display:flex;gap:4px;overflow-x:auto;padding:8px 0;}
+  .tab{font-family:var(--sans);font-size:14px;font-weight:600;white-space:nowrap;border:1px solid transparent;background:transparent;color:var(--ink-2);cursor:pointer;padding:8px 15px;border-radius:100px;display:flex;align-items:center;gap:8px;transition:background .15s,color .15s;}
+  .tab:hover{color:var(--ink);background:var(--surface-2);}
+  .tab[aria-selected="true"]{background:var(--pink);color:#fff;}
+  .tab .fam{font-family:var(--mono);font-size:10.5px;opacity:.7;}
+  .tab[aria-selected="true"] .fam{opacity:.85;}
+  .tab:focus-visible{outline:2px solid var(--pink);outline-offset:2px;}
+  .panel{display:none;padding-top:32px;}
+  .panel.active{display:block;animation:fade .25s ease;}
+
+  .p-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:12px;margin-bottom:6px;}
+  .p-head h2{font-size:27px;font-weight:800;letter-spacing:-.02em;margin:0;}
+  .famcode{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--pink);background:var(--pink-soft);border-radius:7px;padding:3px 9px;}
+  .p-purpose{font-size:15.5px;color:var(--ink-2);max-width:72ch;margin:2px 0 26px;}
+  .p-purpose b{color:var(--ink);font-weight:650;}
+  .p-purpose code{font-family:var(--mono);font-size:12.5px;background:var(--surface-2);padding:1px 5px;border-radius:5px;}
+
+  .lab{display:flex;align-items:center;gap:10px;margin:32px 0 16px;}
+  .lab h3{font-size:14px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin:0;color:var(--ink);}
+  .lab .who{font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:100px;}
+  .who.user{background:var(--pink-soft);color:var(--pink);}
+  .who.app{background:var(--info-bg);color:var(--info);}
+  .lab .rule{flex:1;height:1px;background:var(--hair);}
+
+  /* ===== generic building blocks ===== */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;}
+  @media (max-width:760px){.grid2{grid-template-columns:1fr;}}
+  .card{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);}
+  .card + .card{margin-top:12px;}
+  .card p{margin:0;font-size:14px;color:var(--ink-2);}.card p b{color:var(--ink);font-weight:650;}.card p + p{margin-top:10px;}
+  .card h4{margin:0 0 10px;font-size:15px;font-weight:700;}
+
+  .callout{background:var(--pink-soft);border:1px solid color-mix(in srgb,var(--pink) 28%,transparent);border-radius:var(--radius);padding:16px 20px;font-size:13.5px;color:var(--ink);}
+  .callout b{color:var(--pink);}
+  .co-warn{background:var(--warning-bg);border-color:color-mix(in srgb,var(--warning) 34%,transparent);}
+  .co-warn b{color:var(--warning);}
+  .co-info{background:var(--info-bg);border-color:color-mix(in srgb,var(--info) 30%,transparent);}
+  .co-info b{color:var(--info);}
+
+  .tscroll,.matrix-scroll{overflow-x:auto;border:1px solid var(--hair);border-radius:var(--radius);background:var(--surface);}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;}
+  th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--hair);vertical-align:top;}
+  thead th{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-3);font-weight:600;background:var(--surface-2);}
+  tbody tr:last-child td{border-bottom:none;}
+  td code,.mono{font-family:var(--mono);font-size:11.5px;color:var(--pink);white-space:nowrap;}
+  td .el,td .st,td .tn{font-weight:650;color:var(--ink);}
+  td .cmp{font-family:var(--mono);font-size:11.5px;color:var(--pink);}
+
+  .refs{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;}
+  .ref{font-family:var(--mono);font-size:11px;color:var(--ink-3);background:var(--surface-2);border:1px solid var(--hair);border-radius:7px;padding:3px 8px;}
+  .ref b{color:var(--ink-2);font-weight:600;}
+
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin:16px 0 0;font-size:12px;color:var(--ink-2);}
+  .legend span{display:flex;align-items:center;gap:6px;}
+  .legend .sv{width:9px;height:9px;border-radius:50%;}
+  .sev{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:middle;}
+  .sev.i{background:var(--info)}.sev.p{background:var(--positive)}.sev.w{background:var(--warning)}.sev.c{background:var(--critical)}.sev.n{background:var(--ink-3)}
+
+  .section-title{margin:60px 0 22px;display:flex;align-items:center;gap:14px;}
+  .section-title h3{font-size:23px;font-weight:780;letter-spacing:-.015em;margin:0;}
+  .section-title .rule{flex:1;height:1px;background:var(--hair);}
+  .section-title .kicker{font-family:var(--mono);font-size:12px;color:var(--pink);letter-spacing:.1em;}
+
+  /* ===== STRUCTURE doc ===== */
+  .stage{display:grid;grid-template-columns:372px 1fr;gap:48px;align-items:start;}
+  @media (max-width:880px){.stage{grid-template-columns:1fr;gap:32px;}.rail{position:static !important;max-width:372px;margin:0 auto;}}
+  .rail{position:sticky;top:112px;}
+  .phone{width:100%;background:var(--surface);border:1px solid var(--hair-strong);border-radius:30px;box-shadow:var(--shadow);overflow:hidden;}
+  .p-status{background:var(--violet);color:#fff;font-family:var(--mono);font-size:10px;letter-spacing:.1em;padding:6px 16px 4px;display:flex;justify-content:space-between;opacity:.92;}
+  .p-header{background:var(--violet);color:#fff;padding:8px 16px 16px;display:flex;align-items:center;gap:12px;}
+  .p-burger{width:20px;display:grid;gap:4px;}.p-burger span{height:2px;background:#fff;border-radius:2px;opacity:.95;}
+  .p-title{flex:1;}.p-title .n{font-weight:700;font-size:15px;}.p-title .r{font-size:11.5px;opacity:.8;}
+  .p-header .hic{width:22px;height:22px;border-radius:6px;background:rgba(255,255,255,.16);display:grid;place-items:center;font-size:12px;}
+  .p-body{padding:14px;display:flex;flex-direction:column;gap:12px;background:var(--surface);}
+  .marker{position:absolute;left:-13px;top:-11px;width:26px;height:26px;border-radius:50%;background:var(--pink);color:#fff;font-size:13px;font-weight:700;display:grid;place-items:center;box-shadow:0 2px 6px rgba(0,0,0,.25);z-index:3;font-family:var(--mono);}
+  .blk{position:relative;border-radius:12px;}
+  .assur{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .achip{background:var(--surface-2);border:1px solid var(--hair);border-radius:12px;padding:10px;position:relative;min-height:62px;}
+  .achip .lbl{font-size:10.5px;color:var(--ink-2);}
+  .achip .val{font-weight:800;font-size:17px;margin-top:4px;font-variant-numeric:tabular-nums;}
+  .achip .sub{font-size:9.5px;margin-top:2px;}
+  .newdot{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--pink);}
+  .sbanner{display:flex;align-items:center;gap:10px;background:var(--info-bg);border:1px solid color-mix(in srgb,var(--info) 30%,transparent);border-radius:12px;padding:10px 12px;font-size:11.5px;color:var(--ink);}
+  .sbanner.warn{background:var(--warning-bg);border-color:color-mix(in srgb,var(--warning) 35%,transparent);}
+  .sbanner .dot{width:18px;height:18px;border-radius:50%;background:var(--info);flex:none;}
+  .sbanner.warn .dot{background:var(--warning);}
+  .sbanner .more{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--ink-2);white-space:nowrap;}
+  .stcard{background:var(--surface);border:1px solid var(--hair);border-left:4px solid var(--stripe,var(--ink-3));border-radius:12px;padding:11px 12px;box-shadow:var(--shadow);}
+  .stcard .l1{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:650;}
+  .stcard .id{font-family:var(--mono);font-size:11px;color:var(--ink-2);}
+  .stcard .cnt{margin-left:auto;background:var(--pink);color:#fff;font-size:10px;font-weight:700;border-radius:100px;padding:1px 7px;}
+  .stcard .l2{font-size:11px;color:var(--ink-2);margin-top:6px;display:flex;align-items:center;gap:8px;}
+  .stimer{font-family:var(--mono);font-variant-numeric:tabular-nums;background:var(--surface-2);padding:2px 7px;border-radius:6px;color:var(--warning);font-size:10.5px;}
+  .grp{background:var(--surface);border:1px dashed var(--hair-strong);border-radius:12px;padding:11px 12px;}
+  .grp .h{font-weight:700;font-size:12.5px;display:flex;align-items:center;gap:6px;}
+  .grp .s{font-size:10.5px;color:var(--ink-2);margin-top:3px;}
+  .p-toast{margin:4px 6px 10px;background:var(--ink);color:var(--ground);border-radius:10px;padding:8px 12px;font-size:11px;text-align:center;opacity:.92;}
+  .glyph{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:6px;background:var(--pink-soft);color:var(--pink);font-size:11px;flex:none;}
+  .notes{display:flex;flex-direction:column;gap:14px;}
+  .note{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);}
+  .note-head{display:flex;align-items:center;gap:12px;}
+  .note-num{font-family:var(--mono);font-weight:700;font-size:13px;color:#fff;background:var(--pink);width:24px;height:24px;border-radius:50%;display:grid;place-items:center;flex:none;}
+  .note h4{margin:0;font-size:18px;letter-spacing:-.01em;font-weight:750;}
+  .fixed-pill,.cond-pill,.schema-pill{font-family:var(--mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:100px;margin-left:auto;white-space:nowrap;}
+  .fixed-pill{background:var(--info-bg);color:var(--info);}
+  .cond-pill{background:var(--warning-bg);color:var(--warning);}
+  .schema-pill{background:var(--pink-soft);color:var(--pink);}
+  .note p{margin:10px 0 0;font-size:14.5px;color:var(--ink-2);}
+  .note p b{color:var(--ink);font-weight:650;}
+  .does{margin:12px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;}
+  .does li{font-size:13.5px;color:var(--ink-2);padding-left:18px;position:relative;}
+  .does li::before{content:"→";position:absolute;left:0;color:var(--pink);font-weight:700;}
+  .mini{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);}
+  .mini h5{margin:0 0 6px;font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;}
+  .mini p{margin:0;font-size:13px;color:var(--ink-2);}
+  .mini .cond{font-family:var(--mono);font-size:11px;color:var(--warning);margin-top:8px;display:block;}
+  .mini.goal{border-left:4px solid var(--pink);}
+  .mini .gnum{font-family:var(--mono);color:var(--pink);font-weight:700;}
+
+  /* ===== LOGIC doc ===== */
+  .steps{list-style:none;margin:0;padding:0;position:relative;}
+  .steps::before{content:"";position:absolute;left:13px;top:8px;bottom:8px;width:2px;background:var(--hair);}
+  .steps li{position:relative;padding:0 0 18px 42px;}
+  .steps li:last-child{padding-bottom:0;}
+  .steps .sdot{position:absolute;left:5px;top:1px;width:18px;height:18px;border-radius:50%;background:var(--surface);border:2px solid var(--pink);z-index:1;font-size:9px;font-weight:700;color:var(--pink);display:grid;place-items:center;font-family:var(--mono);}
+  .steps .t{font-weight:650;font-size:15px;}
+  .steps .d{font-size:13.5px;color:var(--ink-2);margin-top:2px;}
+  .steps .d code{font-family:var(--mono);font-size:11.5px;background:var(--surface-2);padding:1px 5px;border-radius:5px;color:var(--ink-2);}
+  .states{display:flex;flex-wrap:wrap;gap:8px;}
+  .schip{font-family:var(--mono);font-size:11.5px;padding:5px 10px;border-radius:8px;border:1px solid var(--hair);display:flex;align-items:center;gap:7px;background:var(--surface);}
+  .schip .sv{width:8px;height:8px;border-radius:50%;flex:none;}
+  .sv.i{background:var(--info)}.sv.p{background:var(--positive)}.sv.w{background:var(--warning)}.sv.c{background:var(--critical)}.sv.n{background:var(--ink-3)}
+  .stategroup{font-size:12px;color:var(--ink-3);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 8px;}
+  .impl{background:linear-gradient(180deg,var(--surface),var(--surface-2));border:1px solid var(--hair);border-left:4px solid var(--info);border-radius:var(--radius);padding:18px 20px;}
+  .impl ul{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:10px;}
+  .impl li{font-size:13.5px;color:var(--ink-2);padding-left:16px;position:relative;}
+  .impl li::before{content:"▪";position:absolute;left:0;color:var(--info);}
+  .impl li b{color:var(--ink);font-weight:650;}
+  .impl code,.endpoint{font-family:var(--mono);font-size:11.5px;background:var(--surface);border:1px solid var(--hair);padding:1px 6px;border-radius:5px;color:var(--ink);white-space:nowrap;}
+  .note-inline{background:var(--warning-bg);border:1px solid color-mix(in srgb,var(--warning) 34%,transparent);border-radius:12px;padding:12px 16px;font-size:13px;color:var(--ink);margin-top:14px;}
+  .note-inline b{color:var(--warning);}
+  .zero{font-weight:600;}.zero.hide{color:var(--ink-3);}.zero.flip{color:var(--critical);}
+
+  /* ===== VISUAL doc — specimens ===== */
+  .specs{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px;}
+  .spec{border:1px solid var(--hair);border-radius:var(--radius);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+  .bnr{display:flex;align-items:center;gap:12px;padding:13px 15px;background:var(--bg);}
+  .bnr .circ{width:34px;height:34px;border-radius:50%;background:var(--ic);display:grid;place-items:center;flex:none;}
+  .bnr .circ svg{width:19px;height:19px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .bnr .txt{min-width:0;}
+  .bnr .ttl{color:var(--sp-title);font-weight:700;font-size:13.5px;line-height:1.3;}
+  .bnr .sub{color:var(--sp-sub);font-size:11.5px;margin-top:2px;}
+  .tone-warn{--bg:var(--sp-warn-bg);--ic:var(--sp-warn-ic);}
+  .tone-info{--bg:var(--sp-info-bg);--ic:var(--sp-info-ic);}
+  .tone-pos{--bg:var(--sp-pos-bg);--ic:var(--sp-pos-ic);}
+  .tone-neg{--bg:var(--sp-neg-bg);--ic:var(--sp-neg-ic);}
+  .tone-none{--bg:var(--surface-2);--ic:var(--ink-3);}
+  .spec .meta{padding:9px 13px;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;border-top:1px solid var(--hair);}
+  .stt{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--ink);}
+  .tone-pill{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;border-radius:100px;}
+  .tp-warn{background:#FFF8E1;color:#8a3d00;}.tp-info{background:#F1E5FF;color:#5613a3;}.tp-pos{background:#E1FAED;color:#006635;}.tp-neg{background:#FFE5E7;color:#a5121f;}.tp-none{background:var(--surface-2);color:var(--ink-3);}
+  .spec .tok{font-family:var(--mono);font-size:10px;color:var(--ink-3);margin-left:auto;}
+  .spec .ln{font-family:var(--mono);font-size:10px;color:var(--ink-3);width:100%;}
+  .line-spec{border:1px solid var(--hair);border-radius:10px;padding:11px 13px;font-size:13px;display:flex;align-items:center;gap:10px;background:var(--surface);}
+  .line-spec .chip{padding:3px 9px;border-radius:7px;font-weight:600;font-size:12.5px;font-variant-numeric:tabular-nums;}
+  .th-normal .chip{color:#161021;background:transparent;border:1px dashed var(--hair-strong);}
+  .th-urgent .chip{color:#B85C00;background:#FFF2BF;}
+  .th-overdue .chip{color:#D92130;background:#FFE5E7;}
+  .line-spec .cap{color:var(--ink-3);font-family:var(--mono);font-size:10.5px;margin-left:auto;}
+  .swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;}
+  .sw{border:1px solid var(--hair);border-radius:10px;overflow:hidden;background:var(--surface);}
+  .sw .swchip{height:46px;}
+  .sw .info{padding:8px 10px;}
+  .sw .nm{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--ink);}
+  .sw .hx{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);}
+  /* home card specimens */
+  .hcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px;}
+  .hspec{border:1px solid var(--hair);border-radius:var(--radius);overflow:hidden;background:var(--surface);box-shadow:var(--shadow);}
+  .hcard{display:flex;background:#FFFFFF;}
+  .hcard .stripe{width:4px;flex:none;background:var(--st,#D7D3E0);}
+  .hcard .body{padding:12px 14px;min-width:0;flex:1;}
+  .hcard .l1{display:flex;align-items:center;gap:8px;}
+  .hcard .ic{width:20px;height:20px;flex:none;}
+  .hcard .ic svg{width:20px;height:20px;stroke:#5C5570;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+  .hcard .ttl{font-size:13px;font-weight:650;color:#161021;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .hcard .loc{font-size:13px;color:#5C5570;white-space:nowrap;}
+  .hcard .cnt{margin-left:auto;background:#D9008D;color:#fff;font-size:10px;font-weight:700;border-radius:100px;padding:1px 7px;flex:none;}
+  .hcard .l2{margin-top:7px;font-size:12px;}
+  .hcard .reason{color:var(--r-tx,#161021);background:var(--r-bg,transparent);border-radius:6px;padding:var(--r-pad,0);display:inline-block;}
+  .hcard .tmr{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:600;border-radius:6px;padding:3px 8px;display:inline-block;}
+  .tmr-slot{color:#B85C00;background:#FFF2BF;}.tmr-p74{color:#D92130;background:#FFE5E7;}.tmr-pk-u{color:#B85C00;background:#FFF2BF;}.tmr-pk-o{color:#D92130;background:#FFE5E7;}
+  .rz-normal{--r-tx:#161021;--r-bg:transparent;--r-pad:0;}
+  .rz-urgent{--r-tx:#B85C00;--r-bg:#FFF2BF;--r-pad:3px 8px;}
+  .rz-overdue{--r-tx:#D92130;--r-bg:#FFE5E7;--r-pad:3px 8px;}
+  .st-default{--st:#D7D3E0;}.st-warning{--st:#B85C00;}.st-negative{--st:#D92130;}
+  .hspec .meta{padding:9px 13px;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;border-top:1px solid var(--hair);}
+  .modepill{font-family:var(--mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.04em;padding:2px 7px;border-radius:100px;background:var(--info-bg);color:var(--info);}
+  .modepill.tm{background:#FFF2BF;color:#8a3d00;}
+  .modepill.grp{background:var(--pink-soft);color:var(--pink);}
+  .caveat-strip{display:flex;gap:12px;align-items:flex-start;background:var(--pink-soft);border:1px solid color-mix(in srgb,var(--pink) 26%,transparent);border-radius:var(--radius);padding:15px 18px;font-size:13.5px;color:var(--ink);margin-bottom:24px;}
+  .caveat-strip b{color:var(--pink);}
+  .caveat-strip svg{width:22px;height:22px;stroke:var(--pink);fill:none;stroke-width:2;flex:none;margin-top:1px;}
+  .gcard{display:flex;gap:12px;align-items:center;padding:13px 15px;background:#FFFFFF;border-left:4px solid #D7D3E0;}
+  .gcard .gic{width:34px;height:34px;border-radius:10px;background:#F1E5FF;display:grid;place-items:center;flex:none;}
+  .gcard .gic svg{width:19px;height:19px;stroke:#6D17CE;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
+  .gcard .gt{font-weight:700;font-size:13.5px;color:#161021;display:flex;align-items:center;gap:8px;}
+  .gcard .gdot{width:7px;height:7px;border-radius:50%;background:#D9008D;}
+  .gcard .gs{font-size:11.5px;color:#5C5570;margin-top:2px;}
+  .gcard.dash{border-left-style:dashed;border-left-color:#D8C8D3;}
+  .gcard .chev{margin-left:auto;color:#9A8B95;font-size:18px;flex:none;}
+
+  footer{margin-top:64px;padding-top:22px;border-top:1px solid var(--hair);font-size:12.5px;color:var(--ink-3);display:flex;flex-wrap:wrap;gap:6px 18px;font-family:var(--mono);}
+</style>
+
+<!-- icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="check" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></symbol>
+  <symbol id="warn" viewBox="0 0 24 24"><path d="M12 3L2 20h20L12 3z"/><path d="M12 10v4.5"/><path d="M12 17.6v.05"/></symbol>
+  <symbol id="clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v5l3.2 2"/></symbol>
+  <symbol id="hourglass" viewBox="0 0 24 24"><path d="M6 4h12M6 20h12M8 4v3l4 5 4-5V4M8 20v-3l4-5 4 5v3"/></symbol>
+  <symbol id="sync" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 0112.4-5.6l2.1 1.9"/><path d="M19.5 12a7.5 7.5 0 01-12.4 5.6l-2.1-1.9"/><path d="M19.5 3.5V8h-4.5M4.5 20.5V16h4.5"/></symbol>
+  <symbol id="swap" viewBox="0 0 24 24"><path d="M7 8.5h13l-3.5-3.5M17 15.5H4l3.5 3.5"/></symbol>
+  <symbol id="router" viewBox="0 0 24 24"><rect x="3" y="13" width="18" height="6" rx="1.5"/><path d="M7 16v.02M11 16v.02M17 16v.02M12 9.5V6M12 6a3 3 0 013 3M12 6a3 3 0 00-3 3"/></symbol>
+</defs></svg>
+
+<div class="wrap">
+  <header class="masthead">
+    <p class="eyebrow">Wiom CSP App · Partner Home · Design Reference</p>
+    <h1>The CSP home page, end to end.</h1>
+    <p class="lede">One reference for the partner home dashboard — <b>how it's laid out</b>, <b>how each task card behaves</b>, and <b>what every state looks like</b> in real app colour. Reconstructed from the screen code; each section carries <code style="font-family:var(--mono);font-size:13px">file:line</code> refs so you can brief engineers precisely.</p>
+    <nav class="docnav" role="tablist" aria-label="Sections">
+      <button class="docbtn" role="tab" aria-selected="true" data-doc="structure"><span class="n">01</span> Home structure</button>
+      <button class="docbtn" role="tab" aria-selected="false" data-doc="logic"><span class="n">02</span> Task logic</button>
+      <button class="docbtn" role="tab" aria-selected="false" data-doc="visual"><span class="n">03</span> State &amp; visuals</button>
+    </nav>
+  </header>
+
+  <!-- ==================================================================== -->
+  <!-- DOC 1 — HOME STRUCTURE -->
+  <!-- ==================================================================== -->
+  <div class="doc active" id="structure">
+    <div class="doc-intro">
+      <h2 class="dh">What the user sees, top to bottom.</h2>
+      <p>The home page is the partner's work dashboard. Its whole job is to answer one question: <b>“What do I need to do right now, and how am I doing?”</b> Below is the screen in real scroll order — numbered markers <b>1–7</b> tie the wireframe to the notes. Tags mark each surface <b>fixed</b>, <b>conditional</b>, or <b>schema-driven</b>.</p>
+    </div>
+
+    <div class="stage">
+      <div class="rail">
+        <div class="phone" aria-label="Home screen wireframe">
+          <div class="p-status"><span>9:41</span><span>▮▮▮ ▮ 100%</span></div>
+          <div class="blk" style="border-radius:0">
+            <span class="marker">1</span>
+            <div class="p-header"><div class="p-burger"><span></span><span></span><span></span></div><div class="p-title"><div class="n">Sharma Traders</div><div class="r">· मालिक</div></div><div class="hic">🔔</div></div>
+          </div>
+          <div class="p-body">
+            <div class="blk"><span class="marker">2</span>
+              <div class="assur">
+                <div class="achip"><span class="newdot"></span><div class="lbl">कनेक्शन</div><div class="val">142<span style="font-size:11px;color:var(--ink-3)">/160</span></div></div>
+                <div class="achip"><div class="lbl">कमाई</div><div class="val">₹18,400</div><div class="sub" style="color:var(--warning)">₹2k बोनस रिस्क में</div></div>
+                <div class="achip"><div class="lbl">क्वालिटी</div><div class="val" style="color:var(--positive)">● अच्छी</div></div>
+                <div class="achip"><div class="lbl">काम की स्थिति</div><div class="val" style="color:var(--info)">खुला</div></div>
+              </div>
+            </div>
+            <div class="blk"><span class="marker">3</span><div class="sbanner warn"><span class="dot"></span><span>2 नेटबॉक्स की पुष्टि बाकी · 31घं बचे</span></div></div>
+            <div class="blk"><span class="marker">4</span><div class="sbanner"><span class="dot"></span><span>नई पॉलिसी लागू हुई</span><span class="more">+2 more</span></div></div>
+            <div class="blk"><span class="marker">5</span><div class="stcard" style="--stripe:var(--warning)"><div class="l1"><span class="glyph">⬇</span>इंस्टॉल <span class="id">#A4821</span> · Kirari<span class="cnt">2</span></div><div class="l2"><span class="stimer">02:14:39</span> स्लॉट खत्म होने में</div></div></div>
+            <div class="blk" style="margin-top:2px"><span class="marker">6</span><div class="grp"><div class="h"><span class="glyph">📦</span>3 पिकअप</div><div class="s">1 डेडलाइन के पास · टैप करें</div></div></div>
+            <div class="blk" style="margin-top:2px"><span class="marker">7</span><div class="grp" style="border-style:solid"><div class="h">6 रिचार्ज <span class="id" style="margin-left:auto">कल तक</span></div><div class="s">पूरी सूची देखें →</div></div></div>
+            <div class="p-toast">इंटरनेट नहीं है — बदलाव सेव नहीं होंगे</div>
+          </div>
+        </div>
+        <p style="font-size:11.5px;color:var(--ink-3);text-align:center;margin:14px 4px 0;font-family:var(--mono)">Representative render · numbers &amp; labels illustrative · order is real</p>
+      </div>
+
+      <div class="notes">
+        <div class="note"><div class="note-head"><span class="note-num">1</span><h4>Top bar &amp; side drawer</h4><span class="fixed-pill">fixed</span></div>
+          <p>A purple bar that bleeds behind the status bar and <b>never scrolls</b>. Shows business name + role (<b>· मालिक</b> owner, vs team-member). The hamburger is the <b>only</b> primary nav — there is <b>no bottom nav bar</b>. It opens a left drawer (wallet, team, support, logout).</p>
+          <ul class="does"><li>Tap hamburger → side drawer</li><li>Bell + bug icons appear in <b>debug builds only</b></li></ul>
+          <div class="refs"><span class="ref"><b>HomeScreen.kt</b>:282 · WiomHeader.kt:49 · drawer :222–265</span></div>
+        </div>
+        <div class="note"><div class="note-head"><span class="note-num">2</span><h4>Assurance strip — 4-chip scorecard</h4><span class="schema-pill">schema-driven</span></div>
+          <p>A fixed <b>2×2 grid of four chips</b> — the partner's report card: <b>connections</b>, <b>earnings</b>, <b>quality</b>, <b>काम की स्थिति</b> (work-availability). Chips, values, and formats all come from the server. Earnings can carry a “bonus at risk” line; quality shows a coloured state icon. A <b>pink dot</b> flags an unseen entry; the whole strip <b>dims to 70%</b> when stale. It scrolls away with the feed — <b>not</b> pinned.</p>
+          <ul class="does"><li>Tap a chip → drill-down bottom sheet</li></ul>
+          <div class="refs"><span class="ref"><b>AssuranceStrip.kt</b>:32 · AssuranceChip.kt:40 · HomeScreen.kt:331</span></div>
+        </div>
+        <div class="note"><div class="note-head"><span class="note-num">3</span><h4>NetBox confirmation reminder</h4><span class="cond-pill">conditional</span></div>
+          <p>Appears <b>only</b> while a NetBox delivery awaits confirmation inside the 48-hour window. Past 48 hrs it escalates to a <b>non-dismissable blocker dialog</b>; on auto-confirm, a one-shot acknowledgement fires instead.</p>
+          <ul class="does"><li>Tap → NetBox delivery-confirm flow</li></ul>
+          <div class="refs"><span class="ref"><b>PendingConfirmationBanner</b> HomeScreen.kt:344–360 · blocker :303</span></div>
+        </div>
+        <div class="note"><div class="note-head"><span class="note-num">4</span><h4>Info banner</h4><span class="schema-pill">schema-driven</span></div>
+          <p>At most <b>one</b> banner at a time; extras collapse into <b>“+N more”</b>. Fully server-driven — message, dismissibility, and tap route all from the API. The <b>offline warning</b> reuses this same slot, injected automatically.</p>
+          <ul class="does"><li>Tap → navigate / detail sheet · Dismiss · “+N more” → all-banners sheet</li></ul>
+          <div class="refs"><span class="ref"><b>WiomBanner</b> HomeScreen.kt:363–374</span></div>
+        </div>
+        <div class="note"><div class="note-head"><span class="note-num">5</span><h4>Task cards — the core feed</h4><span class="schema-pill">schema-driven</span></div>
+          <p>The heart of the page. A <b>generic two-line card, no buttons</b> — the same renderer draws installs, restores, removals. Line 1: type icon · #ID · locality + pink unread badge. Line 2: a status line <b>or a live countdown</b>. The <b>left stripe colour</b> is server-sent. Feed is <b>server-ordered</b>.</p>
+          <ul class="does"><li>Tap body → full-screen drill-down (all actions live there)</li></ul>
+          <div class="refs"><span class="ref"><b>TaskCard.kt</b>:64 · HomeScreen.kt:400 · timers :168–191</span></div>
+        </div>
+        <div class="note"><div class="note-head"><span class="note-num">6</span><h4>NetBox pickup group</h4><span class="cond-pill">conditional</span></div>
+          <p>Pickups are <b>always grouped</b> into one card — even a single one. Shows “{n} पिकअप”, a rotating summary, and a pink dot. Only present when pickup tickets exist.</p>
+          <ul class="does"><li>Tap → NBREC pickup list</li></ul>
+          <div class="refs"><span class="ref"><b>NbrecGroupCard.kt</b>:46 · HomeScreen.kt:411 (grouping :388–392)</span></div>
+        </div>
+        <div class="note"><div class="note-head"><span class="note-num">7</span><h4>Batch &amp; incident blocks</h4><span class="schema-pill">schema-driven</span></div>
+          <p>Same-type tasks (RECHARGE, NETBOX_RETURN…) fold into a <b>batch card</b>. ≤6 items show inline rows; &gt;6 collapses to a “view all” row. <b>Incident blocks</b> are built but the server returns none yet — <b>target rendering, not live (gap G-13)</b>.</p>
+          <ul class="does"><li>Tap batch → its dedicated flow</li></ul>
+          <div class="refs"><span class="ref"><b>BatchBlockCard.kt</b>:39 · IncidentBlockCard.kt:48 · HomeScreen.kt:426,455</span></div>
+        </div>
+        <div class="callout"><b>Not in the scroll, but where the work happens →</b> Tapping a chip or task never acts in place — it opens a layered surface. Chip taps open <b>drill-down sheets</b>; task taps open <b>full-screen drill-downs</b> or <b>action sheets</b> (slot-proposal, executor-assignment). A floating <b>toast</b> and a first-setup <b>download banner</b> hover above the (absent) nav bar.</div>
+      </div>
+    </div>
+
+    <div class="section-title"><span class="kicker">S2</span><h3>Every state the user can land in</h3><span class="rule"></span></div>
+    <p style="margin:0 0 20px;color:var(--ink-2);max-width:66ch;font-size:15px">Designers usually draw the happy path. These are the other rooms the same home screen becomes.</p>
+    <div class="matrix-scroll"><table>
+      <thead><tr><th>State</th><th>What the user sees</th><th>Composable</th></tr></thead>
+      <tbody>
+        <tr><td><span class="sev n"></span><span class="st">Loading</span></td><td>Shimmer skeleton of the whole dashboard on cold open.</td><td class="cmp">ShimmerLoading()</td></tr>
+        <tr><td><span class="sev c"></span><span class="st">Error</span></td><td>Illustration + a single <b>Retry</b> button.</td><td class="cmp">EmptyError</td></tr>
+        <tr><td><span class="sev p"></span><span class="st">Empty feed</span></td><td>Friendly “no tasks” illustration; strip &amp; banners still show.</td><td class="cmp">EmptyNoTasks</td></tr>
+        <tr><td><span class="sev i"></span><span class="st">Refreshing</span></td><td>Pull-to-refresh spinner; also fires on open.</td><td class="cmp">PullToRefreshBox</td></tr>
+        <tr><td><span class="sev w"></span><span class="st">Offline</span></td><td>Non-dismissable warning banner injected, cleared on reconnect.</td><td class="cmp">HomeViewModel :771–799</td></tr>
+        <tr><td><span class="sev c"></span><span class="st">First-time blocker</span></td><td>Full-screen agreement overlay, once per partner.</td><td class="cmp">FirstTimeAgreementBlocker</td></tr>
+        <tr><td><span class="sev c"></span><span class="st">48-hr NetBox blocker</span></td><td>Non-dismissable dialog forcing delivery confirmation.</td><td class="cmp">PendingConfirmationBlockerDialog</td></tr>
+        <tr><td><span class="sev w"></span><span class="st">Permission-gated</span></td><td>Phone-read permission before masked IVR calling.</td><td class="cmp">RequestIvrPermissions</td></tr>
+        <tr><td><span class="sev i"></span><span class="st">Logout confirm</span></td><td>Bottom sheet confirming sign-out.</td><td class="cmp">WiomLogoutConfirmSheet</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="section-title"><span class="kicker">S3</span><h3>What appears only for some partners</h3><span class="rule"></span></div>
+    <div class="grid3">
+      <div class="mini"><h5>Role: owner vs member</h5><p>Header/drawer label &amp; actions follow the partner's role.</p><span class="cond">state.roleLabel · मालिक / member</span></div>
+      <div class="mini"><h5>Auto-recharge partners</h5><p>An “ISP recharge” drawer entry; recharge CTAs route to a different graph.</p><span class="cond">renewalFlowType == AUTO_RECHARGE_FLOW</span></div>
+      <div class="mini"><h5>Pickup group card</h5><p>Renders only when pickup tickets exist.</p><span class="cond">pickup tickets &gt; 0</span></div>
+      <div class="mini"><h5>“Order a NetBox” opportunity</h5><p>Inside the work-availability drill-down; hidden when area capacity &lt; 5.</p><span class="cond">/netbox/capacity-offer</span></div>
+      <div class="mini"><h5>NetBox swap (बदलना है)</h5><p>A kebab action behind a remote kill-switch.</p><span class="cond">RC feature flag</span></div>
+      <div class="mini"><h5>Debug affordances</h5><p>Header bell/bug, strip debug icon, drawer debug row — internal builds only.</p><span class="cond">BuildConfig.DEBUG</span></div>
+    </div>
+
+    <div class="section-title"><span class="kicker">S4</span><h3>What the page is really for</h3><span class="rule"></span></div>
+    <div class="grid3">
+      <div class="mini goal"><h5><span class="gnum">01</span>Triage field work</h5><p>See every pending install, restore, pickup and recharge — server-sorted, with live SLA countdowns.</p></div>
+      <div class="mini goal"><h5><span class="gnum">02</span>Track money &amp; performance</h5><p>The four-chip strip: connections, earnings (+ bonus at risk), quality, new-work capacity.</p></div>
+      <div class="mini goal"><h5><span class="gnum">03</span>Handle NetBox logistics</h5><p>Confirm deliveries before they block, clear pickups, order new NetBoxes.</p></div>
+      <div class="mini goal"><h5><span class="gnum">04</span>Reach the rest of the app</h5><p>Wallet, team, support, settings — one hamburger tap away.</p></div>
+    </div>
+
+    <div class="callout" style="margin-top:26px"><b>Design takeaway →</b> Almost everything below the header is a <b>generic renderer + server schema</b> — chips, task cards, batch blocks, banners and their colours, labels and routes all arrive from the backend. Most “home page” changes are backend/config changes, not app releases. Redesigning a surface here is designing a <b>contract</b> as much as a layout.</div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- DOC 2 — TASK LOGIC -->
+  <!-- ==================================================================== -->
+  <div class="doc" id="logic">
+    <div class="doc-intro">
+      <h2 class="dh">How every task card behaves.</h2>
+      <p>The four kinds of work — <b>Installation</b>, <b>Service</b>, <b>Recharge</b>, <b>NetBox Pickup</b> — documented twice: what the <b>user</b> does, and how the <b>app</b> implements it. Start with the shared engine: one generic card renders all four; the server sends the state, the app renders it.</p>
+      <div class="legend">
+        <span><span class="sv" style="background:var(--pink)"></span> User behaviour</span>
+        <span><span class="sv" style="background:var(--info)"></span> App / implementation</span>
+        <span><span class="sv" style="background:var(--positive)"></span>good</span>
+        <span><span class="sv" style="background:var(--warning)"></span>attention</span>
+        <span><span class="sv" style="background:var(--critical)"></span>overdue / failed</span>
+      </div>
+    </div>
+
+    <div class="tabbar" role="tablist" aria-label="Task types">
+      <button class="tab" role="tab" aria-selected="true" data-tab="l-engine">The engine</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="l-install">Installation <span class="fam">INSTALL</span></button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="l-service">Service <span class="fam">RESTORE</span></button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="l-recharge">Recharge <span class="fam">RECHARGE</span></button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="l-pickup">Pickup <span class="fam">NETBOX_PICKUP</span></button>
+    </div>
+
+    <section class="panel active" id="l-engine" role="tabpanel">
+      <div class="p-head"><h2>The shared task-card engine</h2></div>
+      <p class="p-purpose">Every card is drawn by <b>one</b> composable from <b>one</b> model (<code>TaskDetail</code>). No task type has a bespoke card. The card is a <b>signal, not a surface for action</b>: two lines, no button. All acting happens after a tap.</p>
+      <div class="lab"><h3>The contract</h3><span class="rule"></span></div>
+      <div class="grid2">
+        <div class="card"><p><b>Server-driven (schema)</b></p><p>Task family, state, icon key, label key, the reason-line template (with <code>{name}</code>/<code>{time}</code>/<code>{remaining}</code>), threshold state, accent colour, unread count, deadlines, execution mode, auto-dismiss. <b>Add a new family with zero app release</b> — <code>taskFamily</code> is a raw string, not an enum.</p></div>
+        <div class="card"><p><b>Client-side (rendering only)</b></p><p>Icon-key→vector map, accent→colour, threshold→colour, short-id, countdown copy. Everything hardcoded is a <b>rendering of a server key</b> — no labels, colours, or states invented locally.</p></div>
+      </div>
+      <div class="refs"><span class="ref"><b>TaskDetail.kt</b>:9–232 · enums :313–315</span></div>
+
+      <div class="lab"><h3>Task families</h3><span class="rule"></span></div>
+      <div class="states">
+        <span class="schip"><span class="sv i"></span>INSTALL</span><span class="schip"><span class="sv w"></span>RESTORE</span><span class="schip"><span class="sv w"></span>NETBOX_PICKUP</span><span class="schip"><span class="sv w"></span>NETBOX_RETURN</span><span class="schip"><span class="sv p"></span>RECHARGE</span><span class="schip"><span class="sv n"></span>SHIFTING</span><span class="schip"><span class="sv n"></span>OUTAGE · no card yet</span>
+      </div>
+
+      <div class="lab"><h3>How line 2 is chosen</h3><span class="rule"></span></div>
+      <ol class="steps">
+        <li><span class="sdot">1</span><div class="t">Slot countdown</div><div class="d"><code>INSTALL</code> &amp; <code>AWAITING_SLOT_PROPOSAL</code> &amp; <code>p41DeadlineAt</code> → amber ticking strip.</div></li>
+        <li><span class="sdot">2</span><div class="t">P74 removal countdown</div><div class="d"><code>INSTALL</code> &amp; <code>thresholdState=OVERDUE</code> &amp; <code>p74DeadlineAt</code> → red ticking line.</div></li>
+        <li><span class="sdot">3</span><div class="t">Pickup SLA countdown</div><div class="d"><code>NETBOX_PICKUP</code> &amp; <code>deadlineAt</code> &amp; work not started → 24h line.</div></li>
+        <li><span class="sdot">4</span><div class="t">Reason line (default)</div><div class="d">Resolve template, fill placeholders, tint by threshold. Missing deadline degrades gracefully — <b>never a raw <code>{time}</code></b>.</div></li>
+      </ol>
+      <div class="refs"><span class="ref"><b>TaskCard.kt</b>:167–271 · stripe :79–101</span></div>
+
+      <div class="lab"><h3>Countdown timers — three</h3><span class="rule"></span></div>
+      <div class="tscroll"><table>
+        <thead><tr><th>Timer</th><th>Source</th><th>Window</th><th>At zero</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tn">Install slot (P41)</span></td><td><code>p41DeadlineAt</code></td><td>slot-proposal window</td><td><span class="zero hide">disappears</span></td></tr>
+          <tr><td><span class="tn">Removal (P74)</span></td><td><code>p74DeadlineAt</code></td><td>72h auto-removal</td><td><span class="zero hide">disappears</span> → toast</td></tr>
+          <tr><td><span class="tn">Pickup SLA</span></td><td><code>deadlineAt</code></td><td>24h recovery</td><td><span class="zero flip">shows “overdue”, flips red</span></td></tr>
+        </tbody>
+      </table></div>
+      <p class="p-purpose" style="margin-top:14px">All tick client-side (1s loop) toward an <b>absolute server deadline</b> — never derived locally. Expiry is <b>purely visual</b>; the real state change arrives on the next feed refresh.</p>
+
+      <div class="lab"><h3>Grouping &amp; tap routing</h3><span class="rule"></span></div>
+      <div class="grid2">
+        <div class="card"><p><b>Grouping</b> (HomeScreen :376–464)</p><p>Dedupe by id → <b>pickups always grouped</b>, even one. <code>RECHARGE</code> &amp; <code>NETBOX_RETURN</code> render as collapsed batch cards. Others: inline rows ≤6, “view all” &gt;6. Always <b>server order</b>.</p></div>
+        <div class="card"><p><b>Tap routing</b> (HomeViewModel)</p><p><b>Body tap</b> → fetch detail → drilldown (<code>NETBOX_RETURN</code> → pickup wizard). <b>CTA tap</b> switches on <code>executionMode</code>: <code>DIRECT</code> in place, <code>ACTION_SHEET</code> a sheet by state, <code>DRILLDOWN_REQUIRED</code> full screen.</p></div>
+      </div>
+      <div class="grid2" style="margin-top:12px">
+        <div class="card"><p><b>Unread badge</b></p><p>Pink count = <code>latest − acked</code> version. Cleared on drilldown dismiss; a later server bump re-raises it.</p></div>
+        <div class="card"><p><b>Auto-dismiss</b></p><p>Server <code>autoDismiss</code> + <code>dismissAfterSeconds</code> → card removes itself; keyed on id so recomposition doesn't restart it.</p></div>
+      </div>
+      <div class="refs"><span class="ref"><b>HomeViewModel.kt</b> onCardBodyClick:2451 · onCtaTapped:1480</span></div>
+    </section>
+
+    <section class="panel" id="l-install" role="tabpanel">
+      <div class="p-head"><h2>Installation</h2><span class="famcode">INSTALL</span></div>
+      <p class="p-purpose">Book a slot, assign who does it, then run a guided <b>on-site wizard</b> — arrival, KYC, payment, device photos, provisioning, Happy-Code OTP. One task object drives a card, a drilldown, and a ~33-screen wizard.</p>
+      <div class="lab"><span class="who user">user</span><h3>What the partner does</h3><span class="rule"></span></div>
+      <p class="stategroup">Stage A · inside the drilldown</p>
+      <ol class="steps">
+        <li><span class="sdot">1</span><div class="t">Propose a slot</div><div class="d"><b>Today or Tomorrow</b> only; submitting is implicit acceptance, time arranged offline.</div></li>
+        <li><span class="sdot">2</span><div class="t">Assign an executor</div><div class="d">Self + team, self pre-selected. Self → you run the wizard; teammate → <code>DELEGATED_*</code>, only they run it.</div></li>
+        <li><span class="sdot">3</span><div class="t">Start / resume the wizard</div><div class="d">Launches or resumes at the last completed step.</div></li>
+      </ol>
+      <p class="stategroup" style="margin-top:22px">Stage B · the on-site wizard</p>
+      <ol class="steps">
+        <li><span class="sdot">4</span><div class="t">PAYG consent → arrival</div><div class="d">PAYG audio + confirm, then “I've arrived” marks the visit (→ <code>ARRIVED_AT_SITE</code>).</div></li>
+        <li><span class="sdot">5</span><div class="t">Selfie → Aadhaar KYC</div><div class="d">Technician selfie, then Aadhaar front + back. App re-fetches and <b>branches on payment</b>.</div></li>
+        <li><span class="sdot">6</span><div class="t">Security fee → power-up</div><div class="d">Payment checklist <b>polls until <code>PAID</code></b>, then 30-second power-up + LED confirm.</div></li>
+        <li><span class="sdot">7</span><div class="t">Customer details → ISP account</div><div class="d">Create the ISP account via <b>self-portal / WhatsApp / call</b>.</div></li>
+        <li><span class="sdot">8</span><div class="t">ISP form → placement → device photos</div><div class="d">Device ID + PPPoE (BE-verified), signal check, NetBox / 3-pin / wiring photos.</div></li>
+        <li><span class="sdot">9</span><div class="t">Provisioning → optical / speed</div><div class="d">Router auto-configures; GX/SY read optical (TP-Link skips), then speed test.</div></li>
+        <li><span class="sdot">10</span><div class="t">Happy-Code OTP → rating</div><div class="d">Customer's 4-digit code auto-submits, then a 5-star rating closes to home.</div></li>
+      </ol>
+      <div class="lab"><span class="who user">user</span><h3>States</h3><span class="rule"></span></div>
+      <p class="stategroup">Slot &amp; scheduling</p>
+      <div class="states"><span class="schip"><span class="sv w"></span>AWAITING_SLOT_PROPOSAL</span><span class="schip"><span class="sv i"></span>AWAITING_CUSTOMER_SLOT_CONFIRMATION</span><span class="schip"><span class="sv p"></span>SLOT_CONFIRMED</span><span class="schip"><span class="sv p"></span>SCHEDULED</span><span class="schip"><span class="sv w"></span>NEEDS_RESCHEDULING</span><span class="schip"><span class="sv i"></span>SCHEDULING_FAILED</span></div>
+      <p class="stategroup">Assignment &amp; execution</p>
+      <div class="states"><span class="schip"><span class="sv w"></span>AWAITING_TECHNICIAN_ASSIGNMENT</span><span class="schip"><span class="sv p"></span>TECHNICIAN_ASSIGNED</span><span class="schip"><span class="sv p"></span>ARRIVED_AT_SITE</span><span class="schip"><span class="sv i"></span>IN_PROGRESS (+PRE/POST_FEE·OTP·RATING)</span><span class="schip"><span class="sv i"></span>DELEGATED_NOT_STARTED / IN_PROGRESS</span><span class="schip"><span class="sv c"></span>DELEGATED_OVERDUE</span></div>
+      <p class="stategroup">Closure</p>
+      <div class="states"><span class="schip"><span class="sv i"></span>INSTALL_SUBMITTED / VERIFICATION_PENDING</span><span class="schip"><span class="sv p"></span>RESOLVED</span><span class="schip"><span class="sv c"></span>INSTALLATION_REPORTED_FAILED</span><span class="schip"><span class="sv n"></span>UNKNOWN</span></div>
+      <div class="lab"><span class="who user">user</span><h3>Timers &amp; branches</h3><span class="rule"></span></div>
+      <div class="tscroll"><table><thead><tr><th>Deadline</th><th>Meaning</th><th>At zero</th></tr></thead><tbody>
+        <tr><td><span class="tn">Slot (P41)</span></td><td>window to propose a slot — amber strip</td><td><span class="zero hide">disappears; server re-states</span></td></tr>
+        <tr><td><span class="tn">Removal (P74)</span></td><td>72h before a stale booking auto-removes — red line</td><td><span class="zero hide">card disappears + toast</span></td></tr>
+      </tbody></table></div>
+      <div class="grid2" style="margin-top:14px">
+        <div class="card"><p><b>Fee-paid bypass</b></p><p>If the fee is already <code>PAID</code> after Aadhaar, the wizard skips PAYG-info, payment, and power-up.</p></div>
+        <div class="card"><p><b>Router &amp; delegation</b></p><p>TP-Link skips optical. Self-assign → you run it; delegate → teammate runs it, your CTA hidden.</p></div>
+      </div>
+      <div class="lab"><span class="who app">app</span><h3>Under the hood</h3><span class="rule"></span></div>
+      <div class="impl"><ul>
+        <li><b>State:</b> <code>InstallState</code> enum (unknown → <code>UNKNOWN</code>); transport fields on <code>TaskDetail</code>.</li>
+        <li><b>Home:</b> <code>HomeViewModel</code> → <code>CachingTaskRepository</code>. Slot <span class="endpoint">POST install/candidates/{id}/actions/propose-slot</span>; assign <span class="endpoint">…/assign-technician</span>; exit <span class="endpoint">…/report-installation-failed</span>.</li>
+        <li><b>Wizard:</b> <code>InstallationViewModelNew</code> → per-step <span class="endpoint">install/candidates/{id}/steps/{…}</span>. Resume via <code>completedStep</code> + <code>currentState</code>.</li>
+        <li><b>Optimistic UI:</b> each action <b>morphs the card first, rolls back + toasts on failure</b>. All gated by <code>offlineGuard</code>.</li>
+        <li><b>Resilience:</b> photo close uses a predicted URL + fire-and-forget S3 upload; WiFi released before OTP/rating/speed so they use mobile data.</li>
+      </ul></div>
+      <div class="note-inline"><b>Known gap:</b> <code>isSlotDay</code> drives a “आज इंस्टॉलेशन का दिन है” banner but no mapper sets it true — currently unreachable.</div>
+      <div class="refs"><span class="ref"><b>InstallModels.kt · InstallDrilldownContent.kt · SlotProposalSheet.kt · InstallationViewModelNew.kt</b></span></div>
+    </section>
+
+    <section class="panel" id="l-service" role="tabpanel">
+      <div class="p-head"><h2>Service</h2><span class="famcode">RESTORE · SHIFTING · SWAP</span></div>
+      <p class="p-purpose">Post-install field work: <b>Restore</b> (complaint — down / slow / faulty), <b>Shifting</b> (relocate), and <b>Swap</b> (replace the device, launched from a Restore). <span style="color:var(--ink-3)">The <code>sla</code> and <code>support</code> modules are stubs; <code>OUTAGE</code> is a gap.</span></p>
+      <div class="lab"><span class="who user">user</span><h3>Restore — the complaint flow</h3><span class="rule"></span></div>
+      <ol class="steps">
+        <li><span class="sdot">1</span><div class="t">Accept &amp; start</div><div class="d">Solo → “रिज़ॉल्व हो गया” auto-accepts; team → “टीम को भेजें” opens the picker.</div></li>
+        <li><span class="sdot">2</span><div class="t">Diagnose fault (optional)</div><div class="d">Device-ID + one of 4 fault codes. Confirmed → <code>RECLASSIFIED</code>; denied → prior state.</div></li>
+        <li><span class="sdot">3</span><div class="t">Guided proof</div><div class="d">One server-driven step at a time; once a step passes, <b>Resolve</b> unlocks.</div></li>
+        <li><span class="sdot">4</span><div class="t">Resolve</div><div class="d">Triggers system verification — server-confirmed. Or launch a <b>swap</b> from the kebab.</div></li>
+      </ol>
+      <div class="lab"><span class="who user">user</span><h3>Shifting &amp; Swap</h3><span class="rule"></span></div>
+      <div class="grid2">
+        <div class="card"><p><b>Shifting</b> — within / new premises</p><p>Address + map links. CTAs: <b>choose a person</b> → <b>“शिफ्टिंग पूरी हो गई”</b> or <b>“Not Serviceable”</b>.</p></div>
+        <div class="card"><p><b>Swap</b> — replace device (from Restore)</p><p>Reason → <b>scan the NEW device</b> → physical setup → <b>VL verify (ping countdown)</b> → success. 3 fails → picker / manual + photo sub-flow. Timeout → <b>self-confirm</b>.</p></div>
+      </div>
+      <div class="lab"><span class="who user">user</span><h3>States</h3><span class="rule"></span></div>
+      <p class="stategroup">Restore</p>
+      <div class="states"><span class="schip"><span class="sv w"></span>PENDING_ACCEPTANCE / RESPOND_NOW</span><span class="schip"><span class="sv p"></span>ACCEPTED</span><span class="schip"><span class="sv i"></span>WORKING</span><span class="schip"><span class="sv i"></span>ASSIGNED_TECHNICIAN</span><span class="schip"><span class="sv c"></span>ESCALATED_*</span><span class="schip"><span class="sv i"></span>VERIFICATION_PENDING</span><span class="schip"><span class="sv c"></span>CUSTOMER_DENIED</span><span class="schip"><span class="sv n"></span>RECLASSIFIED</span><span class="schip"><span class="sv p"></span>RESOLVED</span><span class="schip"><span class="sv i"></span>DELEGATED_*</span></div>
+      <p class="stategroup">Shifting</p>
+      <div class="states"><span class="schip"><span class="sv w"></span>OPEN</span><span class="schip"><span class="sv i"></span>PENDING_VERIFICATION</span><span class="schip"><span class="sv c"></span>ESCALATED</span><span class="schip"><span class="sv p"></span>RESOLVED</span><span class="schip"><span class="sv n"></span>CLOSED / UNRESOLVABLE</span></div>
+      <p class="stategroup">Swap steps</p>
+      <div class="states"><span class="schip"><span class="sv n"></span>INTRO</span><span class="schip"><span class="sv i"></span>SCAN_NEW</span><span class="schip"><span class="sv i"></span>PHYSICAL_SETUP</span><span class="schip"><span class="sv i"></span>PROCESSING</span><span class="schip"><span class="sv w"></span>VERIFYING</span><span class="schip"><span class="sv p"></span>SUCCESS</span><span class="schip"><span class="sv c"></span>NOT_VERIFIED / FAILED</span></div>
+      <div class="lab"><span class="who user">user</span><h3>Timers</h3><span class="rule"></span></div>
+      <div class="tscroll"><table><thead><tr><th>Timer</th><th>Window</th><th>At zero</th></tr></thead><tbody>
+        <tr><td><span class="tn">Restore / Shifting SLA pill</span></td><td>server <code>deadlineAt</code> · &lt;4h urgent</td><td><span class="zero flip">red “देरी हो गई”</span></td></tr>
+        <tr><td><span class="tn">Swap VL verify</span></td><td>first ~600s, cap ~1200s, 3 retries</td><td><span class="zero">self-confirm; server may auto-confirm</span></td></tr>
+      </tbody></table></div>
+      <div class="lab"><span class="who app">app</span><h3>Under the hood</h3><span class="rule"></span></div>
+      <div class="impl"><ul>
+        <li><b>Enums:</b> <code>RestoreState</code> (14), <code>CandidateState</code>, <code>ShiftingState</code> (7), <code>SwapStep</code>.</li>
+        <li><b>Restore:</b> one action endpoint <span class="endpoint">POST restore/candidates/{id}/actions/{actionId}</span>; detail <span class="endpoint">service-resolution/{id}/detail</span>.</li>
+        <li><b>Shifting:</b> <span class="endpoint">home/tasks/{id}/actions/submit-resolution</span> &amp; <span class="endpoint">…/not-serviceable</span>.</li>
+        <li><b>Swap:</b> a 7-call S1–S7 lifecycle + <code>NetBoxSwapSession</code> resume store surviving restarts.</li>
+        <li><b>Consistency:</b> actions are <b>server-confirmed, no local queue</b> — every success refreshes the feed.</li>
+      </ul></div>
+      <div class="note-inline"><b>Heads-up:</b> <code>escalationTier</code> is modelled &amp; spec'd to show a badge but the Restore drilldown doesn't render it yet (only Shifting does).</div>
+      <div class="refs"><span class="ref"><b>RestoreModels.kt · RestoreApiService.kt · ShiftingDrilldownContent.kt · SwapModels.kt · NetBoxSwapViewModel.kt</b></span></div>
+    </section>
+
+    <section class="panel" id="l-recharge" role="tabpanel">
+      <div class="p-head"><h2>ISP Recharge</h2><span class="famcode">RECHARGE</span></div>
+      <p class="p-purpose">Renew customers' plans and claim the partner's commission. Surfaces as a <b>collapsed batch card</b>. Two flows, chosen by <code>renewalFlowType</code>: a <b>standard</b> confirm-and-claim flow, and an <b>auto-recharge</b> flow where the app drives the ISP portal itself.</p>
+      <div class="lab"><span class="who user">user</span><h3>Standard flow</h3><span class="rule"></span></div>
+      <ol class="steps">
+        <li><span class="sdot">1</span><div class="t">Education gate</div><div class="d">First-time explainer; skipped once acknowledged.</div></li>
+        <li><span class="sdot">2</span><div class="t">Customer list</div><div class="d">Pending renewals split into a <b>50→100 Mbps migration group</b> and a regular group. Multi-select.</div></li>
+        <li><span class="sdot">3</span><div class="t">Confirm → calculate</div><div class="d">Confirm “recharge N customers?” → app calculates commission earned.</div></li>
+        <li><span class="sdot">4</span><div class="t">Claim commission</div><div class="d">Release commission; list refreshes — if none pending, returns home.</div></li>
+      </ol>
+      <div class="callout co-info"><b style="color:var(--info)">No in-app customer payment.</b> The standard flow doesn't collect money — the partner asserts the recharge happened and the app <b>calculates → releases the partner's commission</b> (amounts in paise). The customer's payment happens out of band.</div>
+      <div class="lab" style="margin-top:20px"><span class="who user">user</span><h3>Auto-recharge flow</h3><span class="rule"></span></div>
+      <ol class="steps">
+        <li><span class="sdot">1</span><div class="t">Connection list</div><div class="d">Pending claims; check for a <b>saved ISP portal</b>.</div></li>
+        <li><span class="sdot">2</span><div class="t">Validate ISP login</div><div class="d">Partner validates portal URL + credentials (handles low balance).</div></li>
+        <li><span class="sdot">3</span><div class="t">Trigger renewal + poll</div><div class="d">App <b>performs the renewal on the ISP portal</b>, then polls <b>up to 24× every 5s</b>.</div></li>
+        <li><span class="sdot">4</span><div class="t">Collect commission</div><div class="d">Shows earned + session total, returns to the list.</div></li>
+      </ol>
+      <div class="lab"><span class="who user">user</span><h3>States</h3><span class="rule"></span></div>
+      <div class="states"><span class="schip"><span class="sv w"></span>PENDING</span><span class="schip"><span class="sv i"></span>IN_PROGRESS</span><span class="schip"><span class="sv i"></span>VERIFIED</span><span class="schip"><span class="sv n"></span>UNCLAIMED</span><span class="schip"><span class="sv p"></span>SUCCESS / CLAIMED</span><span class="schip"><span class="sv p"></span>DISBURSED</span><span class="schip"><span class="sv c"></span>FAILED</span></div>
+      <p class="p-purpose" style="margin-top:12px">No in-app countdown — urgency is the <b>earliest deadline</b> on the batch card.</p>
+      <div class="lab"><span class="who app">app</span><h3>Under the hood</h3><span class="rule"></span></div>
+      <div class="impl"><ul>
+        <li><b>Flow switch:</b> <code>renewalFlowType == "AUTO_RECHARGE_FLOW"</code> at <code>HomeScreen.kt:234/435/513/730</code> → automation graph vs standard.</li>
+        <li><b>Standard API:</b> <span class="endpoint">GET es-recharge/…/candidates</span> → <span class="endpoint">…/commission/calculate</span> → <span class="endpoint">recharge/csp-app-confirmed/batch</span>.</li>
+        <li><b>Auto API:</b> portal-check, validate-login, trigger-renewal, poll-candidate, release-commission; <code>AgenticViewModel</code> runs the 24×5s poll.</li>
+        <li><b>Machines:</b> standard <code>Confirmation→Processing→CommissionCalculated→Released</code>; auto <code>Idle/Triggering/InProgress/Success/Failed/TimedOut</code>.</li>
+      </ul></div>
+      <div class="refs"><span class="ref"><b>RechargeViewModel.kt · RechargeApiService.kt · AgenticViewModel.kt · RechargeFlowType.kt</b></span></div>
+    </section>
+
+    <section class="panel" id="l-pickup" role="tabpanel">
+      <div class="p-head"><h2>NetBox Pickup</h2><span class="famcode">NETBOX_PICKUP</span></div>
+      <p class="p-purpose">Recover the NetBox from a disconnected customer within a <b>24-hour SLA</b>. Pickups are <b>always grouped into one card</b> — even a single one.</p>
+      <div class="lab"><span class="who user">user</span><h3>The group card</h3><span class="rule"></span></div>
+      <div class="card"><p>Router icon + <b>“{n} पिकअप”</b> + a <b>rotating summary</b> alternating every 3s between “<b>nearing deadline</b>” and “<b>yet to assign</b>” — plus a pink dot if any member is unread. Tap → the NBREC list.</p></div>
+      <div class="lab"><span class="who user">user</span><h3>The pickup flow</h3><span class="rule"></span></div>
+      <ol class="steps">
+        <li><span class="sdot">1</span><div class="t">List → drilldown</div><div class="d">NBREC list (latest first) → tap → drilldown (device, map, IVR, deadline, executor).</div></li>
+        <li><span class="sdot">2</span><div class="t">Acknowledge → start work</div><div class="d">Acknowledge (optimistic <code>PENDING → IN_PROGRESS</code>), then start work, which branches:</div></li>
+        <li><span class="sdot">3</span><div class="t">OCR fast-path</div><div class="d">Scan the serial; a match confirms recovery via ACS — no photo upload.</div></li>
+        <li><span class="sdot">3</span><div class="t">…or photo wizard</div><div class="d">Front → back → review + GPS → parallel S3 upload → <b>submit-proof</b> → <code>PROOF_SUBMITTED</code>.</div></li>
+        <li><span class="sdot">4</span><div class="t">Verification</div><div class="d">Server verifies; rejection → <b>retry</b> until exhausted. Or <b>report unable</b> (5 reasons) → <code>CANCELLED</code>.</div></li>
+      </ol>
+      <p class="p-purpose" style="margin-top:8px">A partner can also <b>delegate</b> the pickup (or call/change the executor) from the drilldown.</p>
+      <div class="lab"><span class="who user">user</span><h3>States</h3><span class="rule"></span></div>
+      <div class="states"><span class="schip"><span class="sv w"></span>PENDING_PICKUP</span><span class="schip"><span class="sv i"></span>IN_PROGRESS</span><span class="schip"><span class="sv i"></span>PROOF_SUBMITTED</span><span class="schip"><span class="sv i"></span>VERIFICATION_PENDING</span><span class="schip"><span class="sv p"></span>COMPLETED</span><span class="schip"><span class="sv n"></span>CANCELLED</span><span class="schip"><span class="sv c"></span>FAILED</span></div>
+      <div class="lab"><span class="who user">user</span><h3>The 24-hour SLA</h3><span class="rule"></span></div>
+      <div class="tscroll"><table><thead><tr><th>Timer</th><th>Window</th><th>At zero</th></tr></thead><tbody>
+        <tr><td><span class="tn">Pickup SLA</span></td><td>server <code>deadlineAt</code> (≈24h) · &lt;4h urgent</td><td><span class="zero flip">“समय सीमा पार”, flips red — does NOT hide</span></td></tr>
+        <tr><td><span class="tn">Auto-close</span></td><td><code>pickupAutoCloseHours</code> default 48h</td><td><span class="zero">ticket auto-closes server-side</span></td></tr>
+        <tr><td><span class="tn">Verification attempts</span></td><td><code>maxVerificationAttempts</code> default 2</td><td><span class="zero flip">retry hidden; “final attempt”</span></td></tr>
+      </tbody></table></div>
+      <p class="p-purpose" style="margin-top:14px">Once work starts the countdown is suppressed. The SLA is a <b>server-set deadline</b> — no hardcoded 24h client-side.</p>
+      <div class="lab"><span class="who app">app</span><h3>Under the hood</h3><span class="rule"></span></div>
+      <div class="impl"><ul>
+        <li><b>Enum:</b> <code>CandidateState</code> (7) + <code>ThresholdState</code>; UI surfaces S02–S06.</li>
+        <li><b>API:</b> <span class="endpoint">…/acknowledge</span>, <span class="endpoint">…/submit-proof</span>, <span class="endpoint">…/report-unable</span>, <span class="endpoint">…/device-recovery-confirmed</span> (OCR), <span class="endpoint">…/assign</span>. Presigned-URL S3 upload; every call refreshes the feed.</li>
+        <li><b>ViewModels:</b> <code>HomeViewModel</code> (nbrec fns :1900–2095), <code>NbrecPhotoViewModel</code>, <code>NbrecOcrViewModel</code>.</li>
+        <li><b>Grouping:</b> <code>HomeScreen.kt:387–392</code> renders the group whenever <code>nbrecTasks.isNotEmpty()</code>.</li>
+      </ul></div>
+      <div class="refs"><span class="ref"><b>NbrecGroupCard.kt · PickupDrilldownContent.kt · NbrecApiService.kt · PickupModels.kt · IstFormatter.kt</b></span></div>
+    </section>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- DOC 3 — STATE & VISUALS -->
+  <!-- ==================================================================== -->
+  <div class="doc" id="visual">
+    <div class="doc-intro">
+      <h2 class="dh">What each state looks like.</h2>
+      <p>The exact colour, icon, and copy the app shows for every task state — from the theme tokens and banner code. Each specimen is rendered in its <b>real app hex</b>, so this doubles as a swatch book. Read <b>Foundations</b> first: it explains why the <b>feed card</b> and the <b>drilldown banner</b> are two different colour signals.</p>
+    </div>
+
+    <div class="tabbar" role="tablist" aria-label="Views">
+      <button class="tab" role="tab" aria-selected="true" data-tab="v-found">Foundations</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="v-hcard">Home card</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="v-install">Installation</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="v-restore">Restore</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="v-pickup">Pickup</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="v-shifting">Shifting</button>
+    </div>
+
+    <section class="panel active" id="v-found" role="tabpanel">
+      <div class="p-head"><h2>Two colour signals, not one</h2></div>
+      <p class="p-purpose">The <b>feed card</b> and the <b>drilldown banner</b> are coloured by different rules. The card's colours are <b>server-driven</b> (<code>accentType</code> + <code>thresholdState</code>). The banner's are <b>hardcoded per state</b> — that's the deterministic state→colour map. Kept independent on purpose (INV-H-08).</p>
+      <div class="lab"><h3>The feed card — what drives each colour</h3><span class="rule"></span></div>
+      <div class="tscroll"><table>
+        <thead><tr><th>Card element</th><th>Driven by</th><th>Token · hex</th></tr></thead>
+        <tbody>
+          <tr><td><span class="el">Left accent stripe</span></td><td><span class="tone-pill tp-info">server accentType</span></td><td><code>stateNegative</code> #D92130 · <code>stateWarning</code> #B85C00 · <code>accentDefault</code> #D7D3E0</td></tr>
+          <tr><td><span class="el">Line-2 reason tint</span></td><td><span class="tone-pill tp-info">server thresholdState</span></td><td>see ladder below</td></tr>
+          <tr><td><span class="el">Unread badge</span></td><td><span class="tone-pill tp-info">server unseenCount</span></td><td><code>brandPrimary</code> #D9008D</td></tr>
+          <tr><td><span class="el">Type icon</span></td><td><span class="tone-pill tp-info">server typeIconName</span></td><td>tint <code>textSecondary</code> #5C5570</td></tr>
+          <tr><td><span class="el">Fill · border · text</span></td><td><span class="tone-pill tp-none">hardcoded</span></td><td>#FFFFFF · #E8E4F0 · #161021</td></tr>
+        </tbody>
+      </table></div>
+      <div class="refs"><span class="ref"><b>TaskCard.kt</b>:79–101, 111–120, 157–198</span></div>
+
+      <div class="lab"><h3>Line-2 threshold ladder</h3><span class="rule"></span></div>
+      <div class="grid2">
+        <div class="line-spec th-normal"><span class="chip">इंस्टॉलेशन पक्का हुआ</span><span class="cap">NORMAL · #161021 · no bg</span></div>
+        <div class="line-spec th-urgent"><span class="chip">2 घंटे में हट जाएगी</span><span class="cap">URGENT · #B85C00 / #FFF2BF</span></div>
+        <div class="line-spec th-overdue"><span class="chip">समय सीमा पार</span><span class="cap">OVERDUE · #D92130 / #FFE5E7</span></div>
+        <div class="line-spec"><span class="chip" style="color:var(--ink-3);border:1px dashed var(--hair-strong)">…replaced by a timer</span><span class="cap">when a countdown guard passes</span></div>
+      </div>
+
+      <div class="lab"><h3>The three card countdowns</h3><span class="rule"></span></div>
+      <div class="grid2">
+        <div class="line-spec th-urgent"><span class="chip">3 घंटे में टिकट हट जाएगी</span><span class="cap">Slot P41 · #B85C00/#FFF2BF</span></div>
+        <div class="line-spec th-overdue"><span class="chip">1 दिन में टिकट हटा दिया जाएगा</span><span class="cap">Removal P74 · #D92130/#FFE5E7</span></div>
+        <div class="line-spec th-urgent"><span class="chip">04:12:39</span><span class="cap">Pickup SLA · urgent → red overdue</span></div>
+        <div class="callout co-warn" style="margin:0"><b>Design debt:</b> the URGENT/slot text colour <code>stateWarning</code> #B85C00 is <b>DEPRECATED</b> in the token file, yet still live here.</div>
+      </div>
+
+      <div class="lab"><h3>The drilldown banner — 4 tones</h3><span class="rule"></span></div>
+      <div class="specs">
+        <div class="spec"><div class="bnr tone-warn"><span class="circ"><svg><use href="#clock"/></svg></span><div class="txt"><div class="ttl">WARNING · needs action</div><div class="sub">bg #FFF8E1 · icon #E65100</div></div></div><div class="meta"><span class="tone-pill tp-warn">warning</span><span class="tok">bgCaution / stateCaution</span></div></div>
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#sync"/></svg></span><div class="txt"><div class="ttl">INFO · in motion / waiting</div><div class="sub">bg #F1E5FF · icon #6D17CE</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="tok">bgInfo / stateInfo</span></div></div>
+        <div class="spec"><div class="bnr tone-pos"><span class="circ"><svg><use href="#check"/></svg></span><div class="txt"><div class="ttl">POSITIVE · confirmed / done</div><div class="sub">bg #E1FAED · icon #008043</div></div></div><div class="meta"><span class="tone-pill tp-pos">positive</span><span class="tok">bgPositive / statePositive</span></div></div>
+        <div class="spec"><div class="bnr tone-neg"><span class="circ"><svg><use href="#warn"/></svg></span><div class="txt"><div class="ttl">NEGATIVE · overdue / failed</div><div class="sub">bg #FFE5E7 · icon #D92130</div></div></div><div class="meta"><span class="tone-pill tp-neg">negative</span><span class="tok">bgNegative / stateNegative</span></div></div>
+      </div>
+      <div class="refs"><span class="ref"><b>TaskStateBanner.kt</b>:27–43 · <b>WiomTokens.kt</b></span></div>
+
+      <div class="lab"><h3>Token palette</h3><span class="rule"></span></div>
+      <div class="swatches">
+        <div class="sw"><div class="swchip" style="background:#D9008D"></div><div class="info"><div class="nm">brandPrimary</div><div class="hx">#D9008D</div></div></div>
+        <div class="sw"><div class="swchip" style="background:#008043"></div><div class="info"><div class="nm">statePositive</div><div class="hx">#008043</div></div></div>
+        <div class="sw"><div class="swchip" style="background:#E65100"></div><div class="info"><div class="nm">stateCaution</div><div class="hx">#E65100</div></div></div>
+        <div class="sw"><div class="swchip" style="background:#6D17CE"></div><div class="info"><div class="nm">stateInfo</div><div class="hx">#6D17CE</div></div></div>
+        <div class="sw"><div class="swchip" style="background:#D92130"></div><div class="info"><div class="nm">stateNegative</div><div class="hx">#D92130</div></div></div>
+        <div class="sw"><div class="swchip" style="background:#B85C00"></div><div class="info"><div class="nm">stateWarning ⚠dep</div><div class="hx">#B85C00</div></div></div>
+        <div class="sw"><div class="swchip" style="background:#E1FAED"></div><div class="info"><div class="nm">bgPositive</div><div class="hx">#E1FAED</div></div></div>
+        <div class="sw"><div class="swchip" style="background:#FFF8E1"></div><div class="info"><div class="nm">bgCaution</div><div class="hx">#FFF8E1</div></div></div>
+        <div class="sw"><div class="swchip" style="background:#F1E5FF"></div><div class="info"><div class="nm">bgInfo</div><div class="hx">#F1E5FF</div></div></div>
+        <div class="sw"><div class="swchip" style="background:#FFE5E7"></div><div class="info"><div class="nm">bgNegative</div><div class="hx">#FFE5E7</div></div></div>
+        <div class="sw"><div class="swchip" style="background:#FFF2BF"></div><div class="info"><div class="nm">bgUrgent</div><div class="hx">#FFF2BF</div></div></div>
+        <div class="sw"><div class="swchip" style="background:#161021"></div><div class="info"><div class="nm">textPrimary</div><div class="hx">#161021</div></div></div>
+        <div class="sw"><div class="swchip" style="background:#5C5570"></div><div class="info"><div class="nm">textSecondary</div><div class="hx">#5C5570</div></div></div>
+        <div class="sw"><div class="swchip" style="background:#D7D3E0"></div><div class="info"><div class="nm">accentDefault</div><div class="hx">#D7D3E0</div></div></div>
+        <div class="sw"><div class="swchip" style="background:#E8E4F0"></div><div class="info"><div class="nm">strokePrimary</div><div class="hx">#E8E4F0</div></div></div>
+      </div>
+      <div class="callout co-info" style="margin-top:14px"><b>Light theme only.</b> Every token is defined for light mode; the token file defers dark mode to a future release. There is currently <b>no dark-mode spec</b> for these surfaces.</div>
+    </section>
+
+    <section class="panel" id="v-hcard" role="tabpanel">
+      <div class="p-head"><h2>The feed card, per state</h2></div>
+      <p class="p-purpose">The banners had a colour for every state. <b>The card does not.</b> The stripe and reason line are painted from server fields, so there's no hardcoded state→colour map on the card. What the <b>code</b> decides per state is the <b>icon</b> and <b>which line-2 mode</b> shows — plus grouping. So this shows the <b>distinct card renderings precisely</b>, then a <b>per-state table</b> of the line-2 mode.</p>
+      <div class="caveat-strip"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16v.02"/></svg><div><b>Server-driven vs code-driven.</b> On the card, the <b>stripe</b> (<code style="font-family:var(--mono);font-size:12px">accentType</code>) and the <b>reason text + tint</b> (<code style="font-family:var(--mono);font-size:12px">reasonDisplayTemplate</code> + <code style="font-family:var(--mono);font-size:12px">thresholdState</code>) come from the backend. Specimens render the <b>code-deterministic parts precisely</b> (icon, line-2 mode, timer) and the server parts as their <b>typical</b> appearance.</div></div>
+      <div class="lab"><h3>Anatomy</h3><span class="rule"></span></div>
+      <div class="hcards">
+        <div class="hspec"><div class="hcard st-warning"><div class="stripe"></div><div class="body"><div class="l1"><span class="ic"><svg viewBox="0 0 24 24"><use href="#clock"/></svg></span><span class="ttl">इंस्टॉलेशन · #A4821</span><span class="loc">· Kirari</span><span class="cnt">2</span></div><div class="l2"><span class="reason rz-normal">कनेक्शन का इंतज़ार · 3:20 pm</span></div></div></div><div class="meta"><span class="stt">stripe · icon · label·#id · locality · unread badge · line-2</span></div></div>
+      </div>
+      <div class="refs"><span class="ref"><b>TaskCard.kt</b>:79–271</span></div>
+      <div class="lab"><h3>Line-2 mode 1 · reason line — 3 server tints</h3><span class="rule"></span></div>
+      <div class="hcards">
+        <div class="hspec"><div class="hcard st-default"><div class="stripe"></div><div class="body"><div class="l1"><span class="ic"><svg viewBox="0 0 24 24"><use href="#clock"/></svg></span><span class="ttl">इंस्टॉलेशन · #A4821</span><span class="loc">· Kirari</span></div><div class="l2"><span class="reason rz-normal">इंस्टॉलेशन पक्का हुआ · कल 11 am</span></div></div></div><div class="meta"><span class="modepill tm">threshold NORMAL</span><span class="tok">#161021 · no bg</span></div></div>
+        <div class="hspec"><div class="hcard st-warning"><div class="stripe"></div><div class="body"><div class="l1"><span class="ic"><svg viewBox="0 0 24 24"><use href="#clock"/></svg></span><span class="ttl">इंस्टॉलेशन · #A4821</span><span class="loc">· Kirari</span><span class="cnt">1</span></div><div class="l2"><span class="reason rz-urgent">आज का स्लॉट · जल्दी करें</span></div></div></div><div class="meta"><span class="modepill tm">threshold URGENT</span><span class="tok">#B85C00 · #FFF2BF</span></div></div>
+        <div class="hspec"><div class="hcard st-negative"><div class="stripe"></div><div class="body"><div class="l1"><span class="ic"><svg viewBox="0 0 24 24"><use href="#clock"/></svg></span><span class="ttl">इंस्टॉलेशन · #A4821</span><span class="loc">· Kirari</span></div><div class="l2"><span class="reason rz-overdue">टीम ने देरी कर दी</span></div></div></div><div class="meta"><span class="modepill tm">threshold OVERDUE</span><span class="tok">#D92130 · #FFE5E7</span></div></div>
+      </div>
+      <div class="lab"><h3>Line-2 modes 2–4 · the three countdowns (precise)</h3><span class="rule"></span></div>
+      <div class="hcards">
+        <div class="hspec"><div class="hcard st-warning"><div class="stripe"></div><div class="body"><div class="l1"><span class="ic"><svg viewBox="0 0 24 24"><use href="#clock"/></svg></span><span class="ttl">इंस्टॉलेशन · #A4821</span><span class="loc">· Kirari</span></div><div class="l2"><span class="tmr tmr-slot">3 घंटे में टिकट हट जाएगी</span></div></div></div><div class="meta"><span class="modepill tm">Slot P41</span><span class="stt">AWAITING_SLOT_PROPOSAL</span><span class="ln">guard TaskCard.kt:169</span></div></div>
+        <div class="hspec"><div class="hcard st-negative"><div class="stripe"></div><div class="body"><div class="l1"><span class="ic"><svg viewBox="0 0 24 24"><use href="#clock"/></svg></span><span class="ttl">इंस्टॉलेशन · #A4821</span><span class="loc">· Kirari</span></div><div class="l2"><span class="tmr tmr-p74">1 दिन में टिकट हटा दिया जाएगा</span></div></div></div><div class="meta"><span class="modepill tm">Removal P74</span><span class="stt">thresholdState OVERDUE</span><span class="ln">guard TaskCard.kt:174</span></div></div>
+        <div class="hspec"><div class="hcard st-warning"><div class="stripe"></div><div class="body"><div class="l1"><span class="ic"><svg viewBox="0 0 24 24"><use href="#router"/></svg></span><span class="ttl">पिकअप · #C7710</span><span class="loc">· Nangloi</span></div><div class="l2"><span class="tmr tmr-pk-u">04:12:39</span></div></div></div><div class="meta"><span class="modepill tm">Pickup SLA · urgent</span><span class="stt">not started</span><span class="ln">guard TaskCard.kt:182</span></div></div>
+        <div class="hspec"><div class="hcard st-negative"><div class="stripe"></div><div class="body"><div class="l1"><span class="ic"><svg viewBox="0 0 24 24"><use href="#router"/></svg></span><span class="ttl">पिकअप · #C7710</span><span class="loc">· Nangloi</span></div><div class="l2"><span class="tmr tmr-pk-o">समय सीमा पार</span></div></div></div><div class="meta"><span class="modepill tm">Pickup SLA · overdue</span><span class="stt">flips red, does NOT hide</span><span class="ln">PickupCountdownLine.kt</span></div></div>
+      </div>
+      <div class="lab"><h3>Left stripe · the 3 server accents</h3><span class="rule"></span></div>
+      <div class="hcards">
+        <div class="hspec"><div class="hcard st-default"><div class="stripe"></div><div class="body"><div class="l1"><span class="ic"><svg viewBox="0 0 24 24"><use href="#clock"/></svg></span><span class="ttl">कोई भी टास्क · #ID</span><span class="loc">· area</span></div><div class="l2"><span class="reason rz-normal">सामान्य स्थिति</span></div></div></div><div class="meta"><span class="modepill">accentType default</span><span class="tok">accentDefault #D7D3E0</span></div></div>
+        <div class="hspec"><div class="hcard st-warning"><div class="stripe"></div><div class="body"><div class="l1"><span class="ic"><svg viewBox="0 0 24 24"><use href="#clock"/></svg></span><span class="ttl">कोई भी टास्क · #ID</span><span class="loc">· area</span></div><div class="l2"><span class="reason rz-normal">ध्यान चाहिए</span></div></div></div><div class="meta"><span class="modepill tm">accentType warning</span><span class="tok">stateWarning #B85C00</span></div></div>
+        <div class="hspec"><div class="hcard st-negative"><div class="stripe"></div><div class="body"><div class="l1"><span class="ic"><svg viewBox="0 0 24 24"><use href="#clock"/></svg></span><span class="ttl">कोई भी टास्क · #ID</span><span class="loc">· area</span></div><div class="l2"><span class="reason rz-normal">ज़रूरी / असफल</span></div></div></div><div class="meta"><span class="modepill" style="background:#FFE5E7;color:#a5121f">accentType negative</span><span class="tok">stateNegative #D92130</span></div></div>
+      </div>
+      <div class="callout co-warn" style="margin-top:14px"><b>Independent signals:</b> the stripe (<code>accentType</code>) and the line-2 tint (<code>thresholdState</code>) are set separately by the server — a card can have a neutral stripe with an urgent line. Don't assume they match.</div>
+      <div class="lab"><h3>Grouped &amp; batch cards</h3><span class="rule"></span></div>
+      <div class="hcards">
+        <div class="hspec"><div class="gcard"><span class="gic"><svg viewBox="0 0 24 24"><use href="#router"/></svg></span><div><div class="gt">3 पिकअप <span class="gdot"></span></div><div class="gs">1 डेडलाइन के पास · टैप करें</div></div><span class="chev">›</span></div><div class="meta"><span class="modepill grp">NbrecGroupCard</span><span class="stt">always grouped</span><span class="ln">summary rotates 3s · dot = any unread</span></div></div>
+        <div class="hspec"><div class="gcard dash"><div style="flex:1"><div class="gt">6 रिचार्ज <span class="loc" style="margin-left:auto;font-size:12px;font-weight:400">कल तक</span></div><div class="gs">पूरी सूची देखें</div></div><span class="chev">›</span></div><div class="meta"><span class="modepill grp">BatchBlockCard</span><span class="stt">RECHARGE · collapsed</span><span class="ln">tap → recharge graph</span></div></div>
+        <div class="hspec"><div class="gcard dash"><div style="flex:1"><div class="gt">4 डिवाइस रिटर्न <span class="loc" style="margin-left:auto;font-size:12px;font-weight:400">आज</span></div><div class="gs">पूरी सूची देखें</div></div><span class="chev">›</span></div><div class="meta"><span class="modepill grp">BatchBlockCard</span><span class="stt">NETBOX_RETURN</span><span class="ln">tap → batch select</span></div></div>
+      </div>
+      <div class="lab"><h3>Per-state → card line-2 mode</h3><span class="rule"></span></div>
+      <div class="tscroll"><table>
+        <thead><tr><th>Family · state</th><th>Card line-2 mode</th><th>Icon</th></tr></thead>
+        <tbody>
+          <tr><td><code>INSTALL</code> · AWAITING_SLOT_PROPOSAL <span style="color:var(--ink-3)">(p41)</span></td><td><span class="modepill tm">Slot P41 countdown</span></td><td>clock</td></tr>
+          <tr><td><code>INSTALL</code> · any state OVERDUE <span style="color:var(--ink-3)">(p74)</span></td><td><span class="modepill tm">P74 removal countdown</span></td><td>clock</td></tr>
+          <tr><td><code>INSTALL</code> · all other states</td><td><span class="modepill">reason line</span></td><td>clock</td></tr>
+          <tr><td><code>NETBOX_PICKUP</code> · not started + deadline</td><td><span class="modepill tm">Pickup 24h SLA countdown</span></td><td>router</td></tr>
+          <tr><td><code>NETBOX_PICKUP</code> · work started</td><td><span class="modepill">reason line</span> <span style="color:var(--ink-3)">(inside group card)</span></td><td>router</td></tr>
+          <tr><td><code>RESTORE</code> · all states</td><td><span class="modepill">reason line</span></td><td>build</td></tr>
+          <tr><td><code>SHIFTING</code> · all states</td><td><span class="modepill">reason line</span></td><td>swap</td></tr>
+          <tr><td><code>RECHARGE</code></td><td><span class="modepill grp">Batch card</span> (header only)</td><td>bolt</td></tr>
+          <tr><td><code>NETBOX_RETURN</code></td><td><span class="modepill grp">Batch card</span> → wizard on tap</td><td>router</td></tr>
+        </tbody>
+      </table></div>
+      <div class="refs"><span class="ref"><b>TaskCard.kt</b>:167–271 · <b>NbrecGroupCard.kt · BatchBlockCard.kt</b></span></div>
+    </section>
+
+    <section class="panel" id="v-install" role="tabpanel">
+      <div class="p-head"><h2>Installation banners</h2><span class="famcode">INSTALL</span></div>
+      <p class="p-purpose">Full state ladder. Two states have colour-shifting variants: <code>AWAITING_SLOT_PROPOSAL</code> (copy swaps to a countdown) and <code>SCHEDULED</code> (warning on slot-day, positive otherwise). <code>UNKNOWN</code> renders <b>no banner</b>.</p>
+      <div class="specs">
+        <div class="spec"><div class="bnr tone-warn"><span class="circ"><svg><use href="#clock"/></svg></span><div class="txt"><div class="ttl">समय चुनना बाकी है</div></div></div><div class="meta"><span class="tone-pill tp-warn">warning</span><span class="stt">AWAITING_SLOT_PROPOSAL</span><span class="ln">:187</span></div></div>
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#hourglass"/></svg></span><div class="txt"><div class="ttl">कनेक्शन के कन्फ़र्मेशन का इंतज़ार</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="stt">AWAITING_CUSTOMER_SLOT_CONFIRMATION</span><span class="ln">:202</span></div></div>
+        <div class="spec"><div class="bnr tone-warn"><span class="circ"><svg><use href="#clock"/></svg></span><div class="txt"><div class="ttl">टेक्निशियन चुनना बाकी है</div></div></div><div class="meta"><span class="tone-pill tp-warn">warning</span><span class="stt">AWAITING_TECHNICIAN_ASSIGNMENT</span><span class="ln">:207</span></div></div>
+        <div class="spec"><div class="bnr tone-pos"><span class="circ"><svg><use href="#check"/></svg></span><div class="txt"><div class="ttl">टेक्निशियन तय हो गया</div></div></div><div class="meta"><span class="tone-pill tp-pos">positive</span><span class="stt">TECHNICIAN_ASSIGNED</span><span class="ln">:212</span></div></div>
+        <div class="spec"><div class="bnr tone-pos"><span class="circ"><svg><use href="#check"/></svg></span><div class="txt"><div class="ttl">टीम पहुँच गया</div></div></div><div class="meta"><span class="tone-pill tp-pos">positive</span><span class="stt">ARRIVED_AT_SITE</span><span class="ln">:217</span></div></div>
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#hourglass"/></svg></span><div class="txt"><div class="ttl">इंस्टॉलेशन का समय कन्फर्म हो रहा है</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="stt">AWAITING_CUSTOMER_SELECTION</span><span class="ln">:222</span></div></div>
+        <div class="spec"><div class="bnr tone-pos"><span class="circ"><svg><use href="#check"/></svg></span><div class="txt"><div class="ttl">स्लॉट पक्का हुआ</div></div></div><div class="meta"><span class="tone-pill tp-pos">positive</span><span class="stt">SLOT_CONFIRMED</span><span class="ln">:227</span></div></div>
+        <div class="spec"><div class="bnr tone-warn"><span class="circ"><svg><use href="#clock"/></svg></span><div class="txt"><div class="ttl">आज इंस्टॉलेशन का दिन है</div><div class="sub">isSlotDay = true</div></div></div><div class="meta"><span class="tone-pill tp-warn">warning</span><span class="stt">SCHEDULED (today)</span><span class="ln">:232 · flag never set → unreachable</span></div></div>
+        <div class="spec"><div class="bnr tone-pos"><span class="circ"><svg><use href="#clock"/></svg></span><div class="txt"><div class="ttl">इंस्टॉलेशन पक्का हुआ</div></div></div><div class="meta"><span class="tone-pill tp-pos">positive</span><span class="stt">SCHEDULED (default)</span><span class="ln">:232</span></div></div>
+        <div class="spec"><div class="bnr tone-warn"><span class="circ"><svg><use href="#warn"/></svg></span><div class="txt"><div class="ttl">कनेक्शन के लिए नया समय चुनें</div></div></div><div class="meta"><span class="tone-pill tp-warn">warning</span><span class="stt">NEEDS_RESCHEDULING</span><span class="ln">:243</span></div></div>
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#sync"/></svg></span><div class="txt"><div class="ttl">कनेक्शन ने स्लॉट कन्फर्म नहीं किया</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="stt">SCHEDULING_FAILED</span><span class="ln">:248</span></div></div>
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#sync"/></svg></span><div class="txt"><div class="ttl">इंस्टॉलेशन पर काम चल रहा है</div><div class="sub">{name} काम कर रहे हैं</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="stt">IN_PROGRESS + PRE/POST_FEE · OTP · RATING</span><span class="ln">:253 · 6 states</span></div></div>
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#hourglass"/></svg></span><div class="txt"><div class="ttl">इंस्टॉलेशन पूरा हुआ</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="stt">INSTALL_SUBMITTED</span><span class="ln">:269</span></div></div>
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#hourglass"/></svg></span><div class="txt"><div class="ttl">{name} ने इंस्टॉलेशन अभी शुरू नहीं किया</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="stt">DELEGATED_NOT_STARTED</span><span class="ln">:274</span></div></div>
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#sync"/></svg></span><div class="txt"><div class="ttl">{name} काम कर रहे हैं</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="stt">DELEGATED_IN_PROGRESS</span><span class="ln">:283</span></div></div>
+        <div class="spec"><div class="bnr tone-neg"><span class="circ"><svg><use href="#warn"/></svg></span><div class="txt"><div class="ttl">{name} ने कनेक्शन इंस्टॉलेशन में देरी कर दी</div></div></div><div class="meta"><span class="tone-pill tp-neg">negative</span><span class="stt">DELEGATED_OVERDUE</span><span class="ln">:292</span></div></div>
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#sync"/></svg></span><div class="txt"><div class="ttl">इंस्टॉलेशन वेरिफाई हो रहा है</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="stt">VERIFICATION_PENDING</span><span class="ln">:301</span></div></div>
+        <div class="spec"><div class="bnr tone-pos"><span class="circ"><svg><use href="#check"/></svg></span><div class="txt"><div class="ttl">इंस्टॉलेशन पूरा हुआ — {amount} मिले</div></div></div><div class="meta"><span class="tone-pill tp-pos">positive</span><span class="stt">RESOLVED</span><span class="ln">:306</span></div></div>
+        <div class="spec"><div class="bnr tone-neg"><span class="circ"><svg><use href="#warn"/></svg></span><div class="txt"><div class="ttl">इंस्टॉलेशन असफल रिपोर्ट किया गया</div></div></div><div class="meta"><span class="tone-pill tp-neg">negative</span><span class="stt">INSTALLATION_REPORTED_FAILED</span><span class="ln">:318</span></div></div>
+        <div class="spec"><div class="bnr tone-none"><span class="circ" style="background:var(--ink-3)">—</span><div class="txt"><div class="ttl" style="color:var(--ink-2)">no banner rendered</div></div></div><div class="meta"><span class="tone-pill tp-none">none</span><span class="stt">UNKNOWN</span><span class="ln">:323 · null by design</span></div></div>
+      </div>
+      <div class="refs"><span class="ref"><b>InstallStateBanner.kt</b>:176–327</span></div>
+    </section>
+
+    <section class="panel" id="v-restore" role="tabpanel">
+      <div class="p-head"><h2>Restore banners</h2><span class="famcode">RESTORE</span></div>
+      <p class="p-purpose">Escalations and customer-denial go <b>negative</b>; delegation and verification sit <b>info</b>; only resolution is <b>positive</b>.</p>
+      <div class="specs">
+        <div class="spec"><div class="bnr tone-warn"><span class="circ"><svg><use href="#warn"/></svg></span><div class="txt"><div class="ttl">तुरंत ध्यान दें</div></div></div><div class="meta"><span class="tone-pill tp-warn">warning</span><span class="stt">PENDING_ACCEPTANCE / RESPOND_NOW</span><span class="ln">:469</span></div></div>
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#sync"/></svg></span><div class="txt"><div class="ttl">काम शुरू करें</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="stt">ACCEPTED</span><span class="ln">:474</span></div></div>
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#sync"/></svg></span><div class="txt"><div class="ttl">काम जारी है</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="stt">WORKING</span><span class="ln">:478</span></div></div>
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#sync"/></svg></span><div class="txt"><div class="ttl">टीम मेम्बर असाइन हुआ</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="stt">ASSIGNED_TECHNICIAN</span><span class="ln">:482</span></div></div>
+        <div class="spec"><div class="bnr tone-neg"><span class="circ"><svg><use href="#warn"/></svg></span><div class="txt"><div class="ttl">एस्केलेट हुआ — आपकी कार्रवाई ज़रूरी</div></div></div><div class="meta"><span class="tone-pill tp-neg">negative</span><span class="stt">ESCALATED_CSP_ACTIVE</span><span class="ln">:486</span></div></div>
+        <div class="spec"><div class="bnr tone-neg"><span class="circ"><svg><use href="#warn"/></svg></span><div class="txt"><div class="ttl">Wiom ने ले लिया है</div></div></div><div class="meta"><span class="tone-pill tp-neg">negative</span><span class="stt">ESCALATED_PLATFORM_TAKEOVER</span><span class="ln">:490</span></div></div>
+        <div class="spec"><div class="bnr tone-neg"><span class="circ"><svg><use href="#warn"/></svg></span><div class="txt"><div class="ttl">ग्राहक ने मना किया</div></div></div><div class="meta"><span class="tone-pill tp-neg">negative</span><span class="stt">CUSTOMER_DENIED</span><span class="ln">:494</span></div></div>
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#hourglass"/></svg></span><div class="txt"><div class="ttl">टीम मेम्बर को भेजा — शुरू नहीं हुआ</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="stt">DELEGATED_NOT_STARTED</span><span class="ln">:498</span></div></div>
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#sync"/></svg></span><div class="txt"><div class="ttl">टीम मेम्बर काम कर रहा है</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="stt">DELEGATED_IN_PROGRESS</span><span class="ln">:502</span></div></div>
+        <div class="spec"><div class="bnr tone-neg"><span class="circ"><svg><use href="#warn"/></svg></span><div class="txt"><div class="ttl">समय निकल गया</div></div></div><div class="meta"><span class="tone-pill tp-neg">negative</span><span class="stt">DELEGATED_OVERDUE</span><span class="ln">:506</span></div></div>
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#hourglass"/></svg></span><div class="txt"><div class="ttl">जाँच हो रही है</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="stt">VERIFICATION_PENDING</span><span class="ln">:510</span></div></div>
+        <div class="spec"><div class="bnr tone-pos"><span class="circ"><svg><use href="#check"/></svg></span><div class="txt"><div class="ttl">समस्या ठीक हो गई</div></div></div><div class="meta"><span class="tone-pill tp-pos">positive</span><span class="stt">RESOLVED</span><span class="ln">:514</span></div></div>
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#sync"/></svg></span><div class="txt"><div class="ttl">दोबारा वर्गीकृत हुआ</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="stt">RECLASSIFIED</span><span class="ln">:518</span></div></div>
+      </div>
+      <div class="refs"><span class="ref"><b>RestoreDrilldownContent.kt</b>:466–529</span></div>
+    </section>
+
+    <section class="panel" id="v-pickup" role="tabpanel">
+      <div class="p-head"><h2>NetBox Pickup banners</h2><span class="famcode">NETBOX_PICKUP</span></div>
+      <p class="p-purpose">Resolved on <code>currentState</code> + reason code + delegation. The retry state has two tones — <b>warning</b> on first rejection, <b>negative</b> at the max.</p>
+      <div class="specs">
+        <div class="spec"><div class="bnr tone-warn"><span class="circ"><svg><use href="#clock"/></svg></span><div class="txt"><div class="ttl">डिवाइस वापस लेना बाकी है</div></div></div><div class="meta"><span class="tone-pill tp-warn">warning</span><span class="stt">PENDING_PICKUP</span><span class="ln">:369</span></div></div>
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#hourglass"/></svg></span><div class="txt"><div class="ttl">टीम को भेज दिया गया</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="stt">DELEGATED_NOT_STARTED (team)</span><span class="ln">:376</span></div></div>
+        <div class="spec"><div class="bnr tone-warn"><span class="circ"><svg><use href="#clock"/></svg></span><div class="txt"><div class="ttl">पिकअप बाकी है</div></div></div><div class="meta"><span class="tone-pill tp-warn">warning</span><span class="stt">DELEGATED_NOT_STARTED (self)</span><span class="ln">:383</span></div></div>
+        <div class="spec"><div class="bnr tone-neg"><span class="circ"><svg><use href="#warn"/></svg></span><div class="txt"><div class="ttl">फ़ोटो रिजेक्ट हुआ</div><div class="sub">attempts ≥ max</div></div></div><div class="meta"><span class="tone-pill tp-neg">negative</span><span class="stt">RETRY (limit reached)</span><span class="ln">:390</span></div></div>
+        <div class="spec"><div class="bnr tone-warn"><span class="circ"><svg><use href="#warn"/></svg></span><div class="txt"><div class="ttl">फ़ोटो रिजेक्ट हुआ</div><div class="sub">first rejection</div></div></div><div class="meta"><span class="tone-pill tp-warn">warning</span><span class="stt">RETRY (first)</span><span class="ln">:398</span></div></div>
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#sync"/></svg></span><div class="txt"><div class="ttl">आपने खुद को असाइन किया</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="stt">IN_PROGRESS (self)</span><span class="ln">:405</span></div></div>
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#sync"/></svg></span><div class="txt"><div class="ttl">{name} डिवाइस लेने गए हैं</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="stt">DELEGATED_IN_PROGRESS (team)</span><span class="ln">:419</span></div></div>
+        <div class="spec"><div class="bnr tone-neg"><span class="circ"><svg><use href="#warn"/></svg></span><div class="txt"><div class="ttl">समय सीमा पार हो गई</div></div></div><div class="meta"><span class="tone-pill tp-neg">negative</span><span class="stt">DELEGATED_OVERDUE / PICKUP_OVERDUE</span><span class="ln">:426</span></div></div>
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#hourglass"/></svg></span><div class="txt"><div class="ttl">फ़ोटो भेज दी गई</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="stt">PROOF_SUBMITTED / VERIFICATION_PENDING</span><span class="ln">:433</span></div></div>
+        <div class="spec"><div class="bnr tone-pos"><span class="circ"><svg><use href="#check"/></svg></span><div class="txt"><div class="ttl">डिवाइस वेरिफ़ाई हो गया</div></div></div><div class="meta"><span class="tone-pill tp-pos">positive</span><span class="stt">VERIFIED</span><span class="ln">:440</span></div></div>
+        <div class="spec"><div class="bnr tone-pos"><span class="circ"><svg><use href="#check"/></svg></span><div class="txt"><div class="ttl">रिकवरी पूरी हुई — {amount} मिले</div></div></div><div class="meta"><span class="tone-pill tp-pos">positive</span><span class="stt">RESOLVED</span><span class="ln">:447</span></div></div>
+        <div class="spec"><div class="bnr tone-neg"><span class="circ"><svg><use href="#warn"/></svg></span><div class="txt"><div class="ttl">पिकअप रद्द हो गया</div></div></div><div class="meta"><span class="tone-pill tp-neg">negative</span><span class="stt">CANCELLED</span><span class="ln">:462</span></div></div>
+        <div class="spec"><div class="bnr tone-warn"><span class="circ"><svg><use href="#clock"/></svg></span><div class="txt"><div class="ttl">स्थिति अज्ञात</div><div class="sub">डिवाइस लेकर आना है</div></div></div><div class="meta"><span class="tone-pill tp-warn">warning</span><span class="stt">else (unknown)</span><span class="ln">:469</span></div></div>
+      </div>
+      <div class="refs"><span class="ref"><b>PickupDrilldownContent.kt</b>:360–483</span></div>
+    </section>
+
+    <section class="panel" id="v-shifting" role="tabpanel">
+      <div class="p-head"><h2>Shifting banners</h2><span class="famcode">SHIFTING</span></div>
+      <p class="p-purpose">Title-only banners. <code>OPEN</code> copy differs for within- vs new-premises. A special override renders a negative "declined" banner when the partner refuses service.</p>
+      <div class="specs">
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#swap"/></svg></span><div class="txt"><div class="ttl">ग्राहक ने नेट बॉक्स को दूसरे कमरे में लगाने की रिक्वेस्ट की है</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="stt">OPEN · within premises</span><span class="ln">:345</span></div></div>
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#swap"/></svg></span><div class="txt"><div class="ttl">ग्राहक ने नए पते पर नेटबॉक्स लगाने की रिक्वेस्ट की है</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="stt">OPEN · new premises</span><span class="ln">:345</span></div></div>
+        <div class="spec"><div class="bnr tone-warn"><span class="circ"><svg><use href="#hourglass"/></svg></span><div class="txt"><div class="ttl">जाँच हो रही है — ग्राहक से पुष्टि का इंतज़ार</div></div></div><div class="meta"><span class="tone-pill tp-warn">warning</span><span class="stt">PENDING_VERIFICATION</span><span class="ln">:350</span></div></div>
+        <div class="spec"><div class="bnr tone-pos"><span class="circ"><svg><use href="#check"/></svg></span><div class="txt"><div class="ttl">शिफ्टिंग सफल — वेरिफ़ाई हो गया</div></div></div><div class="meta"><span class="tone-pill tp-pos">positive</span><span class="stt">RESOLVED / CLOSED</span><span class="ln">:355 · 365</span></div></div>
+        <div class="spec"><div class="bnr tone-neg"><span class="circ"><svg><use href="#warn"/></svg></span><div class="txt"><div class="ttl">SLA ब्रीच — एस्केलेट किया गया</div></div></div><div class="meta"><span class="tone-pill tp-neg">negative</span><span class="stt">ESCALATED</span><span class="ln">:360</span></div></div>
+        <div class="spec"><div class="bnr tone-neg"><span class="circ"><svg><use href="#warn"/></svg></span><div class="txt"><div class="ttl">आपने सर्विस देने से मना कर दिया है</div></div></div><div class="meta"><span class="tone-pill tp-neg">negative</span><span class="stt">UNRESOLVABLE / declined</span><span class="ln">:370 · 138</span></div></div>
+        <div class="spec"><div class="bnr tone-info"><span class="circ"><svg><use href="#swap"/></svg></span><div class="txt"><div class="ttl">(within / new premises copy)</div></div></div><div class="meta"><span class="tone-pill tp-info">info</span><span class="stt">UNKNOWN</span><span class="ln">:375 · falls back to OPEN</span></div></div>
+      </div>
+      <div class="callout co-info" style="margin-top:14px">BE states collapse before mapping: <code>OPEN ← {OPEN, PENDING_ACCEPTANCE, ASSIGNED_TECHNICIAN}</code>, <code>ESCALATED ← {ESCALATED, ESCALATED_CSP_ACTIVE, ESCALATED_PLATFORM_TAKEOVER}</code>.</div>
+      <div class="refs"><span class="ref"><b>ShiftingDrilldownContent.kt</b>:339–386, 433–441</span></div>
+    </section>
+  </div>
+
+  <footer>
+    <span>Source: feature/home · feature/installation · feature/recharge(-automation) · feature/netbox · core/common</span>
+    <span>Wiom CSP App · development branch</span>
+    <span>Reference map — verify line refs against current HEAD</span>
+  </footer>
+</div>
+
+<script>
+  (function(){
+    // top-level doc switch
+    var docs=[].slice.call(document.querySelectorAll('.doc'));
+    var dbtns=[].slice.call(document.querySelectorAll('.docbtn'));
+    function selectDoc(id){
+      docs.forEach(function(d){d.classList.toggle('active',d.id===id);});
+      dbtns.forEach(function(b){b.setAttribute('aria-selected',String(b.dataset.doc===id));});
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+    dbtns.forEach(function(b,i){
+      b.addEventListener('click',function(){selectDoc(b.dataset.doc);});
+      b.addEventListener('keydown',function(e){
+        if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();var n=(i+(e.key==='ArrowRight'?1:-1)+dbtns.length)%dbtns.length;dbtns[n].focus();selectDoc(dbtns[n].dataset.doc);}
+      });
+    });
+    // scoped sub-tabs (each .tabbar controls panels within its own .doc)
+    document.querySelectorAll('.tabbar').forEach(function(bar){
+      var doc=bar.closest('.doc');
+      var tabs=[].slice.call(bar.querySelectorAll('.tab'));
+      var panels=[].slice.call(doc.querySelectorAll('.panel'));
+      function selectTab(id){
+        tabs.forEach(function(t){t.setAttribute('aria-selected',String(t.dataset.tab===id));});
+        panels.forEach(function(p){p.classList.toggle('active',p.id===id);});
+      }
+      tabs.forEach(function(t,i){
+        t.addEventListener('click',function(){selectTab(t.dataset.tab);var top=bar.getBoundingClientRect().top+window.scrollY-58;window.scrollTo({top:Math.max(0,top),behavior:'smooth'});});
+        t.addEventListener('keydown',function(e){
+          if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();var n=(i+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;tabs[n].focus();selectTab(tabs[n].dataset.tab);}
+        });
+      });
+    });
+  })();
+</script>
