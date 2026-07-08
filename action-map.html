@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wiom CSP — Action Map · अभी करना है vs काम चल रहा है</title>
+<title>Wiom CSP — Exhaustive Action Map · अभी करना है vs काम चल रहा है</title>
 <style>
 :root{
   --pink:#D9008D;--pink-soft:#F5D6EA;--pink-bg:#FFF0F8;
@@ -21,17 +21,53 @@
 }
 *{box-sizing:border-box;margin:0;}
 body{background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;padding:32px 20px;}
-
-.page{max-width:1200px;margin:0 auto;}
+.page{max-width:1280px;margin:0 auto;}
 .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--pink);margin-bottom:14px;font-weight:600;}
 h1{font-size:clamp(28px,5vw,42px);line-height:1.1;letter-spacing:-.025em;font-weight:800;margin-bottom:12px;}
-.sub{font-size:16px;color:var(--ink-2);margin-bottom:12px;max-width:64ch;}
+.sub{font-size:16px;color:var(--ink-2);margin-bottom:12px;max-width:68ch;}
 .sub b{color:var(--ink);font-weight:650;}
 .rule-box{background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:16px 20px;margin-bottom:36px;font-size:14px;color:var(--ink-2);line-height:1.7;box-shadow:var(--shadow);}
 .rule-box b{color:var(--ink);font-weight:650;}
-.rule-box .pill-demo{display:inline-block;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;vertical-align:middle;margin:0 2px;}
+
+/* pills */
+.pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;margin:2px 3px 2px 0;}
+.pill-a{background:var(--pink-bg);color:var(--pink);border:1px solid var(--pink-soft);}
+.pill-m{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--hair);}
+.pill-c{background:var(--violet-soft);color:var(--violet);border:1px solid #C4A8E0;}
+.pill-demo{display:inline-block;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:600;vertical-align:middle;margin:0 2px;}
 .pill-action-demo{background:var(--pink-bg);color:var(--pink);border:1px solid var(--pink-soft);}
 .pill-motion-demo{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--hair);}
+.pill-common-demo{background:var(--violet-soft);color:var(--violet);border:1px solid #C4A8E0;}
+
+/* ── Overview Table ── */
+.overview{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:32px;}
+.overview-head{background:var(--surface-2);padding:20px 24px;border-bottom:1px solid var(--hair);}
+.overview-head h2{font-size:20px;font-weight:800;margin-bottom:4px;}
+.overview-head p{font-size:13px;color:var(--ink-2);}
+.overview table{width:100%;border-collapse:collapse;}
+.overview th{text-align:left;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);padding:12px 20px;border-bottom:1px solid var(--hair);font-weight:600;}
+.overview td{padding:14px 20px;border-bottom:1px solid var(--hair);vertical-align:top;font-size:14px;}
+.overview tr:last-child td{border-bottom:none;}
+.overview .fn{font-weight:700;white-space:nowrap;}
+.pill-wrap{display:flex;flex-wrap:wrap;gap:4px;align-items:flex-start;}
+
+/* ── Common Actions ── */
+.common-section{background:var(--violet-soft);border:2px solid #C4A8E0;border-radius:var(--radius);padding:24px;margin-bottom:32px;}
+.common-section h2{font-size:22px;font-weight:800;color:var(--violet);margin-bottom:6px;}
+.common-section .c-sub{font-size:14px;color:var(--ink-2);margin-bottom:20px;}
+.common-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.common-card{background:var(--surface);border-radius:12px;padding:18px 20px;box-shadow:var(--shadow);}
+.common-card h3{font-size:16px;font-weight:750;margin-bottom:4px;display:flex;align-items:center;gap:8px;}
+.common-card .cc-where{font-size:12px;color:var(--ink-3);font-family:var(--mono);margin-bottom:10px;}
+.common-card .cc-detail{font-size:13px;color:var(--ink-2);line-height:1.6;}
+.common-card .cc-detail b{color:var(--ink);font-weight:600;}
+.common-card .cc-detail ul{margin:6px 0 6px 16px;}
+.common-card .cc-detail li{margin-bottom:3px;}
+.avail-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px;}
+.avail-table th{text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--ink-3);padding:6px 8px;border-bottom:1px solid var(--hair);}
+.avail-table td{padding:6px 8px;border-bottom:1px solid var(--hair);}
+.avail-table .yes{color:var(--green);font-weight:700;}
+.avail-table .no{color:var(--ink-3);}
 
 /* ── Flow Section ── */
 .flow-section{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:28px;overflow:hidden;}
@@ -39,7 +75,7 @@ h1{font-size:clamp(28px,5vw,42px);line-height:1.1;letter-spacing:-.025em;font-we
 .flow-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
 .flow-header h2{font-size:20px;font-weight:750;letter-spacing:-.01em;}
 .flow-header .flow-desc{font-size:13px;color:var(--ink-2);margin-top:2px;}
-.flow-header .batch-badge{display:inline-block;background:var(--violet-soft);color:var(--violet);font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px;margin-left:10px;vertical-align:middle;font-family:var(--mono);letter-spacing:.05em;}
+.batch-badge{display:inline-block;background:var(--violet-soft);color:var(--violet);font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px;margin-left:10px;vertical-align:middle;font-family:var(--mono);letter-spacing:.05em;}
 
 .flow-body{display:grid;grid-template-columns:1fr 1fr;min-height:100px;}
 .col-action,.col-motion{padding:20px 24px;}
@@ -49,48 +85,44 @@ h1{font-size:clamp(28px,5vw,42px);line-height:1.1;letter-spacing:-.025em;font-we
 .col-motion .col-label{color:var(--ink-3);}
 .col-label .hindi{font-family:var(--sans);letter-spacing:0;text-transform:none;font-size:12px;font-weight:500;}
 
-/* ── State Card ── */
-.state-card{border:1px solid var(--hair);border-radius:12px;padding:14px 16px;margin-bottom:12px;transition:.2s;}
+/* state cards */
+.state-card{border:1px solid var(--hair);border-radius:12px;padding:14px 16px;margin-bottom:12px;transition:.15s;}
 .state-card:hover{border-color:var(--pink-soft);box-shadow:0 2px 8px rgba(217,0,141,.08);}
-.state-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px;}
+.state-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px;}
 .state-name{font-size:15px;font-weight:700;color:var(--ink);}
 .state-hindi{font-size:13px;color:var(--ink-2);font-weight:500;margin-top:1px;}
 .urgency{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.08em;padding:3px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;margin-top:2px;}
 .urgency-high{background:var(--orange-bg);color:var(--orange);}
 .urgency-critical{background:var(--red-bg);color:var(--red);}
 .urgency-normal{background:var(--surface-2);color:var(--ink-3);}
-
-.state-what{font-size:13px;color:var(--ink-2);line-height:1.5;margin-bottom:8px;}
+.state-what{font-size:13px;color:var(--ink-2);line-height:1.5;margin-bottom:6px;}
 .state-what b{color:var(--ink);font-weight:600;}
-
-.state-do{font-size:13px;line-height:1.5;margin-bottom:8px;}
+.state-do{font-size:13px;line-height:1.5;margin-bottom:6px;}
 .state-do .do-label{font-weight:700;color:var(--pink);font-size:11px;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px;}
 .col-motion .state-do .do-label{color:var(--ink-3);}
 .state-do p{color:var(--ink-2);}
-
-.cta-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.cta-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
 .cta-pill{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:8px;font-size:12px;font-weight:600;}
 .cta-primary{background:var(--pink);color:#fff;}
 .cta-secondary{background:var(--pink-bg);color:var(--pink);border:1px solid var(--pink-soft);}
 .cta-tertiary{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--hair);}
 .cta-none{background:var(--surface-2);color:var(--ink-3);border:1px dashed var(--hair);font-style:italic;font-weight:400;}
-
-/* Motion card subtle style */
-.col-motion .state-card{background:var(--surface);border-color:var(--hair);}
+.cta-common{background:var(--violet-soft);color:var(--violet);border:1px solid #C4A8E0;}
+.col-motion .state-card{background:var(--surface);}
 .col-motion .state-name{color:var(--ink-2);font-weight:600;}
 .motion-who{font-size:12px;color:var(--ink-3);font-family:var(--mono);letter-spacing:.04em;margin-bottom:6px;}
 .motion-who b{color:var(--ink-2);font-weight:600;}
+.also-avail{font-size:11px;color:var(--violet);margin-top:6px;padding:6px 10px;background:var(--violet-soft);border-radius:8px;line-height:1.5;}
+.also-avail b{font-weight:700;}
 
-/* ── Batch Card Section ── */
+/* batch */
 .batch-section{background:var(--violet-soft);border:2px solid #C4A8E0;border-radius:var(--radius);padding:24px;margin-bottom:28px;}
 .batch-section h2{font-size:22px;font-weight:800;color:var(--violet);margin-bottom:6px;}
 .batch-section .batch-sub{font-size:14px;color:var(--ink-2);margin-bottom:20px;}
 .batch-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
 .batch-card{background:var(--surface);border-radius:12px;padding:20px;box-shadow:var(--shadow);}
 .batch-card h3{font-size:17px;font-weight:750;margin-bottom:4px;display:flex;align-items:center;gap:8px;}
-.batch-card h3 .b-icon{font-size:18px;}
 .batch-card .b-desc{font-size:13px;color:var(--ink-2);margin-bottom:14px;line-height:1.5;}
-
 .batch-wireframe{background:var(--ground);border:1px solid var(--hair);border-radius:10px;padding:14px;margin-bottom:14px;}
 .bw-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
 .bw-title{font-size:13px;font-weight:700;color:var(--violet);}
@@ -100,99 +132,207 @@ h1{font-size:clamp(28px,5vw,42px);line-height:1.1;letter-spacing:-.025em;font-we
 .bw-left{color:var(--ink-2);}
 .bw-left b{color:var(--ink);font-weight:600;}
 .bw-deadline{color:var(--orange);font-size:11px;font-weight:600;font-family:var(--mono);}
-.bw-cta{background:var(--pink);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:11px;font-weight:600;cursor:pointer;}
-.bw-cta-outline{background:transparent;color:var(--pink);border:1px solid var(--pink);border-radius:6px;padding:4px 12px;font-size:11px;font-weight:600;cursor:pointer;}
+.bw-cta{background:var(--pink);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:11px;font-weight:600;}
+.bw-cta-outline{background:transparent;color:var(--pink);border:1px solid var(--pink);border-radius:6px;padding:4px 12px;font-size:11px;font-weight:600;}
 .bw-viewall{text-align:center;padding:8px;font-size:12px;color:var(--pink);font-weight:600;border-top:1px solid var(--hair);margin-top:4px;}
-
 .batch-detail{font-size:13px;color:var(--ink-2);line-height:1.7;}
 .batch-detail b{color:var(--ink);font-weight:600;}
 .batch-detail ul{margin:6px 0 6px 16px;}
 .batch-detail li{margin-bottom:4px;}
 
-/* ── Resolved row ── */
+/* resolved */
 .resolved-bar{background:var(--green-bg);border:1px solid #B7E4C7;border-radius:12px;padding:16px 24px;margin-bottom:28px;display:flex;align-items:center;gap:12px;}
-.resolved-bar .r-icon{font-size:20px;}
 .resolved-bar .r-text{font-size:14px;color:var(--green);font-weight:600;}
 .resolved-bar .r-desc{font-size:13px;color:var(--ink-2);font-weight:400;margin-left:4px;}
 
-/* ── Summary table ── */
-.summary{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:28px;}
-.summary-head{background:var(--surface-2);padding:20px 24px;border-bottom:1px solid var(--hair);}
-.summary-head h2{font-size:20px;font-weight:800;margin-bottom:4px;}
-.summary-head p{font-size:13px;color:var(--ink-2);}
-.summary table{width:100%;border-collapse:collapse;}
-.summary th{text-align:left;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);padding:12px 20px;border-bottom:1px solid var(--hair);font-weight:600;}
-.summary td{padding:14px 20px;border-bottom:1px solid var(--hair);vertical-align:top;font-size:14px;}
-.summary tr:last-child td{border-bottom:none;}
-.summary .flow-name{font-weight:700;white-space:nowrap;}
-.pill-wrap{display:flex;flex-wrap:wrap;gap:5px;}
-.pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;}
-.pill-a{background:var(--pink-bg);color:var(--pink);border:1px solid var(--pink-soft);}
-.pill-m{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--hair);}
-.count-badge{font-family:var(--mono);font-size:11px;font-weight:700;margin-left:4px;}
-.count-a{color:var(--pink);}
-.count-m{color:var(--ink-3);}
+/* journey */
+.journey{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:28px;}
+.journey-head{background:var(--surface-2);padding:20px 24px;border-bottom:1px solid var(--hair);}
+.journey-head h2{font-size:20px;font-weight:800;margin-bottom:4px;}
+.journey-head p{font-size:13px;color:var(--ink-2);}
+.journey-body{padding:20px 24px;}
+.j-path{display:flex;align-items:stretch;flex-wrap:wrap;gap:0;margin-bottom:16px;}
+.j-step{position:relative;padding:10px 16px 10px 20px;background:var(--surface-2);font-size:13px;font-weight:600;color:var(--ink-2);display:flex;align-items:center;gap:6px;min-height:40px;}
+.j-step:first-child{border-radius:8px 0 0 8px;padding-left:16px;}
+.j-step:last-child{border-radius:0 8px 8px 0;}
+.j-step::after{content:"";position:absolute;right:-8px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:8px solid var(--surface-2);border-top:8px solid transparent;border-bottom:8px solid transparent;z-index:1;}
+.j-step:last-child::after{display:none;}
+.j-step.j-action{background:var(--pink-bg);color:var(--pink);}
+.j-step.j-action::after{border-left-color:var(--pink-bg);}
+.j-step.j-wait{background:var(--surface-2);color:var(--ink-3);}
+.j-step.j-done{background:var(--green-bg);color:var(--green);}
+.j-step.j-done::after{border-left-color:var(--green-bg);}
+.j-step .j-num{font-family:var(--mono);font-size:10px;font-weight:700;opacity:.7;}
+.j-label{font-size:12px;color:var(--ink-3);margin-bottom:12px;}
 
 footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3);text-align:center;}
-
 @media(max-width:768px){
   .flow-body{grid-template-columns:1fr;}
   .col-action{border-right:none;border-bottom:1px solid var(--hair);}
-  .batch-grid{grid-template-columns:1fr;}
-  .summary table{font-size:12px;}
-  .summary td,.summary th{padding:10px 14px;}
+  .batch-grid,.common-grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
 <body>
 <div class="page">
 
-<p class="eyebrow">Wiom CSP App · Action Map</p>
+<p class="eyebrow">Wiom CSP App · Exhaustive Action Map</p>
 <h1>अभी करना है vs काम चल रहा है</h1>
-<p class="sub">Every state across all task flows — classified by <b>what CSP must do</b> and <b>what's already happening</b>. Detailed enough to make design decisions.</p>
+<p class="sub">Every state and <b>every action</b> a CSP can take across all task flows — including common actions like <b>assign technician</b>, <b>assign self</b>, <b>call customer</b>, and <b>exit task</b>.</p>
 
 <div class="rule-box">
-  <b>The simple rule:</b> If the partner has a step <b>pending</b>, the task is <span class="pill-demo pill-action-demo">Needs Action</span>. If it's waiting on someone else or just an update, it's <span class="pill-demo pill-motion-demo">In Motion</span>. <b>Done / resolved</b> tasks automatically leave the feed.
+  <b>Reading this sheet:</b>
+  <span class="pill-demo pill-action-demo">Pink pills</span> = CSP must act.
+  <span class="pill-demo pill-motion-demo">Grey pills</span> = System/customer/technician working — CSP waits.
+  <span class="pill-demo pill-common-demo">Purple pills</span> = Common actions available in that state (assign, call, exit).
+  Every state card shows <b>all</b> buttons visible to CSP — primary CTA, secondary, and common actions.
 </div>
 
-<!-- ━━━━━━━━━━━━━━━━━━━ QUICK SUMMARY TABLE ━━━━━━━━━━━━━━━━━━━ -->
-<div class="summary">
-  <div class="summary-head">
-    <h2>Quick overview</h2>
-    <p>All flows at a glance — count of states in each column</p>
+<!-- ━━━━━━━━━━━━━━━━━━━ OVERVIEW TABLE ━━━━━━━━━━━━━━━━━━━ -->
+<div class="overview">
+  <div class="overview-head">
+    <h2>Complete overview — all states at a glance</h2>
+    <p>Pink = needs action &nbsp;·&nbsp; Grey = in motion &nbsp;·&nbsp; Purple = common actions available across states</p>
   </div>
   <table>
     <tr>
-      <th>Flow</th>
-      <th>Needs Action · अभी करना है <span class="count-badge count-a"></span></th>
+      <th style="width:100px;">Flow</th>
+      <th>Needs Action · अभी करना है</th>
       <th>In Motion · काम चल रहा है</th>
     </tr>
     <tr>
-      <td class="flow-name">🏠 Install</td>
-      <td><div class="pill-wrap"><span class="pill pill-a">Propose slot</span><span class="pill pill-a">Re-schedule</span><span class="pill pill-a">Assign technician</span><span class="pill pill-a">Start install</span><span class="pill pill-a">Delegate overdue</span></div></td>
-      <td><div class="pill-wrap"><span class="pill pill-m">Customer choosing</span><span class="pill pill-m">Scheduling retry</span><span class="pill pill-m">In progress</span><span class="pill pill-m">Team assigned</span><span class="pill pill-m">Team working</span><span class="pill pill-m">Submitted</span><span class="pill pill-m">Verifying</span></div></td>
+      <td class="fn">🏠 Install</td>
+      <td><div class="pill-wrap">
+        <span class="pill pill-a">Propose slot</span><span class="pill pill-a">Re-schedule</span><span class="pill pill-a">Assign technician</span><span class="pill pill-a">Assign self</span><span class="pill pill-a">Start installation</span><span class="pill pill-a">Delegate overdue</span><span class="pill pill-a">Change technician</span>
+        <span class="pill pill-c">Call customer</span><span class="pill pill-c">Exit task</span>
+      </div></td>
+      <td><div class="pill-wrap">
+        <span class="pill pill-m">Customer choosing</span><span class="pill pill-m">Scheduling retry</span><span class="pill pill-m">In progress</span><span class="pill pill-m">Team assigned</span><span class="pill pill-m">Team working</span><span class="pill pill-m">Submitted</span><span class="pill pill-m">Verifying</span>
+      </div></td>
     </tr>
     <tr>
-      <td class="flow-name">🔧 Service</td>
-      <td><div class="pill-wrap"><span class="pill pill-a">Accept / respond</span><span class="pill pill-a">Start work</span><span class="pill pill-a">Resolve</span><span class="pill pill-a">Customer denied</span><span class="pill pill-a">Delegate overdue</span></div></td>
-      <td><div class="pill-wrap"><span class="pill pill-m">Team assigned</span><span class="pill pill-m">Team working</span><span class="pill pill-m">Escalated to Wiom</span><span class="pill pill-m">Reclassified</span><span class="pill pill-m">Verifying</span></div></td>
+      <td class="fn">🔧 Service</td>
+      <td><div class="pill-wrap">
+        <span class="pill pill-a">Accept + start work</span><span class="pill pill-a">Assign technician</span><span class="pill pill-a">Assign self</span><span class="pill pill-a">Resolve</span><span class="pill pill-a">Proof steps</span><span class="pill pill-a">Customer denied</span><span class="pill pill-a">Diagnose fault</span><span class="pill pill-a">Recall task</span><span class="pill pill-a">Delegate overdue</span>
+        <span class="pill pill-c">Call customer</span>
+      </div></td>
+      <td><div class="pill-wrap">
+        <span class="pill pill-m">Team assigned</span><span class="pill pill-m">Team working</span><span class="pill pill-m">Escalated to Wiom</span><span class="pill pill-m">Reclassified</span><span class="pill pill-m">Verifying</span>
+      </div></td>
     </tr>
     <tr>
-      <td class="flow-name">📦 Pickup</td>
-      <td><div class="pill-wrap"><span class="pill pill-a">Acknowledge</span><span class="pill pill-a">Submit photos</span><span class="pill pill-a">Re-submit photos</span></div></td>
-      <td><div class="pill-wrap"><span class="pill pill-m">Photos submitted</span><span class="pill pill-m">Verifying</span></div></td>
+      <td class="fn">📦 Pickup</td>
+      <td><div class="pill-wrap">
+        <span class="pill pill-a">Acknowledge</span><span class="pill pill-a">Submit photos</span><span class="pill pill-a">Re-submit photos</span><span class="pill pill-a">Report unable</span><span class="pill pill-a">Retake photos</span>
+        <span class="pill pill-c">Call customer</span>
+      </div></td>
+      <td><div class="pill-wrap">
+        <span class="pill pill-m">Photos submitted</span><span class="pill pill-m">Verifying</span>
+      </div></td>
     </tr>
     <tr>
-      <td class="flow-name">🚚 Shifting</td>
+      <td class="fn">🚚 Shifting</td>
       <td><div class="pill-wrap"><span class="pill pill-a">New request</span></div></td>
       <td><div class="pill-wrap"><span class="pill pill-m">Awaiting customer</span><span class="pill pill-m">Escalated</span></div></td>
     </tr>
     <tr>
-      <td class="flow-name">⚡ Recharge</td>
-      <td><div class="pill-wrap"><span class="pill pill-a">Pending recharge</span><span class="pill pill-a">Claim commission</span></div></td>
-      <td><div class="pill-wrap"><span class="pill pill-m">Processing</span><span class="pill pill-m">Verified</span></div></td>
+      <td class="fn">⚡ Recharge</td>
+      <td><div class="pill-wrap">
+        <span class="pill pill-a">Select customers</span><span class="pill pill-a">Collect recharge</span><span class="pill pill-a">Calculate commission</span><span class="pill pill-a">Claim commission</span>
+      </div></td>
+      <td><div class="pill-wrap">
+        <span class="pill pill-m">Processing</span><span class="pill pill-m">Verified</span>
+      </div></td>
     </tr>
   </table>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━ COMMON ACTIONS ━━━━━━━━━━━━━━━━━━━ -->
+<div class="common-section">
+  <h2>🔁 Common Actions — available across multiple flows</h2>
+  <p class="c-sub">These actions are <b>not tied to one state</b> — they appear alongside primary CTAs whenever their conditions are met.</p>
+
+  <div class="common-grid">
+    <div class="common-card">
+      <h3>👤 Assign Technician / Assign Self</h3>
+      <div class="cc-where">INSTALL + SERVICE</div>
+      <div class="cc-detail">
+        <p>CSP can <b>delegate work to a team member</b> or <b>take it themselves</b>. Opens a bottom sheet with a radio list of available technicians + "Self" option.</p>
+        <ul>
+          <li><b>Assign Self →</b> CSP will do the work personally. Card transitions to a state where CSP can start working.</li>
+          <li><b>Assign Technician →</b> Delegated to team member. Card moves to "Team assigned" (In Motion).</li>
+        </ul>
+        <table class="avail-table">
+          <tr><th>Flow</th><th>Available in states</th></tr>
+          <tr><td><b>Install</b></td><td>Slot Confirmed, Delegate Overdue</td></tr>
+          <tr><td><b>Service</b></td><td>Pending Acceptance, Accepted, Respond Now</td></tr>
+          <tr><td>Pickup</td><td class="no">— not available</td></tr>
+          <tr><td>Recharge</td><td class="no">— not available</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="common-card">
+      <h3>📞 Call Customer (Masked)</h3>
+      <div class="cc-where">INSTALL + SERVICE + PICKUP + NBREC</div>
+      <div class="cc-detail">
+        <p>CSP can call the customer via a <b>masked number</b> (CSP's real number is hidden). Fire-and-forget — no state change. Tertiary button with phone icon.</p>
+        <ul>
+          <li><b>Condition:</b> <code>maskedCallAvailable == true</code></li>
+          <li><b>Install extra gate:</b> Only on slot day (<code>isSlotDay == true</code>)</li>
+          <li>Also available as <b>inline icon</b> next to technician name in delegated states</li>
+        </ul>
+        <table class="avail-table">
+          <tr><th>Flow</th><th>Available in states</th></tr>
+          <tr><td><b>Install</b></td><td>Scheduled, In Progress, Team Assigned, Team Working, Delegate Overdue (slot day only)</td></tr>
+          <tr><td><b>Service</b></td><td>Working, Escalated, Customer Denied, Team Assigned, Team Working</td></tr>
+          <tr><td><b>Pickup</b></td><td>All states with drilldown open</td></tr>
+          <tr><td>Recharge</td><td class="no">— not available</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="common-card">
+      <h3>🚪 Exit Task</h3>
+      <div class="cc-where">INSTALL only</div>
+      <div class="cc-detail">
+        <p>CSP can <b>drop an installation task</b> entirely. Opens a reason sheet with 4 structured reasons. Destructive — requires confirmation.</p>
+        <ul>
+          <li><b>Reasons:</b> Location unreachable, Capacity full, Customer cancelled, Technician unavailable</li>
+          <li><b>Early state (Propose Slot):</b> Exit button is inline, easy to reach — low investment</li>
+          <li><b>Later states:</b> Exit hidden in overflow menu (⋯) — protects against accidental exit</li>
+          <li>Card removed from feed after confirmation</li>
+        </ul>
+        <table class="avail-table">
+          <tr><th>Flow</th><th>Available in states</th></tr>
+          <tr><td><b>Install</b></td><td>All states where <code>exitAvailable == true</code></td></tr>
+          <tr><td>Service</td><td class="no">— not available (no exit mechanism)</td></tr>
+          <tr><td>Pickup</td><td class="no">— uses "Report Unable" instead</td></tr>
+          <tr><td>Recharge</td><td class="no">— not available</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="common-card">
+      <h3>🚫 Report Unable to Complete</h3>
+      <div class="cc-where">PICKUP only</div>
+      <div class="cc-detail">
+        <p>CSP can <b>report they cannot complete a pickup</b>. Opens a reason sheet with 5 structured reasons + optional free text for "Other".</p>
+        <ul>
+          <li><b>Reasons:</b> Device not found, Customer not available, Location inaccessible, Device damaged, Other</li>
+          <li>"Other" unlocks a text input (3–200 chars)</li>
+          <li>Card removed from feed after confirmation</li>
+          <li>Appears as a tertiary text link, not primary CTA</li>
+        </ul>
+        <table class="avail-table">
+          <tr><th>Flow</th><th>Available in states</th></tr>
+          <tr><td><b>Pickup</b></td><td>Submit Photos (S03), Re-submit Photos (S04)</td></tr>
+          <tr><td>Install</td><td class="no">— uses "Exit Task" instead</td></tr>
+          <tr><td>Service</td><td class="no">— not available</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ━━━━━━━━━━━━━━━━━━━ INSTALL ━━━━━━━━━━━━━━━━━━━ -->
@@ -201,58 +341,79 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
     <div class="flow-icon" style="background:var(--blue-bg);color:var(--blue);">🏠</div>
     <div>
       <h2>Install · नया कनेक्शन</h2>
-      <div class="flow-desc">New customer NetBox installation — slot booking → technician → on-site setup → Happy Code verification</div>
+      <div class="flow-desc">New customer NetBox installation — slot → assign → on-site setup → verification</div>
     </div>
   </div>
+
+  <!-- Journey -->
+  <div style="padding:16px 24px;border-bottom:1px solid var(--hair);background:var(--ground);">
+    <div class="j-label">Happy path (CSP does it themselves)</div>
+    <div class="j-path">
+      <div class="j-step j-action"><span class="j-num">1</span> Propose Slot</div>
+      <div class="j-step j-wait"><span class="j-num">2</span> Customer Choosing</div>
+      <div class="j-step j-action"><span class="j-num">3</span> Assign Self</div>
+      <div class="j-step j-action"><span class="j-num">4</span> Start Installation</div>
+      <div class="j-step j-wait"><span class="j-num">5</span> On-Site Wizard</div>
+      <div class="j-step j-wait"><span class="j-num">6</span> Verifying</div>
+      <div class="j-step j-done"><span class="j-num">7</span> Resolved ✓</div>
+    </div>
+    <div class="j-label">Delegated path (CSP assigns a technician)</div>
+    <div class="j-path">
+      <div class="j-step j-action"><span class="j-num">1</span> Propose Slot</div>
+      <div class="j-step j-wait"><span class="j-num">2</span> Customer Choosing</div>
+      <div class="j-step j-action"><span class="j-num">3</span> Assign Technician</div>
+      <div class="j-step j-wait"><span class="j-num">4</span> Team Assigned</div>
+      <div class="j-step j-wait"><span class="j-num">5</span> Team Working</div>
+      <div class="j-step j-wait"><span class="j-num">6</span> Verifying</div>
+      <div class="j-step j-done"><span class="j-num">7</span> Resolved ✓</div>
+    </div>
+  </div>
+
   <div class="flow-body">
-    <!-- ACTION COLUMN -->
     <div class="col-action">
       <div class="col-label">Needs Action <span class="hindi">· अभी करना है</span></div>
 
       <div class="state-card">
         <div class="state-top">
-          <div><div class="state-name">Propose Slot</div><div class="state-hindi">अपनी सुविधा के अनुसार स्लॉट सुझाएं</div></div>
+          <div><div class="state-name">Propose Slot</div><div class="state-hindi">स्लॉट सुझाएं</div></div>
           <div class="urgency urgency-high">HIGH</div>
         </div>
-        <div class="state-what">Card appears when a <b>new install order</b> arrives. CSP sees an orange banner with a calendar icon. No slot exists yet — the customer is waiting.</div>
-        <div class="state-do">
-          <div class="do-label">What CSP must do</div>
-          <p>Tap card → open date/time picker → select <b>2 available slots</b> → submit. Can also exit the task from this state.</p>
-        </div>
+        <div class="state-what">New install order arrived. Orange banner. No slot exists — customer is waiting. <b>This IS the acceptance step</b> — proposing slots accepts the booking.</div>
+        <div class="state-do"><div class="do-label">What CSP must do</div>
+        <p>Tap card → date/time picker → select <b>2 available slots</b> → submit.</p></div>
         <div class="cta-row">
-          <span class="cta-pill cta-primary">Propose Slots</span>
-          <span class="cta-pill cta-tertiary">Exit Task</span>
+          <span class="cta-pill cta-primary">स्लॉट चुनें</span>
+          <span class="cta-pill cta-tertiary">टास्क छोड़ें (Exit)</span>
         </div>
+        <div class="also-avail"><b>Also available:</b> Exit Task (inline in this state — easy to reach since CSP hasn't invested effort yet)</div>
       </div>
 
       <div class="state-card">
         <div class="state-top">
-          <div><div class="state-name">Re-schedule</div><div class="state-hindi">रीशेड्यूल चाहिए</div></div>
+          <div><div class="state-name">Re-schedule</div><div class="state-hindi">दोबारा स्लॉट सुझाएं</div></div>
           <div class="urgency urgency-high">HIGH</div>
         </div>
-        <div class="state-what">Previous slots didn't work out — customer rejected or slot expired. Orange warning banner reappears. CSP must propose <b>new dates</b>.</div>
-        <div class="state-do">
-          <div class="do-label">What CSP must do</div>
-          <p>Same as propose slot — pick 2 new available dates/times and submit again.</p>
-        </div>
+        <div class="state-what">Previous slots expired or customer rejected. Orange warning. Shows expired/cancelled slots with strikethrough.</div>
+        <div class="state-do"><div class="do-label">What CSP must do</div>
+        <p>Pick 2 new dates/times and submit. Same flow as initial proposal.</p></div>
         <div class="cta-row">
-          <span class="cta-pill cta-primary">Propose Slots</span>
+          <span class="cta-pill cta-primary">स्लॉट चुनें</span>
         </div>
+        <div class="also-avail"><b>Also available:</b> Exit Task (overflow menu ⋯)</div>
       </div>
 
       <div class="state-card">
         <div class="state-top">
-          <div><div class="state-name">Assign Technician</div><div class="state-hindi">स्लॉट चुना गया — टेक्नीशियन लगाएं</div></div>
+          <div><div class="state-name">Assign Technician / Self</div><div class="state-hindi">टेक्नीशियन लगाएं या खुद करें</div></div>
           <div class="urgency urgency-normal">NORMAL</div>
         </div>
-        <div class="state-what">Customer has picked a slot. Green banner with checkmark shows the <b>confirmed date & time</b>. Now CSP needs to assign who will do the installation.</div>
-        <div class="state-do">
-          <div class="do-label">What CSP must do</div>
-          <p>Tap "Assign Technician" → pick from team list or select "Self" if CSP will do it personally.</p>
-        </div>
+        <div class="state-what">Customer picked a slot. Green banner with confirmed date. Now CSP decides <b>who will do the installation</b>.</div>
+        <div class="state-do"><div class="do-label">What CSP must do</div>
+        <p>Tap "Assign Technician" → bottom sheet with radio list: <b>"Self" (pre-selected)</b> or team members → confirm.</p></div>
         <div class="cta-row">
-          <span class="cta-pill cta-primary">Assign Technician</span>
+          <span class="cta-pill cta-primary">व्यक्ति चुनें (Assign)</span>
         </div>
+        <div class="also-avail"><b>If Self →</b> transitions to "Scheduled" (CSP will do it). <b>If Team →</b> transitions to "Team Assigned" (In Motion).</div>
       </div>
 
       <div class="state-card">
@@ -260,163 +421,181 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
           <div><div class="state-name">Start Installation</div><div class="state-hindi">इंस्टॉलेशन शुरू करें</div></div>
           <div class="urgency urgency-high">HIGH on slot day</div>
         </div>
-        <div class="state-what">It's the <b>scheduled day</b>. Orange "Install is today" banner if same-day, green "Scheduled for [date]" if future. Technician assigned, everything is set.</div>
-        <div class="state-do">
-          <div class="do-label">What CSP must do</div>
-          <p>Go to customer location → tap "Start Installation" → complete the on-site wizard (Happy Code OTP, photos, activation steps).</p>
-        </div>
+        <div class="state-what">Scheduled day. CSP assigned themselves. Orange "Install is today" if same-day, green if future.</div>
+        <div class="state-do"><div class="do-label">What CSP must do</div>
+        <p>Go to customer → tap "Start Installation" → complete on-site wizard (device setup, Happy Code OTP, photos, activation).</p></div>
         <div class="cta-row">
-          <span class="cta-pill cta-primary">Start Installation</span>
-          <span class="cta-pill cta-tertiary">📞 Call Customer</span>
+          <span class="cta-pill cta-primary">काम शुरू करें</span>
+          <span class="cta-pill cta-common">📞 Call Customer</span>
         </div>
+        <div class="also-avail"><b>Also available:</b> Call Customer (if slot day), Exit Task (overflow menu ⋯)</div>
       </div>
 
       <div class="state-card">
         <div class="state-top">
-          <div><div class="state-name">Delegate Overdue</div><div class="state-hindi">टेक्नीशियन की समय सीमा समाप्त</div></div>
+          <div><div class="state-name">Delegate Overdue → Change Technician</div><div class="state-hindi">टेक्नीशियन ओवरड्यू — बदलें</div></div>
           <div class="urgency urgency-critical">CRITICAL</div>
         </div>
-        <div class="state-what">Technician was assigned but <b>missed the deadline</b>. Red warning banner. The task is stuck until CSP intervenes.</div>
-        <div class="state-do">
-          <div class="do-label">What CSP must do</div>
-          <p>Call the overdue technician to check status, then either wait or tap "Change Technician" to reassign to someone else.</p>
-        </div>
+        <div class="state-what">Technician missed deadline. <b>Red warning banner</b>. Task stuck until CSP reassigns.</div>
+        <div class="state-do"><div class="do-label">What CSP must do</div>
+        <p>Call the overdue tech → tap "Change Technician" → bottom sheet → pick new tech or assign self.</p></div>
         <div class="cta-row">
-          <span class="cta-pill cta-secondary">Change Technician</span>
-          <span class="cta-pill cta-tertiary">📞 Call Tech</span>
+          <span class="cta-pill cta-secondary">टेक्नीशियन बदलें</span>
+          <span class="cta-pill cta-common">📞 Call Tech</span>
+          <span class="cta-pill cta-common">📞 Call Customer</span>
         </div>
+        <div class="also-avail"><b>Also available:</b> Call Tech (inline icon next to tech name), Call Customer (if slot day), Exit Task (overflow ⋯)</div>
       </div>
     </div>
 
-    <!-- MOTION COLUMN -->
     <div class="col-motion">
       <div class="col-label">In Motion <span class="hindi">· काम चल रहा है</span></div>
 
       <div class="state-card">
-        <div class="state-top">
-          <div><div class="state-name">Customer Choosing Slot</div><div class="state-hindi">ग्राहक अपनी पसंद का स्लॉट चुन रहे हैं</div></div>
-        </div>
+        <div class="state-top"><div><div class="state-name">Customer Choosing Slot</div><div class="state-hindi">ग्राहक स्लॉट चुन रहे हैं</div></div></div>
         <div class="motion-who">Waiting on: <b>Customer</b></div>
-        <div class="state-what">CSP proposed 2 slots. Blue hourglass banner. Customer got an SMS/notification and needs to pick one. CSP can't speed this up.</div>
+        <div class="state-what">CSP proposed 2 slots. Blue hourglass. Customer received SMS and must pick one. Card is <b>passive</b> — tapping does nothing.</div>
         <div class="cta-row"><span class="cta-pill cta-none">No CTA — wait</span></div>
       </div>
 
       <div class="state-card">
-        <div class="state-top">
-          <div><div class="state-name">Scheduling Retry</div><div class="state-hindi">स्लॉट शेड्यूल नहीं हो सका, फिर से कोशिश</div></div>
-        </div>
+        <div class="state-top"><div><div class="state-name">Scheduling Retry</div><div class="state-hindi">शेड्यूल फेल — रीट्राय</div></div></div>
         <div class="motion-who">Waiting on: <b>System</b></div>
-        <div class="state-what">Slot sync failed (network / backend issue). Blue sync banner. System auto-retrying. Rare state — usually resolves on its own.</div>
+        <div class="state-what">Slot sync failed (network/backend). Blue sync banner. System auto-retrying. Rare state.</div>
         <div class="cta-row"><span class="cta-pill cta-none">No CTA — system retrying</span></div>
       </div>
 
       <div class="state-card">
-        <div class="state-top">
-          <div><div class="state-name">In Progress</div><div class="state-hindi">सेटअप हो रहा है</div></div>
-        </div>
-        <div class="motion-who">Waiting on: <b>CSP (on-site)</b></div>
-        <div class="state-what">CSP or technician tapped "Start" and is physically at the customer's location setting up the NetBox. Blue sync banner shows technician name.</div>
-        <div class="cta-row"><span class="cta-pill cta-tertiary">📞 Call (if technician)</span></div>
+        <div class="state-top"><div><div class="state-name">In Progress (Self)</div><div class="state-hindi">आप काम कर रहे हैं</div></div></div>
+        <div class="motion-who">Active: <b>CSP on-site</b></div>
+        <div class="state-what">CSP tapped "Start" and is physically at customer location running the installation wizard.</div>
+        <div class="cta-row"><span class="cta-pill cta-common">📞 Call Customer</span></div>
       </div>
 
       <div class="state-card">
-        <div class="state-top">
-          <div><div class="state-name">Team Assigned</div><div class="state-hindi">टेक्नीशियन को सौंपा गया</div></div>
-        </div>
+        <div class="state-top"><div><div class="state-name">Team Assigned</div><div class="state-hindi">टेक्नीशियन को सौंपा गया</div></div></div>
         <div class="motion-who">Waiting on: <b>Technician</b></div>
-        <div class="state-what">CSP delegated the install to a team member. Blue hourglass banner with tech name. Technician hasn't started yet. CSP can call to check.</div>
-        <div class="cta-row"><span class="cta-pill cta-tertiary">📞 Call Tech</span></div>
+        <div class="state-what">CSP delegated install. Tech notified but hasn't started. Shows tech name + hourglass.</div>
+        <div class="cta-row"><span class="cta-pill cta-common">📞 Call Tech</span></div>
       </div>
 
       <div class="state-card">
-        <div class="state-top">
-          <div><div class="state-name">Team Working</div><div class="state-hindi">टेक्नीशियन काम कर रहा है</div></div>
-        </div>
+        <div class="state-top"><div><div class="state-name">Team Working</div><div class="state-hindi">टेक्नीशियन काम कर रहा है</div></div></div>
         <div class="motion-who">Waiting on: <b>Technician</b></div>
-        <div class="state-what">Delegated technician has started the installation. Blue sync banner. Work is in progress at the customer site.</div>
-        <div class="cta-row"><span class="cta-pill cta-tertiary">📞 Call Tech</span></div>
+        <div class="state-what">Delegated tech has started. Blue sync banner. Work in progress on-site.</div>
+        <div class="cta-row"><span class="cta-pill cta-common">📞 Call Tech</span></div>
       </div>
 
       <div class="state-card">
-        <div class="state-top">
-          <div><div class="state-name">Submitted</div><div class="state-hindi">सेटअप जमा किया गया</div></div>
-        </div>
+        <div class="state-top"><div><div class="state-name">Submitted</div><div class="state-hindi">सेटअप जमा किया गया</div></div></div>
         <div class="motion-who">Waiting on: <b>System</b></div>
-        <div class="state-what">On-site wizard completed — photos uploaded, Happy Code entered. Blue hourglass. Backend is processing the submission. Usually resolves in minutes.</div>
+        <div class="state-what">Wizard complete, photos/Happy Code uploaded. Backend processing. Card is passive.</div>
         <div class="cta-row"><span class="cta-pill cta-none">No CTA — processing</span></div>
       </div>
 
       <div class="state-card">
-        <div class="state-top">
-          <div><div class="state-name">Verifying</div><div class="state-hindi">Happy Code सत्यापन लंबित</div></div>
-        </div>
+        <div class="state-top"><div><div class="state-name">Verifying</div><div class="state-hindi">सत्यापन हो रहा है</div></div></div>
         <div class="motion-who">Waiting on: <b>System</b></div>
-        <div class="state-what">Backend verifying Happy Code + installation quality. Blue sync banner. If verification passes → task auto-resolves and leaves the feed.</div>
+        <div class="state-what">Happy Code verification. If passes → auto-resolves. Card is passive.</div>
         <div class="cta-row"><span class="cta-pill cta-none">No CTA — auto-resolves</span></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ━━━━━━━━━━━━━━━━━━━ SERVICE / RESTORE ━━━━━━━━━━━━━━━━━━━ -->
+<!-- ━━━━━━━━━━━━━━━━━━━ SERVICE ━━━━━━━━━━━━━━━━━━━ -->
 <div class="flow-section">
   <div class="flow-header">
     <div class="flow-icon" style="background:var(--orange-bg);color:var(--orange);">🔧</div>
     <div>
       <h2>Service · सर्विस / रिस्टोर</h2>
-      <div class="flow-desc">Existing customer NetBox has a problem — accept task → diagnose → fix → submit proof → verification</div>
+      <div class="flow-desc">Existing customer issue — accept → assign/self → diagnose → fix → proof → verification</div>
     </div>
   </div>
+
+  <div style="padding:16px 24px;border-bottom:1px solid var(--hair);background:var(--ground);">
+    <div class="j-label">Self-service path</div>
+    <div class="j-path">
+      <div class="j-step j-action"><span class="j-num">1</span> Accept + Start Work</div>
+      <div class="j-step j-action"><span class="j-num">2</span> Diagnose + Fix</div>
+      <div class="j-step j-action"><span class="j-num">3</span> Resolve (Submit Proof)</div>
+      <div class="j-step j-wait"><span class="j-num">4</span> Verifying</div>
+      <div class="j-step j-done"><span class="j-num">5</span> Resolved ✓</div>
+    </div>
+    <div class="j-label">Delegated path</div>
+    <div class="j-path">
+      <div class="j-step j-action"><span class="j-num">1</span> Accept</div>
+      <div class="j-step j-action"><span class="j-num">2</span> Assign Technician</div>
+      <div class="j-step j-wait"><span class="j-num">3</span> Team Working</div>
+      <div class="j-step j-wait"><span class="j-num">4</span> Verifying</div>
+      <div class="j-step j-done"><span class="j-num">5</span> Resolved ✓</div>
+    </div>
+  </div>
+
   <div class="flow-body">
     <div class="col-action">
       <div class="col-label">Needs Action <span class="hindi">· अभी करना है</span></div>
 
       <div class="state-card">
         <div class="state-top">
-          <div><div class="state-name">Accept / Respond</div><div class="state-hindi">नया टास्क आया है — स्वीकार करें</div></div>
+          <div><div class="state-name">Accept + Start Work</div><div class="state-hindi">स्वीकार करें + काम शुरू करें</div></div>
           <div class="urgency urgency-high">HIGH</div>
         </div>
-        <div class="state-what">New service request just landed. Card shows <b>customer name, issue type, and area</b>. CSP hasn't acknowledged it yet — the clock is ticking on SLA.</div>
-        <div class="state-do">
-          <div class="do-label">What CSP must do</div>
-          <p>Tap "Start Work" to accept and immediately begin, OR tap "Assign Technician" to delegate to a team member.</p>
-        </div>
+        <div class="state-what">New service request landed. Shows customer name, issue type, area. <b>Accept and Start Work are chained</b> — tapping "Start Work" auto-accepts first.</div>
+        <div class="state-do"><div class="do-label">What CSP can do</div>
+        <p><b>Option A:</b> Tap "Start Work" → accepts + transitions to Working state (CSP will fix it).<br>
+        <b>Option B:</b> Tap "Assign Technician" → accepts + delegates to team member.</p></div>
         <div class="cta-row">
-          <span class="cta-pill cta-primary">Start Work</span>
+          <span class="cta-pill cta-primary">Start Work (= Accept + Self)</span>
           <span class="cta-pill cta-secondary">Assign Technician</span>
         </div>
+        <div class="also-avail"><b>Two paths from here:</b> "Start Work" chains ACCEPT → START_WORK APIs automatically. "Assign" chains ACCEPT → ASSIGN_TECHNICIAN.</div>
       </div>
 
       <div class="state-card">
         <div class="state-top">
-          <div><div class="state-name">Start Work</div><div class="state-hindi">काम शुरू करें</div></div>
+          <div><div class="state-name">Working → Resolve</div><div class="state-hindi">समस्या ठीक करें — प्रूफ दें</div></div>
           <div class="urgency urgency-normal">NORMAL</div>
         </div>
-        <div class="state-what">CSP accepted the task but hasn't started yet. Also appears when CSP "recalls" a task from a delegated technician using "Start Work" button.</div>
-        <div class="state-do">
-          <div class="do-label">What CSP must do</div>
-          <p>Tap "Start Work" to transition into active working state. Can still reassign if needed.</p>
-        </div>
-        <div class="cta-row">
-          <span class="cta-pill cta-primary">Start Work</span>
-          <span class="cta-pill cta-secondary">Change Technician</span>
-        </div>
-      </div>
-
-      <div class="state-card">
-        <div class="state-top">
-          <div><div class="state-name">Resolve</div><div class="state-hindi">समस्या ठीक करें — प्रूफ दें</div></div>
-          <div class="urgency urgency-normal">NORMAL</div>
-        </div>
-        <div class="state-what">CSP is actively working. Card shows <b>issue type in red accent</b>, customer phone visible, reason template displayed. CSP is diagnosing or has fixed the problem.</div>
-        <div class="state-do">
-          <div class="do-label">What CSP must do</div>
-          <p>Call customer if needed → diagnose and fix → tap "Resolve" → submit proof steps (guided flow, one step at a time).</p>
-        </div>
+        <div class="state-what">CSP is actively working. Card shows <b>issue type in red</b>, customer phone visible. CSP is diagnosing or has fixed the problem.</div>
+        <div class="state-do"><div class="do-label">What CSP can do</div>
+        <p>Call customer → diagnose → fix → tap "Resolve" → submit proof steps (guided flow, one step at a time).</p></div>
         <div class="cta-row">
           <span class="cta-pill cta-primary">Resolve</span>
-          <span class="cta-pill cta-tertiary">📞 Call Customer</span>
+          <span class="cta-pill cta-common">📞 Call Customer</span>
         </div>
+        <div class="also-avail"><b>Also available:</b> Diagnose Fault (if <code>diagnoseAvailable</code>), Call Customer</div>
+      </div>
+
+      <div class="state-card">
+        <div class="state-top">
+          <div><div class="state-name">Proof Steps (System / Customer)</div><div class="state-hindi">प्रूफ सत्यापन चरण</div></div>
+          <div class="urgency urgency-normal">NORMAL</div>
+        </div>
+        <div class="state-what">After tapping Resolve, a <b>guided proof flow</b> appears. One step at a time — CSP triggers each verification step sequentially.</div>
+        <div class="state-do"><div class="do-label">Proof steps in order</div>
+        <p><b>Step 1:</b> Device Event (automatic — runs in background, no CSP action).<br>
+        <b>Step 2:</b> System Check — CSP taps to trigger system verification.<br>
+        <b>Step 3:</b> Customer Confirm — only if System Check fails. CSP taps to request customer verification.</p></div>
+        <div class="cta-row">
+          <span class="cta-pill cta-secondary">Trigger System Check</span>
+          <span class="cta-pill cta-secondary">Request Customer Confirm</span>
+        </div>
+        <div class="also-avail">Each step shows PASS ✓ / FAIL ✗ / PENDING ⏳. Only one step is active (clickable) at a time. Polls server after 3s for result.</div>
+      </div>
+
+      <div class="state-card">
+        <div class="state-top">
+          <div><div class="state-name">Diagnose Router Fault</div><div class="state-hindi">राउटर की समस्या जांचें</div></div>
+          <div class="urgency urgency-normal">NORMAL</div>
+        </div>
+        <div class="state-what">Available in Working states when <code>diagnoseAvailable == true</code>. CSP can submit a hardware diagnosis.</div>
+        <div class="state-do"><div class="do-label">What CSP must do</div>
+        <p>Tap "Diagnose" → bottom sheet → enter Device ID + select fault code (Malfunction / Power Failure / Physical Damage / Firmware Issue) → submit.</p></div>
+        <div class="cta-row">
+          <span class="cta-pill cta-secondary">Diagnose Fault</span>
+        </div>
+        <div class="also-avail">If diagnosis confirmed → task reclassified. If denied → reverts to previous state.</div>
       </div>
 
       <div class="state-card">
@@ -424,11 +603,9 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
           <div><div class="state-name">Customer Denied</div><div class="state-hindi">ग्राहक ने मना किया</div></div>
           <div class="urgency urgency-critical">CRITICAL</div>
         </div>
-        <div class="state-what">CSP went to customer's location but <b>customer refused service</b> (not home, doesn't want it, dispute). Card needs resolution — can't stay stuck.</div>
-        <div class="state-do">
-          <div class="do-label">What CSP must do</div>
-          <p>Document the situation → tap "Resolve" with appropriate proof/reason for customer denial.</p>
-        </div>
+        <div class="state-what">Customer refused service. Card needs resolution — can't stay stuck.</div>
+        <div class="state-do"><div class="do-label">What CSP must do</div>
+        <p>Document situation → tap "Resolve" with proof/reason for denial.</p></div>
         <div class="cta-row">
           <span class="cta-pill cta-primary">Resolve</span>
         </div>
@@ -436,17 +613,28 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
 
       <div class="state-card">
         <div class="state-top">
-          <div><div class="state-name">Delegate Overdue</div><div class="state-hindi">टेक्नीशियन की समय सीमा समाप्त</div></div>
+          <div><div class="state-name">Recall Task (from Technician)</div><div class="state-hindi">टास्क वापस लें</div></div>
+          <div class="urgency urgency-normal">NORMAL</div>
+        </div>
+        <div class="state-what">CSP delegated to a tech but wants to <b>take it back</b>. Only available in "Team Assigned" state.</div>
+        <div class="state-do"><div class="do-label">What CSP must do</div>
+        <p>Tap "Start Work" in the Assigned Technician drilldown → clears tech assignment → CSP enters Working state.</p></div>
+        <div class="cta-row">
+          <span class="cta-pill cta-primary">Start Work (= Recall)</span>
+        </div>
+      </div>
+
+      <div class="state-card">
+        <div class="state-top">
+          <div><div class="state-name">Delegate Overdue</div><div class="state-hindi">टेक्नीशियन ओवरड्यू</div></div>
           <div class="urgency urgency-critical">CRITICAL</div>
         </div>
-        <div class="state-what">Technician assigned to this service task <b>missed the deadline</b>. Red warning. SLA may be breached. CSP must take control.</div>
-        <div class="state-do">
-          <div class="do-label">What CSP must do</div>
-          <p>Call technician → reassign to another team member or recall task to self.</p>
-        </div>
+        <div class="state-what">Technician missed deadline. Red warning. SLA may be breached.</div>
+        <div class="state-do"><div class="do-label">What CSP must do</div>
+        <p>Call tech → reassign to another team member or recall to self.</p></div>
         <div class="cta-row">
           <span class="cta-pill cta-secondary">Change Technician</span>
-          <span class="cta-pill cta-tertiary">📞 Call Tech</span>
+          <span class="cta-pill cta-common">📞 Call Tech</span>
         </div>
       </div>
     </div>
@@ -455,47 +643,37 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
       <div class="col-label">In Motion <span class="hindi">· काम चल रहा है</span></div>
 
       <div class="state-card">
-        <div class="state-top">
-          <div><div class="state-name">Team Assigned</div><div class="state-hindi">टेक्नीशियन को सौंपा गया</div></div>
-        </div>
+        <div class="state-top"><div><div class="state-name">Team Assigned</div><div class="state-hindi">टेक्नीशियन को सौंपा गया</div></div></div>
         <div class="motion-who">Waiting on: <b>Technician</b></div>
-        <div class="state-what">CSP delegated the service task to a team member. Technician has been notified but hasn't started yet. Shows tech name + deadline.</div>
-        <div class="cta-row"><span class="cta-pill cta-tertiary">📞 Call Tech</span></div>
+        <div class="state-what">CSP delegated to team member. Tech notified but hasn't started. Shows tech name + deadline.</div>
+        <div class="cta-row"><span class="cta-pill cta-common">📞 Call Tech</span></div>
       </div>
 
       <div class="state-card">
-        <div class="state-top">
-          <div><div class="state-name">Team Working</div><div class="state-hindi">टेक्नीशियन काम कर रहा है</div></div>
-        </div>
+        <div class="state-top"><div><div class="state-name">Team Working</div><div class="state-hindi">टेक्नीशियन काम कर रहा है</div></div></div>
         <div class="motion-who">Waiting on: <b>Technician</b></div>
-        <div class="state-what">Delegated technician is actively working on the service issue. Shows tech name + progress. CSP can call for status update.</div>
-        <div class="cta-row"><span class="cta-pill cta-tertiary">📞 Call Tech</span></div>
+        <div class="state-what">Delegated tech actively working. Shows progress.</div>
+        <div class="cta-row"><span class="cta-pill cta-common">📞 Call Tech</span></div>
       </div>
 
       <div class="state-card">
-        <div class="state-top">
-          <div><div class="state-name">Escalated to Wiom</div><div class="state-hindi">Wiom/Airtel संभाल रहा है</div></div>
-        </div>
+        <div class="state-top"><div><div class="state-name">Escalated to Wiom</div><div class="state-hindi">Wiom/Airtel संभाल रहा है</div></div></div>
         <div class="motion-who">Waiting on: <b>Wiom Platform</b></div>
-        <div class="state-what">Issue escalated beyond CSP's ability — Wiom or Airtel's central team has taken over. Shows escalation badge. CSP can't act on this anymore.</div>
+        <div class="state-what">Issue escalated beyond CSP's ability. Wiom/Airtel took over. Shows escalation badge.</div>
         <div class="cta-row"><span class="cta-pill cta-none">No CTA — platform handling</span></div>
       </div>
 
       <div class="state-card">
-        <div class="state-top">
-          <div><div class="state-name">Reclassified</div><div class="state-hindi">टास्क की श्रेणी बदली गई</div></div>
-        </div>
+        <div class="state-top"><div><div class="state-name">Reclassified</div><div class="state-hindi">श्रेणी बदली गई</div></div></div>
         <div class="motion-who">Waiting on: <b>System</b></div>
-        <div class="state-what">Task was reclassified to a different category. Being re-routed in the system. May reappear as a different task type or get assigned elsewhere.</div>
+        <div class="state-what">Task reclassified (often after Diagnose Fault). Being re-routed. May reappear as different type.</div>
         <div class="cta-row"><span class="cta-pill cta-none">No CTA — re-routing</span></div>
       </div>
 
       <div class="state-card">
-        <div class="state-top">
-          <div><div class="state-name">Verifying</div><div class="state-hindi">सत्यापन लंबित</div></div>
-        </div>
+        <div class="state-top"><div><div class="state-name">Verifying</div><div class="state-hindi">सत्यापन लंबित</div></div></div>
         <div class="motion-who">Waiting on: <b>System</b></div>
-        <div class="state-what">CSP submitted proof of resolution. Backend verifying the evidence. If verification passes → task auto-resolves. If fails → may bounce back to CSP.</div>
+        <div class="state-what">Proof submitted. Backend verifying. If passes → auto-resolves. If fails → may bounce back.</div>
         <div class="cta-row"><span class="cta-pill cta-none">No CTA — auto-resolves</span></div>
       </div>
     </div>
@@ -508,58 +686,79 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
     <div class="flow-icon" style="background:var(--green-bg);color:var(--green);">📦</div>
     <div>
       <h2>Pickup · नेटबॉक्स पिकअप <span class="batch-badge">Batch Card</span></h2>
-      <div class="flow-desc">Recover NetBox device from churned customer — acknowledge → collect device → photograph front & back → submit proof → verification</div>
+      <div class="flow-desc">Recover NetBox from churned customer — acknowledge → collect → photograph → submit → verify</div>
     </div>
   </div>
+
+  <div style="padding:16px 24px;border-bottom:1px solid var(--hair);background:var(--ground);">
+    <div class="j-label">Happy path</div>
+    <div class="j-path">
+      <div class="j-step j-action"><span class="j-num">S02</span> Acknowledge</div>
+      <div class="j-step j-action"><span class="j-num">S03</span> Collect + Front Photo</div>
+      <div class="j-step j-action"><span class="j-num"> </span> Back Photo</div>
+      <div class="j-step j-action"><span class="j-num">S08</span> Review + Submit</div>
+      <div class="j-step j-wait"><span class="j-num">S05</span> Verifying</div>
+      <div class="j-step j-done"><span class="j-num"> </span> Resolved ✓</div>
+    </div>
+    <div class="j-label">Rejection + retry path</div>
+    <div class="j-path">
+      <div class="j-step j-wait"><span class="j-num">S05</span> Verifying</div>
+      <div class="j-step j-action" style="background:var(--red-bg);color:var(--red);"><span class="j-num">S04</span> Rejected → Retake</div>
+      <div class="j-step j-action"><span class="j-num">S08</span> Re-submit</div>
+      <div class="j-step j-wait"><span class="j-num">S05</span> Verifying</div>
+      <div class="j-step j-done"><span class="j-num"> </span> Resolved ✓</div>
+    </div>
+  </div>
+
   <div class="flow-body">
     <div class="col-action">
       <div class="col-label">Needs Action <span class="hindi">· अभी करना है</span></div>
 
       <div class="state-card">
         <div class="state-top">
-          <div><div class="state-name">Acknowledge Pickup</div><div class="state-hindi">पिकअप स्वीकार करें</div></div>
+          <div><div class="state-name">S02 · Acknowledge Pickup</div><div class="state-hindi">पिकअप स्वीकार करें</div></div>
           <div class="urgency urgency-normal">NORMAL</div>
         </div>
-        <div class="state-what">New pickup request arrived. Card shows <b>customer name, address, device ID, and deadline</b>. CSP must confirm they've seen it and will collect.</div>
-        <div class="state-do">
-          <div class="do-label">What CSP must do</div>
-          <p>Tap "Acknowledge Pickup" to confirm receipt. This moves the task to the next step — collecting the physical device.</p>
-        </div>
+        <div class="state-what">New pickup request. Shows customer name, address, device ID, deadline.</div>
+        <div class="state-do"><div class="do-label">What CSP must do</div>
+        <p>Tap "Acknowledge" to confirm they'll collect the device.</p></div>
         <div class="cta-row">
           <span class="cta-pill cta-primary">Acknowledge Pickup</span>
+          <span class="cta-pill cta-common">📞 Call Customer</span>
         </div>
       </div>
 
       <div class="state-card">
         <div class="state-top">
-          <div><div class="state-name">Submit Photos</div><div class="state-hindi">फोटो जमा करें</div></div>
+          <div><div class="state-name">S03 · Collect Device + Submit Photos</div><div class="state-hindi">डिवाइस लें + फोटो जमा करें</div></div>
           <div class="urgency urgency-normal">NORMAL</div>
         </div>
-        <div class="state-what">CSP acknowledged the pickup. Now sees <b>step-by-step instructions</b> (bullet list) for collecting the device. Must capture front & back photos of the NetBox for verification.</div>
-        <div class="state-do">
-          <div class="do-label">What CSP must do</div>
-          <p>Go to customer → collect device → tap "Submit Front Photo" → camera opens → capture front → capture back → submit. Can report "Unable to Complete" if customer not available.</p>
-        </div>
+        <div class="state-what">Acknowledged. Shows step-by-step instruction bullets. CSP must physically collect the NetBox and photograph it.</div>
+        <div class="state-do"><div class="do-label">What CSP must do</div>
+        <p>Go to customer → collect device → tap "Submit Photos" → camera wizard:<br>
+        <b>1.</b> Scan Device ID (camera OCR) → <b>2.</b> Front photo (with guide overlay) → <b>3.</b> Back photo → <b>4.</b> Review both + GPS auto-captured → <b>5.</b> Submit.</p></div>
         <div class="cta-row">
           <span class="cta-pill cta-primary">Submit Photos</span>
-          <span class="cta-pill cta-tertiary">Unable to Complete</span>
+          <span class="cta-pill cta-tertiary">Report Unable</span>
+          <span class="cta-pill cta-common">📞 Call Customer</span>
         </div>
+        <div class="also-avail"><b>Inside camera wizard:</b> Retake front photo, Retake back photo, Close camera (with confirm dialog). <b>In review screen:</b> Tap any thumbnail to retake that photo.</div>
       </div>
 
       <div class="state-card">
         <div class="state-top">
-          <div><div class="state-name">Re-submit Photos</div><div class="state-hindi">फोटो दोबारा जमा करें — अस्वीकृत</div></div>
+          <div><div class="state-name">S04 · Re-submit Photos (Rejected)</div><div class="state-hindi">फोटो अस्वीकृत — दोबारा जमा करें</div></div>
           <div class="urgency urgency-critical">CRITICAL</div>
         </div>
-        <div class="state-what"><b>Red retry banner</b> appears with rejection reason (blurry, wrong device, can't read serial). Shows attempt count — e.g., "Attempt 1 of 2". Limited retries.</div>
-        <div class="state-do">
-          <div class="do-label">What CSP must do</div>
-          <p>Read the rejection reason → fix the issue (better lighting, correct angle) → tap "Resubmit" → retake photos. If max attempts exhausted, task may need escalation.</p>
-        </div>
+        <div class="state-what"><b>Red rejection banner</b> with reason (blurry, wrong device, can't read serial) + attempt counter "Attempt 1 of 2". Limited retries.</div>
+        <div class="state-do"><div class="do-label">What CSP must do</div>
+        <p>Read rejection reason → fix issue → tap "Resubmit" → retake photos with better quality.</p></div>
         <div class="cta-row">
           <span class="cta-pill cta-primary">Resubmit</span>
-          <span class="cta-pill cta-tertiary">Unable to Complete</span>
+          <span class="cta-pill cta-tertiary">Report Unable</span>
+          <span class="cta-pill cta-common">📞 Call Customer</span>
         </div>
+        <div class="also-avail"><b>If max attempts exhausted:</b> Only "Close" available — task may need escalation.</div>
       </div>
     </div>
 
@@ -567,20 +766,17 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
       <div class="col-label">In Motion <span class="hindi">· काम चल रहा है</span></div>
 
       <div class="state-card">
-        <div class="state-top">
-          <div><div class="state-name">Photos Submitted</div><div class="state-hindi">फोटो जमा हो गई</div></div>
-        </div>
+        <div class="state-top"><div><div class="state-name">S05 · Photos Submitted</div><div class="state-hindi">फोटो जमा हो गई</div></div></div>
         <div class="motion-who">Waiting on: <b>System</b></div>
-        <div class="state-what">Photos uploaded. Shows submitted images + verification chips: "OCR verified ✓" and "GPS recorded ✓". Backend is checking serial number match, image quality, and location.</div>
+        <div class="state-what">Photos uploaded. Shows submitted images + verification chips: "OCR verified ✓", "GPS recorded 📍", "Timestamp 🕐". Backend checking serial number, quality, location.</div>
         <div class="cta-row"><span class="cta-pill cta-none">No CTA — verifying</span></div>
+        <div class="also-avail">Auto-polls every 60 seconds. If rejected → bounces back to S04 (Re-submit). If approved → auto-resolves.</div>
       </div>
 
       <div class="state-card">
-        <div class="state-top">
-          <div><div class="state-name">Verifying</div><div class="state-hindi">सत्यापन हो रहा है</div></div>
-        </div>
+        <div class="state-top"><div><div class="state-name">Verifying</div><div class="state-hindi">सत्यापन हो रहा है</div></div></div>
         <div class="motion-who">Waiting on: <b>System</b></div>
-        <div class="state-what">Backend verification in progress — OCR serial number matching, GPS location check, image quality validation. If passes → auto-resolves. If fails → bounces back as "Re-submit".</div>
+        <div class="state-what">OCR serial matching, GPS location check, image quality validation in progress.</div>
         <div class="cta-row"><span class="cta-pill cta-none">No CTA — auto-resolves or rejects</span></div>
       </div>
     </div>
@@ -593,48 +789,36 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
     <div class="flow-icon" style="background:var(--violet-soft);color:var(--violet);">🚚</div>
     <div>
       <h2>Shifting · शिफ्टिंग</h2>
-      <div class="flow-desc">Customer moving to new address — CSP handles the NetBox relocation request</div>
+      <div class="flow-desc">Customer moving — handle NetBox relocation (not yet fully implemented in codebase)</div>
     </div>
   </div>
   <div class="flow-body">
     <div class="col-action">
       <div class="col-label">Needs Action <span class="hindi">· अभी करना है</span></div>
-
       <div class="state-card">
         <div class="state-top">
           <div><div class="state-name">New Request</div><div class="state-hindi">नई शिफ्टिंग रिक्वेस्ट</div></div>
           <div class="urgency urgency-normal">NORMAL</div>
         </div>
-        <div class="state-what">Customer has requested a location shift. Card shows <b>current address and new address</b>. CSP must acknowledge and start the shifting process.</div>
-        <div class="state-do">
-          <div class="do-label">What CSP must do</div>
-          <p>Review the request → coordinate with customer on timing → begin the NetBox relocation process.</p>
-        </div>
-        <div class="cta-row">
-          <span class="cta-pill cta-primary">Start Shifting</span>
-        </div>
+        <div class="state-what">Customer requested location shift. Shows current + new address.</div>
+        <div class="state-do"><div class="do-label">What CSP must do</div>
+        <p>Review request → coordinate timing → begin relocation.</p></div>
+        <div class="cta-row"><span class="cta-pill cta-primary">Start Shifting</span></div>
       </div>
     </div>
-
     <div class="col-motion">
       <div class="col-label">In Motion <span class="hindi">· काम चल रहा है</span></div>
-
       <div class="state-card">
-        <div class="state-top">
-          <div><div class="state-name">Awaiting Customer</div><div class="state-hindi">ग्राहक से पुष्टि बाकी</div></div>
-        </div>
+        <div class="state-top"><div><div class="state-name">Awaiting Customer</div></div></div>
         <div class="motion-who">Waiting on: <b>Customer</b></div>
-        <div class="state-what">Shifting initiated, waiting for customer to confirm new location details or availability for the move.</div>
-        <div class="cta-row"><span class="cta-pill cta-none">No CTA — customer confirming</span></div>
+        <div class="state-what">Waiting for customer to confirm new location details.</div>
+        <div class="cta-row"><span class="cta-pill cta-none">No CTA</span></div>
       </div>
-
       <div class="state-card">
-        <div class="state-top">
-          <div><div class="state-name">Escalated</div><div class="state-hindi">एस्कलेट किया गया</div></div>
-        </div>
+        <div class="state-top"><div><div class="state-name">Escalated</div></div></div>
         <div class="motion-who">Waiting on: <b>Wiom Platform</b></div>
-        <div class="state-what">Shifting request needs backend intervention — address validation, zone reassignment, or coverage check at new location. Platform is handling it.</div>
-        <div class="cta-row"><span class="cta-pill cta-none">No CTA — platform handling</span></div>
+        <div class="state-what">Backend intervention needed — address validation, zone reassignment.</div>
+        <div class="cta-row"><span class="cta-pill cta-none">No CTA</span></div>
       </div>
     </div>
   </div>
@@ -646,25 +830,68 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
     <div class="flow-icon" style="background:var(--pink-bg);color:var(--pink);">⚡</div>
     <div>
       <h2>Recharge · रिचार्ज कलेक्शन <span class="batch-badge">Batch Card</span></h2>
-      <div class="flow-desc">Collect ISP recharge payments from existing customers — batch of pending collections shown as a single grouped card</div>
+      <div class="flow-desc">Collect ISP recharge payments — select customers → collect → calculate commission → claim</div>
     </div>
   </div>
+
+  <div style="padding:16px 24px;border-bottom:1px solid var(--hair);background:var(--ground);">
+    <div class="j-label">Recharge collection flow</div>
+    <div class="j-path">
+      <div class="j-step j-action"><span class="j-num">1</span> Tap Batch Card</div>
+      <div class="j-step j-action"><span class="j-num">2</span> Select Customers</div>
+      <div class="j-step j-action"><span class="j-num">3</span> Recharge Done</div>
+      <div class="j-step j-action"><span class="j-num">4</span> Confirm Commission</div>
+      <div class="j-step j-action"><span class="j-num">5</span> Claim Commission</div>
+      <div class="j-step j-done"><span class="j-num">6</span> Released ✓</div>
+    </div>
+  </div>
+
   <div class="flow-body">
     <div class="col-action">
       <div class="col-label">Needs Action <span class="hindi">· अभी करना है</span></div>
 
       <div class="state-card">
         <div class="state-top">
-          <div><div class="state-name">Pending Recharge</div><div class="state-hindi">रिचार्ज बाकी है — पैसे लें</div></div>
+          <div><div class="state-name">Select Customers for Recharge</div><div class="state-hindi">ग्राहक चुनें</div></div>
+          <div class="urgency urgency-normal">NORMAL</div>
+        </div>
+        <div class="state-what">Recharge customer list screen. Shows all pending collections with customer name, phone, status. CSP can select individual or all.</div>
+        <div class="state-do"><div class="do-label">What CSP can do</div>
+        <p><b>Select individual:</b> Tap checkbox next to each customer.<br>
+        <b>Select all:</b> Tap "Select All" toggle.<br>
+        <b>Refresh:</b> Tap refresh icon to re-fetch pending claims list.</p></div>
+        <div class="cta-row">
+          <span class="cta-pill cta-secondary">☑ Select / Deselect</span>
+          <span class="cta-pill cta-secondary">☑ Select All</span>
+          <span class="cta-pill cta-tertiary">🔄 Refresh</span>
+        </div>
+      </div>
+
+      <div class="state-card">
+        <div class="state-top">
+          <div><div class="state-name">Collect Recharge</div><div class="state-hindi">पैसे लें — रिचार्ज करें</div></div>
           <div class="urgency urgency-high">HIGH</div>
         </div>
-        <div class="state-what">Customer's plan is expiring or expired. The card shows <b>customer name, locality, connection ID, and deadline</b>. CSP must collect payment before service drops.</div>
-        <div class="state-do">
-          <div class="do-label">What CSP must do</div>
-          <p>Contact customer → collect cash/UPI payment → tap "Collect" on the specific row → confirm the recharge amount → submit.</p>
-        </div>
+        <div class="state-what">Customers selected. On batch card: each row shows <b>locality, connection ID, deadline</b>. In list screen: shows customer with checkbox.</div>
+        <div class="state-do"><div class="do-label">What CSP must do</div>
+        <p>Contact customer → collect cash/UPI payment → tap "Recharge Done" after collecting from selected customers.</p></div>
         <div class="cta-row">
-          <span class="cta-pill cta-primary">Collect</span>
+          <span class="cta-pill cta-primary">Recharge Done</span>
+        </div>
+      </div>
+
+      <div class="state-card">
+        <div class="state-top">
+          <div><div class="state-name">Calculate + Confirm Commission</div><div class="state-hindi">कमीशन कैलकुलेट करें</div></div>
+          <div class="urgency urgency-normal">NORMAL</div>
+        </div>
+        <div class="state-what">After "Recharge Done", a <b>confirmation dialog</b> shows selected count. Then system calculates commission amount.</div>
+        <div class="state-do"><div class="do-label">Dialog flow</div>
+        <p><b>Step 1:</b> Confirmation dialog — "You selected N customers" → Tap "Confirm".<br>
+        <b>Step 2:</b> Processing spinner while commission calculates.<br>
+        <b>Step 3:</b> Commission Calculated dialog — shows amount earned.</p></div>
+        <div class="cta-row">
+          <span class="cta-pill cta-primary">Confirm</span>
         </div>
       </div>
 
@@ -673,11 +900,9 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
           <div><div class="state-name">Claim Commission</div><div class="state-hindi">कमीशन क्लेम करें</div></div>
           <div class="urgency urgency-normal">NORMAL</div>
         </div>
-        <div class="state-what">Recharge collected successfully. CSP can now <b>claim their commission</b> for this collection. Shows the commission amount earned.</div>
-        <div class="state-do">
-          <div class="do-label">What CSP must do</div>
-          <p>Tap "Claim Commission" → confirm amount → commission gets added to CSP's payout.</p>
-        </div>
+        <div class="state-what">Commission amount shown. CSP can now release it to their payout.</div>
+        <div class="state-do"><div class="do-label">What CSP must do</div>
+        <p>Tap "Claim" → commission released → success dialog → auto-redirects after 1.5s (back to list if more pending, or home if done).</p></div>
         <div class="cta-row">
           <span class="cta-pill cta-primary">Claim Commission</span>
         </div>
@@ -688,169 +913,88 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
       <div class="col-label">In Motion <span class="hindi">· काम चल रहा है</span></div>
 
       <div class="state-card">
-        <div class="state-top">
-          <div><div class="state-name">Processing</div><div class="state-hindi">प्रोसेसिंग हो रही है</div></div>
-        </div>
+        <div class="state-top"><div><div class="state-name">Processing</div><div class="state-hindi">प्रोसेसिंग</div></div></div>
         <div class="motion-who">Waiting on: <b>System</b></div>
-        <div class="state-what">Payment collected and submitted. Backend processing the recharge activation. Usually completes within minutes. Plan will auto-activate on success.</div>
+        <div class="state-what">Payment collected, backend processing recharge activation. Usually completes in minutes.</div>
         <div class="cta-row"><span class="cta-pill cta-none">No CTA — processing</span></div>
       </div>
 
       <div class="state-card">
-        <div class="state-top">
-          <div><div class="state-name">Verified</div><div class="state-hindi">सत्यापित — प्लान एक्टिव</div></div>
-        </div>
+        <div class="state-top"><div><div class="state-name">Verified — Plan Active</div><div class="state-hindi">सत्यापित — प्लान एक्टिव</div></div></div>
         <div class="motion-who">Waiting on: <b>Nothing — complete</b></div>
-        <div class="state-what">Recharge verified, customer's plan is now active. This item will automatically leave the batch card shortly. Commission is eligible for claim.</div>
+        <div class="state-what">Recharge verified, plan active. Item leaves batch card automatically.</div>
         <div class="cta-row"><span class="cta-pill cta-none">Auto-leaves feed</span></div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ━━━━━━━━━━━━━━━━━━━ BATCH CARD BEHAVIOUR ━━━━━━━━━━━━━━━━━━━ -->
+<!-- ━━━━━━━━━━━━━━━━━━━ BATCH CARDS ━━━━━━━━━━━━━━━━━━━ -->
 <div class="batch-section">
-  <h2>📋 Batch Card Behaviour · बैच कार्ड कैसे काम करता है</h2>
-  <p class="batch-sub">Recharge and Pickup tasks appear as <b>grouped batch cards</b> on the home feed — not individual cards. Here's how they work.</p>
+  <h2>📋 Batch Card Behaviour — Recharge + Pickup</h2>
+  <p class="batch-sub">Recharge and Pickup tasks appear as <b>grouped batch cards</b> on the home feed — not individual cards.</p>
 
   <div class="batch-grid">
-    <!-- RECHARGE BATCH -->
     <div class="batch-card">
-      <h3><span class="b-icon">⚡</span> Recharge Batch Card</h3>
-      <p class="b-desc">Multiple recharge collections grouped into one card. Shows count + individual rows with per-item CTA.</p>
-
+      <h3>⚡ Recharge Batch Card</h3>
+      <p class="b-desc">Multiple recharge collections in one card. Per-item CTA when ≤ 6 items.</p>
       <div class="batch-wireframe">
         <div class="bw-header">
           <div class="bw-title">⚡ 4 Recharge collections due</div>
           <div class="bw-count">Earliest: 2 hrs</div>
         </div>
-        <div class="bw-row">
-          <div class="bw-left"><b>Rajesh K.</b> · Sector 12 · #4821</div>
-          <div style="display:flex;gap:6px;align-items:center;">
-            <span class="bw-deadline">2h left</span>
-            <button class="bw-cta">Collect</button>
-          </div>
-        </div>
-        <div class="bw-row">
-          <div class="bw-left"><b>Meena S.</b> · Lajpat Nagar · #3392</div>
-          <div style="display:flex;gap:6px;align-items:center;">
-            <span class="bw-deadline">5h left</span>
-            <button class="bw-cta-outline">Collect</button>
-          </div>
-        </div>
-        <div class="bw-row">
-          <div class="bw-left"><b>Amit P.</b> · Dwarka · #7710</div>
-          <div style="display:flex;gap:6px;align-items:center;">
-            <span class="bw-deadline">1d left</span>
-            <button class="bw-cta-outline">Collect</button>
-          </div>
-        </div>
-        <div class="bw-row">
-          <div class="bw-left"><b>Sunita D.</b> · Rohini · #5501</div>
-          <div style="display:flex;gap:6px;align-items:center;">
-            <span class="bw-deadline">2d left</span>
-            <button class="bw-cta-outline">Collect</button>
-          </div>
-        </div>
+        <div class="bw-row"><div class="bw-left"><b>Rajesh K.</b> · Sector 12 · #4821</div><div style="display:flex;gap:6px;align-items:center;"><span class="bw-deadline">2h left</span><button class="bw-cta">Collect</button></div></div>
+        <div class="bw-row"><div class="bw-left"><b>Meena S.</b> · Lajpat Nagar · #3392</div><div style="display:flex;gap:6px;align-items:center;"><span class="bw-deadline">5h left</span><button class="bw-cta-outline">Collect</button></div></div>
+        <div class="bw-row"><div class="bw-left"><b>Amit P.</b> · Dwarka · #7710</div><div style="display:flex;gap:6px;align-items:center;"><span class="bw-deadline">1d left</span><button class="bw-cta-outline">Collect</button></div></div>
       </div>
-
       <div class="batch-detail">
         <b>How it works:</b>
         <ul>
-          <li><b>≤ 6 items:</b> All rows visible inline — each row has its own "Collect" CTA</li>
-          <li><b>> 6 items:</b> First 6 visible + "View All →" link at bottom that opens full list drilldown</li>
-          <li><b>Sorted by deadline</b> — most urgent collection on top (orange/red deadline)</li>
-          <li><b>Per-item action:</b> Tapping "Collect" on any row opens that specific customer's recharge flow</li>
-          <li><b>Card count updates</b> in real-time as CSP completes collections</li>
-          <li><b>Card disappears</b> from feed when all items are collected or expired</li>
+          <li><b>≤ 6 items:</b> All rows visible inline with per-item "Collect" CTA</li>
+          <li><b>> 6 items:</b> First 6 visible + "View All →" link for full drilldown</li>
+          <li><b>Sorted by deadline</b> — most urgent on top</li>
+          <li><b>Per-item CTA:</b> Tapping "Collect" opens that customer's recharge flow</li>
+          <li><b>Card count updates</b> as CSP completes collections</li>
+          <li><b>Card disappears</b> when all items collected/expired</li>
         </ul>
-        <b>What CSP sees at a glance:</b> "I have 4 recharge collections today, the most urgent one is Rajesh in 2 hours"
       </div>
     </div>
 
-    <!-- PICKUP BATCH -->
     <div class="batch-card">
-      <h3><span class="b-icon">📦</span> NetBox Pickup Batch Card</h3>
-      <p class="b-desc">Multiple device pickups grouped into one card. Shows count + individual rows with per-item status/CTA.</p>
-
+      <h3>📦 Pickup Batch Card</h3>
+      <p class="b-desc">Multiple pickups in one card. Each row at its own state in the pickup flow.</p>
       <div class="batch-wireframe">
         <div class="bw-header">
           <div class="bw-title">📦 3 NetBox pickups pending</div>
           <div class="bw-count">Earliest: 1 day</div>
         </div>
-        <div class="bw-row">
-          <div class="bw-left"><b>Priya M.</b> · Saket · NB-8832</div>
-          <div style="display:flex;gap:6px;align-items:center;">
-            <span class="bw-deadline">1d left</span>
-            <button class="bw-cta">Acknowledge</button>
-          </div>
-        </div>
-        <div class="bw-row">
-          <div class="bw-left"><b>Karan S.</b> · Vasant Kunj · NB-6654</div>
-          <div style="display:flex;gap:6px;align-items:center;">
-            <span class="bw-deadline">3d left</span>
-            <button class="bw-cta-outline">Submit Photos</button>
-          </div>
-        </div>
-        <div class="bw-row">
-          <div class="bw-left"><b>Anita R.</b> · GK-II · NB-2217</div>
-          <div style="display:flex;gap:6px;align-items:center;">
-            <span style="font-size:11px;color:#9A8B95;">Verifying</span>
-          </div>
-        </div>
+        <div class="bw-row"><div class="bw-left"><b>Priya M.</b> · Saket · NB-8832</div><div style="display:flex;gap:6px;align-items:center;"><span class="bw-deadline">1d left</span><button class="bw-cta">Acknowledge</button></div></div>
+        <div class="bw-row"><div class="bw-left"><b>Karan S.</b> · Vasant Kunj · NB-6654</div><div style="display:flex;gap:6px;align-items:center;"><span class="bw-deadline">3d left</span><button class="bw-cta-outline">Photos</button></div></div>
+        <div class="bw-row"><div class="bw-left"><b>Anita R.</b> · GK-II · NB-2217</div><div style="display:flex;gap:6px;align-items:center;"><span style="font-size:11px;color:#9A8B95;">Verifying</span></div></div>
       </div>
-
       <div class="batch-detail">
         <b>How it works:</b>
         <ul>
-          <li><b>≤ 6 items:</b> All rows visible inline — each at its own state in the pickup flow</li>
-          <li><b>> 6 items:</b> First 6 visible + "View All →" link for full drilldown</li>
-          <li><b>Mixed states in one card:</b> Some rows say "Acknowledge", some say "Submit Photos", some show "Verifying" — each pickup is at a different step</li>
-          <li><b>Per-item action:</b> Tapping a row's CTA opens that specific device's pickup flow (acknowledge → photos → verify)</li>
-          <li><b>Deadline sorting:</b> Most urgent pickup on top, completed/verifying items pushed to bottom</li>
-          <li><b>Row disappears</b> when that individual pickup is verified and resolved</li>
-          <li><b>Card disappears</b> when all pickups are resolved</li>
+          <li><b>Mixed states:</b> Some rows "Acknowledge", some "Submit Photos", some "Verifying"</li>
+          <li><b>Per-item CTA:</b> Each row opens that device's pickup flow at its current step</li>
+          <li><b>Deadline sorting:</b> Most urgent on top, completed items pushed to bottom</li>
+          <li><b>Row disappears</b> when individual pickup is resolved</li>
+          <li><b>Card disappears</b> when all pickups resolved</li>
         </ul>
-        <b>What CSP sees at a glance:</b> "I have 3 pickups — Priya's is due tomorrow, Karan's I already collected but need photos, Anita's is being verified"
       </div>
     </div>
   </div>
 
-  <!-- Batch vs Individual comparison -->
   <div class="batch-card" style="margin-top:20px;">
-    <h3>Batch Card vs Individual Card — when does what appear?</h3>
+    <h3>Batch vs Individual — which task uses what?</h3>
     <div class="batch-detail" style="margin-top:10px;">
       <table style="width:100%;border-collapse:collapse;font-size:13px;">
-        <tr style="border-bottom:1px solid var(--hair);">
-          <td style="padding:10px 12px;font-weight:700;">Task Type</td>
-          <td style="padding:10px 12px;font-weight:700;">Card Style</td>
-          <td style="padding:10px 12px;font-weight:700;">Why?</td>
-        </tr>
-        <tr style="border-bottom:1px solid var(--hair);">
-          <td style="padding:10px 12px;">🏠 Install</td>
-          <td style="padding:10px 12px;"><span class="pill pill-a" style="font-size:11px;">Individual card</span></td>
-          <td style="padding:10px 12px;color:var(--ink-2);">Each install is unique — different customer, location, slot, technician. Needs its own dedicated card + drilldown.</td>
-        </tr>
-        <tr style="border-bottom:1px solid var(--hair);">
-          <td style="padding:10px 12px;">🔧 Service</td>
-          <td style="padding:10px 12px;"><span class="pill pill-a" style="font-size:11px;">Individual card</span></td>
-          <td style="padding:10px 12px;color:var(--ink-2);">Each service issue is unique — different fault type, SLA, escalation path. Needs dedicated attention.</td>
-        </tr>
-        <tr style="border-bottom:1px solid var(--hair);">
-          <td style="padding:10px 12px;">📦 Pickup</td>
-          <td style="padding:10px 12px;"><span class="pill pill-m" style="font-size:11px;">Batch card</span></td>
-          <td style="padding:10px 12px;color:var(--ink-2);">Multiple pickups are similar — go to location, collect device, photograph. Grouping reduces feed clutter. CSP can plan a pickup route.</td>
-        </tr>
-        <tr style="border-bottom:1px solid var(--hair);">
-          <td style="padding:10px 12px;">🚚 Shifting</td>
-          <td style="padding:10px 12px;"><span class="pill pill-a" style="font-size:11px;">Individual card</span></td>
-          <td style="padding:10px 12px;color:var(--ink-2);">Each shifting involves unique addresses, coordination. Treated individually.</td>
-        </tr>
-        <tr>
-          <td style="padding:10px 12px;">⚡ Recharge</td>
-          <td style="padding:10px 12px;"><span class="pill pill-m" style="font-size:11px;">Batch card</span></td>
-          <td style="padding:10px 12px;color:var(--ink-2);">Multiple collections are repetitive — call customer, collect money, confirm. Grouping lets CSP see total pending + plan collection rounds.</td>
-        </tr>
+        <tr style="border-bottom:1px solid var(--hair);"><td style="padding:10px 12px;font-weight:700;">Task</td><td style="padding:10px 12px;font-weight:700;">Card Style</td><td style="padding:10px 12px;font-weight:700;">Why?</td></tr>
+        <tr style="border-bottom:1px solid var(--hair);"><td style="padding:10px 12px;">🏠 Install</td><td style="padding:10px 12px;"><span class="pill pill-a">Individual</span></td><td style="padding:10px 12px;color:var(--ink-2);">Each install is unique — different customer, slot, technician, wizard.</td></tr>
+        <tr style="border-bottom:1px solid var(--hair);"><td style="padding:10px 12px;">🔧 Service</td><td style="padding:10px 12px;"><span class="pill pill-a">Individual</span></td><td style="padding:10px 12px;color:var(--ink-2);">Each issue is unique — different fault, SLA, escalation path.</td></tr>
+        <tr style="border-bottom:1px solid var(--hair);"><td style="padding:10px 12px;">📦 Pickup</td><td style="padding:10px 12px;"><span class="pill pill-m">Batch</span></td><td style="padding:10px 12px;color:var(--ink-2);">Similar steps: collect + photograph. Grouping lets CSP plan pickup route.</td></tr>
+        <tr style="border-bottom:1px solid var(--hair);"><td style="padding:10px 12px;">🚚 Shifting</td><td style="padding:10px 12px;"><span class="pill pill-a">Individual</span></td><td style="padding:10px 12px;color:var(--ink-2);">Unique addresses, coordination per customer.</td></tr>
+        <tr><td style="padding:10px 12px;">⚡ Recharge</td><td style="padding:10px 12px;"><span class="pill pill-m">Batch</span></td><td style="padding:10px 12px;color:var(--ink-2);">Repetitive: call + collect + confirm. Grouping shows total pending.</td></tr>
       </table>
     </div>
   </div>
@@ -858,45 +1002,49 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
 
 <!-- ━━━━━━━━━━━━━━━━━━━ RESOLVED ━━━━━━━━━━━━━━━━━━━ -->
 <div class="resolved-bar">
-  <div class="r-icon">✅</div>
+  <div style="font-size:20px;">✅</div>
   <div>
     <span class="r-text">Done / Resolved</span>
-    <span class="r-desc">— tasks auto-leave the feed. CSP doesn't need to dismiss them. Card count on home updates immediately.</span>
+    <span class="r-desc">— tasks auto-leave the feed. CSP doesn't dismiss them. Install cards auto-dismiss after ~5 seconds. Card count updates immediately.</span>
   </div>
 </div>
 
-<!-- ━━━━━━━━━━━━━━━━━━━ URGENCY SYSTEM ━━━━━━━━━━━━━━━━━━━ -->
+<!-- ━━━━━━━━━━━━━━━━━━━ URGENCY ━━━━━━━━━━━━━━━━━━━ -->
 <div class="flow-section">
   <div class="flow-header">
     <div class="flow-icon" style="background:var(--red-bg);color:var(--red);">🔔</div>
     <div>
       <h2>Urgency System · कार्ड कब तेज़ चमकता है</h2>
-      <div class="flow-desc">How the app tells CSP that something is time-sensitive through visual signals</div>
+      <div class="flow-desc">Applies to both Needs Action and In Motion cards — visual urgency on top of state</div>
     </div>
   </div>
   <div class="flow-body" style="display:block;padding:20px 24px;">
     <table style="width:100%;border-collapse:collapse;font-size:14px;">
-      <tr style="border-bottom:1px solid var(--hair);">
-        <td style="padding:12px;"><span class="urgency urgency-normal" style="font-size:11px;">NORMAL</span></td>
-        <td style="padding:12px;font-weight:600;">Deadline is far away</td>
-        <td style="padding:12px;color:var(--ink-2);">Grey/secondary text. No background tint. Card blends into feed normally.</td>
-      </tr>
-      <tr style="border-bottom:1px solid var(--hair);">
-        <td style="padding:12px;"><span class="urgency urgency-high" style="font-size:11px;">URGENT</span></td>
-        <td style="padding:12px;font-weight:600;">Deadline approaching</td>
-        <td style="padding:12px;color:var(--ink-2);">Orange warning background + orange deadline text + clock icon turns red. Card stands out.</td>
-      </tr>
-      <tr>
-        <td style="padding:12px;"><span class="urgency urgency-critical" style="font-size:11px;">OVERDUE</span></td>
-        <td style="padding:12px;font-weight:600;">Deadline passed</td>
-        <td style="padding:12px;color:var(--ink-2);">Red negative background + bold "overdue" text. Card is visually loud. In Restore tasks, the entire card gets a red background tint.</td>
-      </tr>
+      <tr style="border-bottom:1px solid var(--hair);"><td style="padding:12px;"><span class="urgency urgency-normal">NORMAL</span></td><td style="padding:12px;font-weight:600;">Deadline far away</td><td style="padding:12px;color:var(--ink-2);">Grey text, no tint. Card blends into feed.</td></tr>
+      <tr style="border-bottom:1px solid var(--hair);"><td style="padding:12px;"><span class="urgency urgency-high">URGENT</span></td><td style="padding:12px;font-weight:600;">Deadline approaching</td><td style="padding:12px;color:var(--ink-2);">Orange background + red clock icon. Card stands out.</td></tr>
+      <tr><td style="padding:12px;"><span class="urgency urgency-critical">OVERDUE</span></td><td style="padding:12px;font-weight:600;">Deadline passed</td><td style="padding:12px;color:var(--ink-2);">Red background + bold "overdue". Service cards get full red tint.</td></tr>
     </table>
-    <p style="font-size:13px;color:var(--ink-2);margin-top:14px;padding:0 12px;"><b>Note:</b> Urgency applies on top of both Needs Action and In Motion cards. An "In Motion" card can also become URGENT if the technician's deadline is approaching.</p>
   </div>
 </div>
 
-<footer>Built from wiom-csp-app codebase analysis · Design Reference</footer>
+<!-- ━━━━━━━━━━━━━━━━━━━ FULL COUNT ━━━━━━━━━━━━━━━━━━━ -->
+<div class="overview">
+  <div class="overview-head">
+    <h2>Total action count across all flows</h2>
+    <p>Every distinct action a CSP can take, counted</p>
+  </div>
+  <table>
+    <tr><th>Flow</th><th>Needs Action states</th><th>Distinct actions</th><th>In Motion states</th></tr>
+    <tr><td class="fn">🏠 Install</td><td>5 states</td><td><b>9</b> — Propose slot, Re-schedule, Assign self, Assign tech, Start install, Change tech, Call customer, Call tech, Exit task</td><td>7 states</td></tr>
+    <tr><td class="fn">🔧 Service</td><td>7 states</td><td><b>10</b> — Accept+start, Assign self, Assign tech, Resolve, Proof: system check, Proof: customer confirm, Diagnose fault, Recall task, Change tech, Call customer</td><td>5 states</td></tr>
+    <tr><td class="fn">📦 Pickup</td><td>3 states</td><td><b>8</b> — Acknowledge, Submit photos, Re-submit, Retake front, Retake back, Scan device, Report unable, Call customer</td><td>2 states</td></tr>
+    <tr><td class="fn">🚚 Shifting</td><td>1 state</td><td><b>1</b> — Start shifting</td><td>2 states</td></tr>
+    <tr><td class="fn">⚡ Recharge</td><td>4 states</td><td><b>6</b> — Select customers, Select all, Collect/recharge done, Confirm commission, Claim commission, Refresh list</td><td>2 states</td></tr>
+    <tr style="background:var(--pink-bg);"><td class="fn" style="color:var(--pink);">TOTAL</td><td><b>20 action states</b></td><td><b>34 distinct actions</b></td><td><b>18 in-motion states</b></td></tr>
+  </table>
+</div>
+
+<footer>Built from wiom-csp-app codebase — exhaustive frontend + backend analysis</footer>
 </div>
 </body>
 </html>
