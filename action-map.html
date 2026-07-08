@@ -243,10 +243,10 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
     <tr>
       <td class="fn">⚡ Recharge</td>
       <td><div class="pill-wrap">
-        <span class="pill pill-a">Select customers</span><span class="pill pill-a">Collect recharge</span><span class="pill pill-a">Calculate commission</span><span class="pill pill-a">Claim commission</span>
+        <span class="pill pill-a">Recharge</span>
       </div></td>
       <td><div class="pill-wrap">
-        <span class="pill pill-m">Processing</span><span class="pill pill-m">Verified</span>
+        <span class="pill pill-m">Verification pending</span>
       </div></td>
     </tr>
   </table>
@@ -921,19 +921,16 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
     <div class="flow-icon" style="background:var(--pink-bg);color:var(--pink);">⚡</div>
     <div>
       <h2>Recharge · रिचार्ज कलेक्शन <span class="batch-badge">Batch Card</span></h2>
-      <div class="flow-desc">Collect ISP recharge payments — select customers → collect → calculate commission → claim</div>
+      <div class="flow-desc">Collect ISP recharge payment from customer → recharge → verification</div>
     </div>
   </div>
 
   <div style="padding:16px 24px;border-bottom:1px solid var(--hair);background:var(--ground);">
-    <div class="j-label">Recharge collection flow</div>
+    <div class="j-label">Recharge flow</div>
     <div class="j-path">
-      <div class="j-step j-action"><span class="j-num">1</span> Tap Batch Card</div>
-      <div class="j-step j-action"><span class="j-num">2</span> Select Customers</div>
-      <div class="j-step j-action"><span class="j-num">3</span> Recharge Done</div>
-      <div class="j-step j-action"><span class="j-num">4</span> Confirm Commission</div>
-      <div class="j-step j-action"><span class="j-num">5</span> Claim Commission</div>
-      <div class="j-step j-done"><span class="j-num">6</span> Released ✓</div>
+      <div class="j-step j-action"><span class="j-num">1</span> Recharge</div>
+      <div class="j-step j-wait"><span class="j-num">2</span> Verification Pending</div>
+      <div class="j-step j-done"><span class="j-num">3</span> Done ✓</div>
     </div>
   </div>
 
@@ -943,59 +940,14 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
 
       <div class="state-card">
         <div class="state-top">
-          <div><div class="state-name">Select Customers for Recharge</div><div class="state-hindi">ग्राहक चुनें</div></div>
-          <div class="urgency urgency-normal">NORMAL</div>
-        </div>
-        <div class="state-what">Recharge customer list screen. Shows all pending collections with customer name, phone, status. CSP can select individual or all.</div>
-        <div class="state-do"><div class="do-label">What CSP can do</div>
-        <p><b>Select individual:</b> Tap checkbox next to each customer.<br>
-        <b>Select all:</b> Tap "Select All" toggle.<br>
-        <b>Refresh:</b> Tap refresh icon to re-fetch pending claims list.</p></div>
-        <div class="cta-row">
-          <span class="cta-pill cta-secondary">☑ Select / Deselect</span>
-          <span class="cta-pill cta-secondary">☑ Select All</span>
-          <span class="cta-pill cta-tertiary">🔄 Refresh</span>
-        </div>
-      </div>
-
-      <div class="state-card">
-        <div class="state-top">
-          <div><div class="state-name">Collect Recharge</div><div class="state-hindi">पैसे लें — रिचार्ज करें</div></div>
+          <div><div class="state-name">Recharge</div><div class="state-hindi">रिचार्ज करें</div></div>
           <div class="urgency urgency-high">HIGH</div>
         </div>
-        <div class="state-what">Customers selected. On batch card: each row shows <b>locality, connection ID, deadline</b>. In list screen: shows customer with checkbox.</div>
+        <div class="state-what">Customer's plan is expiring or expired. Batch card shows pending recharges with <b>customer name, locality, connection ID, and deadline</b>. CSP must collect payment and complete the recharge.</div>
         <div class="state-do"><div class="do-label">What CSP must do</div>
-        <p>Contact customer → collect cash/UPI payment → tap "Recharge Done" after collecting from selected customers.</p></div>
+        <p>Contact customer → collect cash/UPI payment → complete the recharge in the app.</p></div>
         <div class="cta-row">
-          <span class="cta-pill cta-primary">Recharge Done</span>
-        </div>
-      </div>
-
-      <div class="state-card">
-        <div class="state-top">
-          <div><div class="state-name">Calculate + Confirm Commission</div><div class="state-hindi">कमीशन कैलकुलेट करें</div></div>
-          <div class="urgency urgency-normal">NORMAL</div>
-        </div>
-        <div class="state-what">After "Recharge Done", a <b>confirmation dialog</b> shows selected count. Then system calculates commission amount.</div>
-        <div class="state-do"><div class="do-label">Dialog flow</div>
-        <p><b>Step 1:</b> Confirmation dialog — "You selected N customers" → Tap "Confirm".<br>
-        <b>Step 2:</b> Processing spinner while commission calculates.<br>
-        <b>Step 3:</b> Commission Calculated dialog — shows amount earned.</p></div>
-        <div class="cta-row">
-          <span class="cta-pill cta-primary">Confirm</span>
-        </div>
-      </div>
-
-      <div class="state-card">
-        <div class="state-top">
-          <div><div class="state-name">Claim Commission</div><div class="state-hindi">कमीशन क्लेम करें</div></div>
-          <div class="urgency urgency-normal">NORMAL</div>
-        </div>
-        <div class="state-what">Commission amount shown. CSP can now release it to their payout.</div>
-        <div class="state-do"><div class="do-label">What CSP must do</div>
-        <p>Tap "Claim" → commission released → success dialog → auto-redirects after 1.5s (back to list if more pending, or home if done).</p></div>
-        <div class="cta-row">
-          <span class="cta-pill cta-primary">Claim Commission</span>
+          <span class="cta-pill cta-primary">Recharge</span>
         </div>
       </div>
     </div>
@@ -1004,17 +956,10 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
       <div class="col-label">In Motion <span class="hindi">· काम चल रहा है</span></div>
 
       <div class="state-card">
-        <div class="state-top"><div><div class="state-name">Processing</div><div class="state-hindi">प्रोसेसिंग</div></div></div>
+        <div class="state-top"><div><div class="state-name">Verification Pending</div><div class="state-hindi">सत्यापन लंबित</div></div></div>
         <div class="motion-who">Waiting on: <b>System</b></div>
-        <div class="state-what">Payment collected, backend processing recharge activation. Usually completes in minutes.</div>
-        <div class="cta-row"><span class="cta-pill cta-none">No CTA — processing</span></div>
-      </div>
-
-      <div class="state-card">
-        <div class="state-top"><div><div class="state-name">Verified — Plan Active</div><div class="state-hindi">सत्यापित — प्लान एक्टिव</div></div></div>
-        <div class="motion-who">Waiting on: <b>Nothing — complete</b></div>
-        <div class="state-what">Recharge verified, plan active. Item leaves batch card automatically.</div>
-        <div class="cta-row"><span class="cta-pill cta-none">Auto-leaves feed</span></div>
+        <div class="state-what">Recharge submitted. Backend verifying the payment and activating the customer's plan. Auto-resolves on success — item leaves the batch card.</div>
+        <div class="cta-row"><span class="cta-pill cta-none">No CTA — auto-resolves</span></div>
       </div>
     </div>
   </div>
@@ -1131,8 +1076,8 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
     <tr><td class="fn">🔧 Service</td><td>7 states</td><td><b>10</b> — Accept+start, Assign self, Assign tech, Resolve, Proof: system check, Proof: customer confirm, Diagnose fault, Recall task, Change tech, Call customer</td><td>5 states</td></tr>
     <tr><td class="fn">📦 Pickup</td><td>3 states</td><td><b>5</b> — Assign self, Assign technician, Start pickup, Call tech, Call customer</td><td>3 states</td></tr>
     <tr><td class="fn">🚚 Shifting</td><td>4 states</td><td><b>6</b> — Assign self, Assign tech, Start work, Verify, Call customer, Call tech</td><td>3 states</td></tr>
-    <tr><td class="fn">⚡ Recharge</td><td>4 states</td><td><b>6</b> — Select customers, Select all, Collect/recharge done, Confirm commission, Claim commission, Refresh list</td><td>2 states</td></tr>
-    <tr style="background:var(--pink-bg);"><td class="fn" style="color:var(--pink);">TOTAL</td><td><b>23 action states</b></td><td><b>36 distinct actions</b></td><td><b>20 in-motion states</b></td></tr>
+    <tr><td class="fn">⚡ Recharge</td><td>1 state</td><td><b>1</b> — Recharge</td><td>1 state</td></tr>
+    <tr style="background:var(--pink-bg);"><td class="fn" style="color:var(--pink);">TOTAL</td><td><b>20 action states</b></td><td><b>31 distinct actions</b></td><td><b>19 in-motion states</b></td></tr>
   </table>
 </div>
 
