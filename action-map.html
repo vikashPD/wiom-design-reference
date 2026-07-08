@@ -232,8 +232,13 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
     </tr>
     <tr>
       <td class="fn">🚚 Shifting</td>
-      <td><div class="pill-wrap"><span class="pill pill-a">New request</span></div></td>
-      <td><div class="pill-wrap"><span class="pill pill-m">Awaiting customer</span><span class="pill pill-m">Escalated</span></div></td>
+      <td><div class="pill-wrap">
+        <span class="pill pill-a">Assign self / technician</span><span class="pill pill-a">Start work</span><span class="pill pill-a">Verify</span><span class="pill pill-a">Work delay — do it soon</span>
+        <span class="pill pill-c">Call customer</span>
+      </div></td>
+      <td><div class="pill-wrap">
+        <span class="pill pill-m">Technician assigned</span><span class="pill pill-m">Time left in pickup date</span><span class="pill pill-m">Verification pending</span>
+      </div></td>
     </tr>
     <tr>
       <td class="fn">⚡ Recharge</td>
@@ -255,9 +260,9 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
   <div class="common-grid">
     <div class="common-card">
       <h3>👤 Assign Technician / Assign Self</h3>
-      <div class="cc-where">INSTALL + SERVICE + PICKUP</div>
+      <div class="cc-where">INSTALL + SERVICE + PICKUP + SHIFTING</div>
       <div class="cc-detail">
-        <p>CSP can <b>delegate work to a team member</b> or <b>take it themselves</b>. Opens a bottom sheet with a radio list of available technicians + "Self" option.</p>
+        <p>CSP can <b>delegate work to a team member</b> or <b>take it themselves</b>. Opens a bottom sheet with a radio list of available technicians + "Self" option. This is the <b>first action in every field task</b>.</p>
         <ul>
           <li><b>Assign Self →</b> CSP will do the work personally. Card transitions to a state where CSP can start working.</li>
           <li><b>Assign Technician →</b> Delegated to team member. Card moves to "Technician assigned" (In Motion).</li>
@@ -267,7 +272,8 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
           <tr><td><b>Install</b></td><td>Slot Confirmed, Delegate Overdue</td></tr>
           <tr><td><b>Service</b></td><td>Pending Acceptance, Accepted, Respond Now</td></tr>
           <tr><td><b>Pickup</b></td><td>New pickup request — first action before starting work</td></tr>
-          <tr><td>Recharge</td><td class="no">— not available</td></tr>
+          <tr><td><b>Shifting</b></td><td>New shifting request — first action before starting work</td></tr>
+          <tr><td>Recharge</td><td class="no">— not available (batch selection instead)</td></tr>
         </table>
       </div>
     </div>
@@ -794,36 +800,116 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
     <div class="flow-icon" style="background:var(--violet-soft);color:var(--violet);">🚚</div>
     <div>
       <h2>Shifting · शिफ्टिंग</h2>
-      <div class="flow-desc">Customer moving — handle NetBox relocation (not yet fully implemented in codebase)</div>
+      <div class="flow-desc">Customer moving to new address — assign → pickup old NetBox → reinstall at new location → verify</div>
     </div>
   </div>
+
+  <div style="padding:16px 24px;border-bottom:1px solid var(--hair);background:var(--ground);">
+    <div class="j-label">CSP does it themselves</div>
+    <div class="j-path">
+      <div class="j-step j-action"><span class="j-num">1</span> Assign Self</div>
+      <div class="j-step j-action"><span class="j-num">2</span> Start Work</div>
+      <div class="j-step j-action"><span class="j-num">3</span> Verify</div>
+      <div class="j-step j-done"><span class="j-num">4</span> Done ✓</div>
+    </div>
+    <div class="j-label">CSP assigns a technician</div>
+    <div class="j-path">
+      <div class="j-step j-action"><span class="j-num">1</span> Assign Technician</div>
+      <div class="j-step j-wait"><span class="j-num">2</span> Tech Assigned</div>
+      <div class="j-step j-wait"><span class="j-num">3</span> Time Left in Pickup Date</div>
+      <div class="j-step j-wait"><span class="j-num">4</span> Verification Pending</div>
+      <div class="j-step j-done"><span class="j-num">5</span> Done ✓</div>
+    </div>
+  </div>
+
   <div class="flow-body">
     <div class="col-action">
       <div class="col-label">Needs Action <span class="hindi">· अभी करना है</span></div>
+
       <div class="state-card">
         <div class="state-top">
-          <div><div class="state-name">New Request</div><div class="state-hindi">नई शिफ्टिंग रिक्वेस्ट</div></div>
+          <div><div class="state-name">Assign Self / Technician</div><div class="state-hindi">खुद करें या टेक्नीशियन लगाएं</div></div>
           <div class="urgency urgency-normal">NORMAL</div>
         </div>
-        <div class="state-what">Customer requested location shift. Shows current + new address.</div>
+        <div class="state-what">New shifting request arrived. Shows <b>customer name, current address, new address</b>, and pickup date. CSP decides who handles the relocation.</div>
         <div class="state-do"><div class="do-label">What CSP must do</div>
-        <p>Review request → coordinate timing → begin relocation.</p></div>
-        <div class="cta-row"><span class="cta-pill cta-primary">Start Shifting</span></div>
+        <p><b>Option A:</b> Assign Self — CSP will personally handle the NetBox relocation.<br>
+        <b>Option B:</b> Assign Technician — delegate to a team member.</p></div>
+        <div class="cta-row">
+          <span class="cta-pill cta-primary">Assign Self</span>
+          <span class="cta-pill cta-secondary">Assign Technician</span>
+          <span class="cta-pill cta-common">📞 Call Customer</span>
+        </div>
+        <div class="also-avail"><b>Same pattern as Install, Service & Pickup</b> — CSP always decides first: do it myself or delegate?</div>
+      </div>
+
+      <div class="state-card">
+        <div class="state-top">
+          <div><div class="state-name">Start Work</div><div class="state-hindi">काम शुरू करें</div></div>
+          <div class="urgency urgency-normal">NORMAL</div>
+        </div>
+        <div class="state-what">CSP assigned themselves. Now they need to go to the customer's current location, pick up the NetBox, and reinstall it at the new address.</div>
+        <div class="state-do"><div class="do-label">What CSP must do</div>
+        <p>Go to customer's current address → disconnect and collect NetBox → go to new address → reinstall → tap "Start Work" to begin the process.</p></div>
+        <div class="cta-row">
+          <span class="cta-pill cta-primary">Start Work</span>
+          <span class="cta-pill cta-common">📞 Call Customer</span>
+        </div>
+      </div>
+
+      <div class="state-card">
+        <div class="state-top">
+          <div><div class="state-name">Verify</div><div class="state-hindi">सत्यापन करें</div></div>
+          <div class="urgency urgency-normal">NORMAL</div>
+        </div>
+        <div class="state-what">NetBox has been relocated and reinstalled at the new address. CSP needs to verify that the connection is working at the new location.</div>
+        <div class="state-do"><div class="do-label">What CSP must do</div>
+        <p>Confirm the NetBox is set up correctly at the new address → tap "Verify" to submit for verification.</p></div>
+        <div class="cta-row">
+          <span class="cta-pill cta-primary">Verify</span>
+        </div>
+      </div>
+
+      <div class="state-card">
+        <div class="state-top">
+          <div><div class="state-name">Work Delay — Do It Soon</div><div class="state-hindi">काम में देरी — जल्दी करें</div></div>
+          <div class="urgency urgency-critical">OVERDUE</div>
+        </div>
+        <div class="state-what">Pickup date is approaching or passed. Card turns <b>red</b> with overdue warning. CSP or technician hasn't completed the work on time.</div>
+        <div class="state-do"><div class="do-label">What CSP must do</div>
+        <p>If self-assigned: drop everything and complete the shifting now.<br>
+        If technician assigned: call tech to check — tell them to hurry or take it back and do it yourself.</p></div>
+        <div class="cta-row">
+          <span class="cta-pill cta-primary">Start Work / Verify</span>
+          <span class="cta-pill cta-common">📞 Call Tech / Customer</span>
+        </div>
+        <div class="also-avail"><b>Urgency escalation:</b> Same task with OVERDUE threshold — red background, negative timer. Work is delayed and needs immediate attention.</div>
       </div>
     </div>
+
     <div class="col-motion">
       <div class="col-label">In Motion <span class="hindi">· काम चल रहा है</span></div>
+
       <div class="state-card">
-        <div class="state-top"><div><div class="state-name">Awaiting Customer</div></div></div>
-        <div class="motion-who">Waiting on: <b>Customer</b></div>
-        <div class="state-what">Waiting for customer to confirm new location details.</div>
-        <div class="cta-row"><span class="cta-pill cta-none">No CTA</span></div>
+        <div class="state-top"><div><div class="state-name">Technician Assigned</div><div class="state-hindi">टेक्नीशियन को सौंपा गया</div></div></div>
+        <div class="motion-who">Waiting on: <b>Technician</b></div>
+        <div class="state-what">CSP delegated the shifting to a team member. Technician has been notified but hasn't started yet. Shows tech name and pickup date countdown.</div>
+        <div class="cta-row"><span class="cta-pill cta-common">📞 Call Tech</span></div>
+        <div class="also-avail">If pickup date approaches → card escalates to URGENT/OVERDUE. CSP should call tech.</div>
       </div>
+
       <div class="state-card">
-        <div class="state-top"><div><div class="state-name">Escalated</div></div></div>
-        <div class="motion-who">Waiting on: <b>Wiom Platform</b></div>
-        <div class="state-what">Backend intervention needed — address validation, zone reassignment.</div>
-        <div class="cta-row"><span class="cta-pill cta-none">No CTA</span></div>
+        <div class="state-top"><div><div class="state-name">Time Left in Pickup Date</div><div class="state-hindi">पिकअप तारीख में समय बाकी</div></div></div>
+        <div class="motion-who">Waiting on: <b>Technician / CSP</b></div>
+        <div class="state-what">Countdown to the scheduled pickup date. Shows how much time is left before CSP or tech needs to reach the customer. Card shows deadline timer — may turn orange as date approaches.</div>
+        <div class="cta-row"><span class="cta-pill cta-common">📞 Call Tech</span></div>
+      </div>
+
+      <div class="state-card">
+        <div class="state-top"><div><div class="state-name">Verification Pending</div><div class="state-hindi">सत्यापन लंबित</div></div></div>
+        <div class="motion-who">Waiting on: <b>System</b></div>
+        <div class="state-what">Shifting work submitted for verification. Backend checking if the NetBox is properly reinstalled and active at the new address. Auto-resolves on success.</div>
+        <div class="cta-row"><span class="cta-pill cta-none">No CTA — auto-resolves</span></div>
       </div>
     </div>
   </div>
@@ -1044,9 +1130,9 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
     <tr><td class="fn">🏠 Install</td><td>5 states</td><td><b>9</b> — Propose slot, Re-schedule, Assign self, Assign tech, Start install, Change tech, Call customer, Call tech, Exit task</td><td>7 states</td></tr>
     <tr><td class="fn">🔧 Service</td><td>7 states</td><td><b>10</b> — Accept+start, Assign self, Assign tech, Resolve, Proof: system check, Proof: customer confirm, Diagnose fault, Recall task, Change tech, Call customer</td><td>5 states</td></tr>
     <tr><td class="fn">📦 Pickup</td><td>3 states</td><td><b>5</b> — Assign self, Assign technician, Start pickup, Call tech, Call customer</td><td>3 states</td></tr>
-    <tr><td class="fn">🚚 Shifting</td><td>1 state</td><td><b>1</b> — Start shifting</td><td>2 states</td></tr>
+    <tr><td class="fn">🚚 Shifting</td><td>4 states</td><td><b>6</b> — Assign self, Assign tech, Start work, Verify, Call customer, Call tech</td><td>3 states</td></tr>
     <tr><td class="fn">⚡ Recharge</td><td>4 states</td><td><b>6</b> — Select customers, Select all, Collect/recharge done, Confirm commission, Claim commission, Refresh list</td><td>2 states</td></tr>
-    <tr style="background:var(--pink-bg);"><td class="fn" style="color:var(--pink);">TOTAL</td><td><b>20 action states</b></td><td><b>31 distinct actions</b></td><td><b>19 in-motion states</b></td></tr>
+    <tr style="background:var(--pink-bg);"><td class="fn" style="color:var(--pink);">TOTAL</td><td><b>23 action states</b></td><td><b>36 distinct actions</b></td><td><b>20 in-motion states</b></td></tr>
   </table>
 </div>
 
