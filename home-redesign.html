@@ -121,6 +121,32 @@ h1{font-size:clamp(28px,5vw,42px);line-height:1.1;letter-spacing:-.025em;font-we
 .note-box b{color:var(--blue);font-weight:700;}
 
 footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3);text-align:center;}
+
+/* ── Interactive Prototype ── */
+.proto-tabs{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap;}
+.proto-tab{padding:8px 16px;border-radius:10px;font-size:13px;font-weight:700;border:1px solid var(--hair);background:var(--surface);color:var(--ink-2);cursor:pointer;transition:.2s;font-family:inherit;}
+.proto-tab:hover{border-color:var(--pink);color:var(--pink);}
+.proto-tab.active{background:var(--pink);color:#fff;border-color:var(--pink);}
+.proto-cases{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;}
+.proto-case{padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;border:1px solid var(--hair);background:var(--surface-2);color:var(--ink-2);cursor:pointer;transition:.2s;font-family:inherit;}
+.proto-case:hover{border-color:var(--pink);}
+.proto-case.active{background:var(--pink-bg);color:var(--pink);border-color:var(--pink-soft);}
+.proto-desc{font-size:13px;color:var(--ink-2);line-height:1.6;margin-bottom:20px;padding:12px 16px;background:var(--blue-bg);border:1px solid #B3D4FF;border-radius:10px;}
+.proto-desc b{color:var(--blue);font-weight:700;}
+@keyframes protoCardOut{0%{opacity:1;max-height:120px;transform:scale(1);margin-bottom:4px;}100%{opacity:0;max-height:0;transform:scale(.92);margin-bottom:0;padding:0 14px;overflow:hidden;}}
+@keyframes protoCardIn{0%{opacity:0;transform:translateY(-10px) scale(.95);}100%{opacity:1;transform:translateY(0) scale(1);}}
+@keyframes protoFlash{0%{box-shadow:0 0 0 0 rgba(10,138,61,.4);}70%{box-shadow:0 0 0 8px rgba(10,138,61,0);}100%{box-shadow:0 0 0 0 rgba(10,138,61,0);}}
+.p-card-exit{animation:protoCardOut .45s ease forwards;}
+.p-card-enter{animation:protoCardIn .4s ease both;}
+.p-flash{animation:protoFlash .6s ease;}
+.proto-cta-btn{cursor:pointer;transition:.15s;user-select:none;}
+.proto-cta-btn:hover{filter:brightness(1.1);transform:scale(1.04);}
+.proto-cta-btn:active{transform:scale(.96);}
+.proto-cta-btn.done{opacity:.5;pointer-events:none;}
+.proto-reset{display:inline-block;padding:7px 18px;border-radius:8px;font-size:12px;font-weight:700;border:1px solid var(--hair);background:var(--surface);color:var(--ink-2);cursor:pointer;transition:.2s;font-family:inherit;}
+.proto-reset:hover{border-color:var(--pink);color:var(--pink);}
+.proto-ghost{text-align:center;padding:14px 12px;font-size:11px;color:var(--ink-3);font-style:italic;border:1px dashed var(--hair);border-radius:10px;margin:4px 12px;}
+
 @media(max-width:768px){
   .phone-wrap{flex-direction:column;align-items:center;}
   .principle-grid{grid-template-columns:1fr;}
@@ -274,6 +300,46 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
         <div class="phone-label">New Home Layout</div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━ INTERACTIVE PROTOTYPE ━━━━━━━━━━━━━━━━━━━ -->
+<div class="section" id="proto-section">
+  <div class="section-head" style="background:linear-gradient(135deg,var(--pink-bg),var(--surface-2));">
+    <h2>Interactive Prototype — Try it yourself</h2>
+    <p>Pick a task flow and case, then click the CTA on the card to watch it move from "आज के काम" to "चल रहा है"</p>
+  </div>
+  <div class="section-body">
+
+    <!-- Task flow tabs -->
+    <div class="proto-tabs" id="proto-tabs">
+      <button class="proto-tab active" data-tab="install">🏠 Install</button>
+      <button class="proto-tab" data-tab="service">🔧 Service</button>
+      <button class="proto-tab" data-tab="pickup">📦 Pickup</button>
+      <button class="proto-tab" data-tab="shifting">🚚 Shifting</button>
+      <button class="proto-tab" data-tab="recharge">⚡ Recharge</button>
+    </div>
+
+    <!-- Case sub-tabs -->
+    <div class="proto-cases" id="proto-cases"></div>
+
+    <!-- Case description -->
+    <div class="proto-desc" id="proto-desc"></div>
+
+    <!-- Phone wireframe -->
+    <div class="phone-wrap">
+      <div>
+        <div class="phone" style="width:340px;">
+          <div class="phone-notch"></div>
+          <div class="phone-screen" id="proto-screen" style="min-height:520px;"></div>
+        </div>
+        <div style="text-align:center;margin-top:10px;">
+          <div class="phone-label" id="proto-label">Click the pink CTA to see the card move</div>
+          <button class="proto-reset" id="proto-reset" style="display:none;margin-top:6px;">↻ Reset &amp; try again</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -698,5 +764,204 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
 
 <footer>Wiom CSP Home Redesign — Action-First Feed · Design Reference</footer>
 </div>
+
+<script>
+(function(){
+  /* ── Scenario data ── */
+  var S={
+    install:[
+      {name:"Confirm Slot",
+       desc:"CSP proposes a time slot for the new installation. After clicking <b>Confirm Slot</b>, the card drops to <b>चल रहा है</b> — system is now waiting for the customer to accept.",
+       a:{type:"INSTALL",icon:"🏠",name:"Amit P.",loc:"Dwarka Sec 12",sub:"New booking · Propose a slot",time:"2h ago",cta:"Confirm Slot",urg:""},
+       m:{name:"Amit P.",loc:"Dwarka Sec 12",sub:"Awaiting customer confirmation",time:"Just now"}},
+      {name:"Assign Technician",
+       desc:"Customer confirmed the time slot. CSP now clicks <b>Assign</b> to delegate to a technician. Card drops to <b>चल रहा है</b> — technician is responsible now.",
+       a:{type:"INSTALL",icon:"🏠",name:"Sunita D.",loc:"Rohini Sec 5",sub:"Slot confirmed · Assign technician",time:"Today",cta:"Assign",urg:"urgent"},
+       m:{name:"Sunita D.",loc:"Rohini Sec 5",sub:"Technician Raj assigned",time:"Just now"}},
+      {name:"Start Installation",
+       desc:"CSP assigned themselves. Reached customer location. Clicks <b>Start Work</b>. Card drops to <b>चल रहा है</b> — installation in progress.",
+       a:{type:"INSTALL",icon:"🏠",name:"Kiran P.",loc:"Vasant Kunj",sub:"You're assigned · Reach & start",time:"30m ago",cta:"Start Work",urg:""},
+       m:{name:"Kiran P.",loc:"Vasant Kunj",sub:"Installation in progress",time:"Just now"}}
+    ],
+    service:[
+      {name:"Start Work",
+       desc:"New service complaint — internet is down. CSP clicks <b>Start Work</b> to begin troubleshooting. Card moves to <b>चल रहा है</b>.",
+       a:{type:"SERVICE",icon:"🔧",name:"Rajesh K.",loc:"Sector 12",sub:"New complaint · Internet down",time:"1h ago",cta:"Start Work",urg:""},
+       m:{name:"Rajesh K.",loc:"Sector 12",sub:"Technician working",time:"Just now"}},
+      {name:"Assign Technician",
+       desc:"CSP can't go themselves. Clicks <b>Assign</b> to delegate to team member Amit. Card drops to <b>चल रहा है</b>.",
+       a:{type:"SERVICE",icon:"🔧",name:"Priya M.",loc:"Saket",sub:"New request · Assign team member",time:"3h ago",cta:"Assign",urg:"urgent"},
+       m:{name:"Priya M.",loc:"Saket",sub:"Technician Amit assigned",time:"Just now"}},
+      {name:"Verify",
+       desc:"Technician completed the work. CSP clicks <b>Verify</b> to confirm fix. Card moves to <b>चल रहा है</b> as verification pending.",
+       a:{type:"SERVICE",icon:"🔧",name:"Anita R.",loc:"Dwarka",sub:"Work done · Verify now",time:"10m ago",cta:"Verify",urg:""},
+       m:{name:"Anita R.",loc:"Dwarka",sub:"Verification pending",time:"Just now"}}
+    ],
+    pickup:[
+      {name:"Assign Technician",
+       desc:"New NetBox pickup ticket. CSP clicks <b>Assign</b> to delegate. The <b>individual card disappears</b> from action section and becomes a <b>batch row</b> in चल रहा है.",
+       a:{type:"PICKUP",icon:"📦",name:"Ravi K. · NB-3301",loc:"Dwarka",sub:"Assign technician for pickup",time:"5d left",cta:"Assign",urg:""},
+       m:{name:"Ravi K.",loc:"NB-3301",sub:"Tech Amit assigned",time:"Just now",batch:true}},
+      {name:"Start Pickup",
+       desc:"CSP assigned self. At customer location now. Clicks <b>Start Pickup</b>. Card moves to <b>batch row</b> in चल रहा है — pickup in progress.",
+       a:{type:"PICKUP",icon:"📦",name:"Meena S. · NB-4410",loc:"Rohini",sub:"You're assigned · Start pickup",time:"2h left",cta:"Start Pickup",urg:"urgent"},
+       m:{name:"Meena S.",loc:"NB-4410",sub:"Pickup in progress",time:"Just now",batch:true}},
+      {name:"Overdue — Reassign",
+       desc:"Pickup deadline passed. Card shows red urgency. CSP clicks <b>Reassign</b> to a faster technician. Card moves to <b>batch</b> in चल रहा है.",
+       a:{type:"PICKUP",icon:"📦",name:"Karan S. · NB-6654",loc:"Saket",sub:"Pickup delay · Reassign now",time:"Overdue",cta:"Reassign",urg:"overdue"},
+       m:{name:"Karan S.",loc:"NB-6654",sub:"Tech Raj reassigned",time:"Just now",batch:true}}
+    ],
+    shifting:[
+      {name:"Assign Technician",
+       desc:"New shifting request. CSP clicks <b>Assign</b> to delegate. Card moves to <b>चल रहा है</b> — technician handles it.",
+       a:{type:"SHIFTING",icon:"🚚",name:"Deepak M.",loc:"Sec 22 → Sec 15",sub:"New request · Assign technician",time:"4h ago",cta:"Assign",urg:""},
+       m:{name:"Deepak M.",loc:"Sec 22 → Sec 15",sub:"Technician assigned",time:"Just now"}},
+      {name:"Start Work",
+       desc:"CSP assigned self. At location. Clicks <b>Start Work</b>. Card drops to <b>चल रहा है</b> — work in progress.",
+       a:{type:"SHIFTING",icon:"🚚",name:"Pooja S.",loc:"Dwarka → Janakpuri",sub:"You're assigned · Start work",time:"1h ago",cta:"Start Work",urg:""},
+       m:{name:"Pooja S.",loc:"Dwarka → Janakpuri",sub:"Work in progress",time:"Just now"}},
+      {name:"Verify",
+       desc:"Shifting work complete. CSP clicks <b>Verify</b>. Card moves to <b>चल रहा है</b> as verification pending.",
+       a:{type:"SHIFTING",icon:"🚚",name:"Arun T.",loc:"Rohini → Pitampura",sub:"Work complete · Verify now",time:"20m ago",cta:"Verify",urg:""},
+       m:{name:"Arun T.",loc:"Rohini → Pitampura",sub:"Verification pending",time:"Just now"}}
+    ],
+    recharge:[
+      {name:"Recharge (12 pending)",
+       desc:"12 recharges pending. CSP taps <b>Recharge</b>, collects from Rajesh, completes the recharge. Count drops from <b>12 → 11</b>. A verification row appears in चल रहा है.",
+       a:{type:"RECHARGE",icon:"⚡",isBatch:true,count:12,name:"12 Recharge collections due",loc:"Earliest: Rajesh K. · 2 hrs left",cta:"Recharge"},
+       m:{name:"Rajesh K.",loc:"Plan ₹399",sub:"Verification pending",time:"Just now",rAfter:11}},
+      {name:"Last Recharge",
+       desc:"Only 1 recharge left. CSP completes it. <b>Batch card disappears entirely</b> from action section — 0 pending! Verification row appears in चल रहा है.",
+       a:{type:"RECHARGE",icon:"⚡",isBatch:true,count:1,name:"1 Recharge collection due",loc:"Sunita D. · 4 hrs left",cta:"Recharge"},
+       m:{name:"Sunita D.",loc:"Plan ₹599",sub:"Verification pending",time:"Just now",rAfter:0}}
+    ]
+  };
+
+  var tab="install",ci=0,acted=false;
+
+  function urg(v){return v==="urgent"?" urgent":v==="overdue"?" overdue":"";}
+
+  function buildScreen(){
+    acted=false;
+    var sc=S[tab][ci],a=sc.a,isR=a.isBatch,isP=a.type==="PICKUP";
+
+    /* ── Cases row ── */
+    var cH="";S[tab].forEach(function(c,i){cH+='<button class="proto-case'+(i===ci?" active":"")+'" data-ci="'+i+'">'+c.name+"</button>";});
+    document.getElementById("proto-cases").innerHTML=cH;
+    document.querySelectorAll(".proto-case").forEach(function(b){b.onclick=function(){ci=+b.dataset.ci;buildScreen();};});
+
+    /* ── Desc ── */
+    document.getElementById("proto-desc").innerHTML=sc.desc;
+    document.getElementById("proto-reset").style.display="none";
+    document.getElementById("proto-label").textContent='Click "'+a.cta+'" to see the card move';
+
+    /* ── Action card HTML ── */
+    var acH;
+    if(isR){
+      acH='<div class="w-card w-recharge" id="p-ac">'
+        +'<div class="w-card-top"><div class="w-card-type" style="color:var(--orange);">'+a.icon+" "+a.type+'</div><div class="w-card-time urgent" id="p-cnt">'+a.count+' pending</div></div>'
+        +'<div class="w-card-title" id="p-ac-title">'+a.name+'</div>'
+        +'<div class="w-card-sub" id="p-ac-sub">'+a.loc+'</div>'
+        +'<div class="w-card-cta proto-cta-btn" id="p-cta">'+a.cta+'</div></div>';
+    }else{
+      var bc=a.urg==="overdue"?" w-urgent":"";
+      acH='<div class="w-card w-action'+bc+'" id="p-ac">'
+        +'<div class="w-card-top"><div class="w-card-type" style="color:var(--pink);">'+a.icon+" "+a.type+'</div><div class="w-card-time'+urg(a.urg)+'">'+a.time+'</div></div>'
+        +'<div class="w-card-title">'+a.name+'</div>'
+        +'<div class="w-card-sub">'+a.loc+" · "+a.sub+'</div>'
+        +'<div class="w-card-cta proto-cta-btn" id="p-cta">'+a.cta+'</div></div>';
+    }
+
+    /* ── Motion placeholder ── */
+    var moH;
+    if(isP){
+      moH='<div class="w-batch" style="border-left:3px solid var(--hair);opacity:.35;" id="p-mo">'
+        +'<div class="w-batch-head"><div class="w-batch-title">📦 Pickup · In Motion</div><div class="w-batch-count" id="p-bc">1 item</div></div>'
+        +'<div class="w-batch-row"><div class="w-batch-left"><b>Anita R.</b> · NB-2217</div><div class="w-batch-status">Sent to Wiom</div></div>'
+        +'<div id="p-nr"></div></div>';
+    }else if(isR){
+      moH='<div class="w-batch" style="border-left:3px solid var(--hair);opacity:.35;" id="p-mo">'
+        +'<div class="w-batch-head"><div class="w-batch-title">⚡ Recharge · Verifying</div><div class="w-batch-count" id="p-bc">0 items</div></div>'
+        +'<div id="p-nr"></div></div>';
+    }else{
+      moH='<div class="proto-ghost" id="p-mo">Card will appear here after you take action above</div>';
+    }
+
+    /* ── Assemble screen ── */
+    document.getElementById("proto-screen").innerHTML=
+      '<div class="w-header"><div class="w-logo">wiom</div><div class="w-icons"><div class="w-icon"></div><div class="w-icon"></div></div></div>'
+      +'<div class="w-chips"><div class="w-chip active">All</div><div class="w-chip">Install</div><div class="w-chip">Service</div><div class="w-chip">Pickup</div></div>'
+      +'<div class="w-section-label" style="color:var(--pink);"><span>आज के काम · Today\'s Action</span><span class="w-count" style="background:var(--pink-bg);color:var(--pink);" id="p-a-cnt">1</span></div>'
+      +acH
+      +'<div class="w-spacer"></div><div class="w-divider"></div><div class="w-spacer"></div>'
+      +'<div class="w-section-label" style="color:var(--ink-3);"><span>चल रहा है · In Motion</span><span class="w-count" style="background:var(--surface-2);color:var(--ink-3);" id="p-m-cnt">'+(isP?"1":"0")+'</span></div>'
+      +moH
+      +'<div class="w-spacer"></div>';
+
+    document.getElementById("p-cta").onclick=doAction;
+  }
+
+  function doAction(){
+    if(acted)return;acted=true;
+    var sc=S[tab][ci],a=sc.a,m=sc.m,isR=a.isBatch,isP=a.type==="PICKUP";
+    var card=document.getElementById("p-ac"),cta=document.getElementById("p-cta"),mo=document.getElementById("p-mo");
+
+    cta.classList.add("done");
+    card.classList.add("p-card-exit");
+
+    setTimeout(function(){
+      /* ── Update action section ── */
+      if(isR&&m.rAfter>0){
+        /* recharge count decrement — card stays */
+        card.classList.remove("p-card-exit");
+        card.style.opacity="1";
+        document.getElementById("p-ac-title").textContent=m.rAfter+" Recharge collections due";
+        document.getElementById("p-cnt").textContent=m.rAfter+" pending";
+        document.getElementById("p-ac-sub").textContent="Next: "+(m.rAfter>1?"multiple customers":"last customer");
+      }else if(isR&&m.rAfter===0){
+        card.style.display="none";
+        document.getElementById("p-a-cnt").textContent="0";
+      }else{
+        card.style.display="none";
+        document.getElementById("p-a-cnt").textContent="0";
+      }
+
+      /* ── Update motion section ── */
+      mo.style.opacity="1";
+
+      if(isP||isR){
+        var nr=document.getElementById("p-nr");
+        var oldCnt=isP?1:0;
+        document.getElementById("p-bc").textContent=(oldCnt+1)+" items";
+        document.getElementById("p-m-cnt").textContent=""+(oldCnt+1);
+        nr.innerHTML='<div class="w-batch-row p-card-enter p-flash" style="background:var(--green-bg);">'
+          +'<div class="w-batch-left"><b>'+m.name+'</b> · '+m.loc+'</div>'
+          +'<div class="w-batch-status" style="color:var(--green);font-weight:600;">'+m.sub+'</div></div>';
+      }else{
+        mo.className="w-card w-motion p-card-enter p-flash";
+        mo.style.borderLeft="3px solid var(--green)";mo.style.background="var(--green-bg)";
+        mo.innerHTML='<div class="w-card-top"><div class="w-card-type" style="color:var(--green);">'+a.icon+" "+a.type+'</div><div class="w-card-time" style="color:var(--green);">'+m.time+'</div></div>'
+          +'<div class="w-card-title">'+m.name+'</div>'
+          +'<div class="w-card-sub">'+m.loc+" · "+m.sub+'</div>';
+        document.getElementById("p-m-cnt").textContent="1";
+      }
+
+      document.getElementById("proto-label").textContent='Done! "'+a.cta+'" → card moved to "चल रहा है"';
+      document.getElementById("proto-reset").style.display="inline-block";
+    },500);
+  }
+
+  /* ── Tab clicks ── */
+  document.querySelectorAll(".proto-tab").forEach(function(t){
+    t.onclick=function(){
+      document.querySelectorAll(".proto-tab").forEach(function(x){x.classList.remove("active");});
+      t.classList.add("active");tab=t.dataset.tab;ci=0;buildScreen();
+    };
+  });
+
+  document.getElementById("proto-reset").onclick=function(){buildScreen();};
+  buildScreen();
+})();
+</script>
 </body>
 </html>
