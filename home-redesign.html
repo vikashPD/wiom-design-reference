@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wiom CSP — Home Page Redesign · Action-First Feed</title>
+<style>
+:root{
+  --pink:#D9008D;--pink-soft:#F5D6EA;--pink-bg:#FFF0F8;
+  --violet:#4A1B6E;--violet-soft:#EDE4F3;
+  --green:#0A8A3D;--green-bg:#E8F7EE;
+  --orange:#D46B08;--orange-bg:#FFF4E5;
+  --red:#C4314B;--red-bg:#FDE8EC;
+  --blue:#0066CC;--blue-bg:#E8F2FF;
+  --ground:#FBF6F9;--surface:#FFFFFF;--surface-2:#F6EEF3;
+  --ink:#201823;--ink-2:#6B5C67;--ink-3:#9A8B95;
+  --hair:#EADFE7;--radius:16px;
+  --shadow:0 1px 3px rgba(32,24,35,.06),0 8px 24px -12px rgba(32,24,35,.16);
+  --sans:"Segoe UI",system-ui,-apple-system,"Roboto",sans-serif;
+  --mono:ui-monospace,"Cascadia Code","Consolas","SF Mono",monospace;
+}
+*{box-sizing:border-box;margin:0;}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;padding:32px 20px;}
+.page{max-width:1280px;margin:0 auto;}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--pink);margin-bottom:14px;font-weight:600;}
+h1{font-size:clamp(28px,5vw,42px);line-height:1.1;letter-spacing:-.025em;font-weight:800;margin-bottom:12px;}
+.sub{font-size:16px;color:var(--ink-2);margin-bottom:12px;max-width:68ch;}
+.sub b{color:var(--ink);font-weight:650;}
+
+/* sections */
+.section{background:var(--surface);border:1px solid var(--hair);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:28px;overflow:hidden;}
+.section-head{padding:20px 24px;border-bottom:1px solid var(--hair);background:var(--surface-2);}
+.section-head h2{font-size:20px;font-weight:800;margin-bottom:4px;}
+.section-head p{font-size:13px;color:var(--ink-2);}
+.section-body{padding:24px;}
+
+/* principle box */
+.principle{background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:18px 22px;margin-bottom:28px;box-shadow:var(--shadow);}
+.principle h3{font-size:16px;font-weight:750;margin-bottom:8px;}
+.principle p{font-size:14px;color:var(--ink-2);line-height:1.6;}
+.principle b{color:var(--ink);font-weight:650;}
+.principle-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:28px;}
+
+/* phone wireframe */
+.phone-wrap{display:flex;gap:32px;justify-content:center;flex-wrap:wrap;margin:20px 0;}
+.phone{width:320px;background:#fff;border:2px solid var(--ink);border-radius:32px;padding:12px;position:relative;box-shadow:0 8px 32px rgba(32,24,35,.15);}
+.phone-notch{width:100px;height:6px;background:var(--ink);border-radius:3px;margin:0 auto 8px;opacity:.3;}
+.phone-screen{background:var(--ground);border-radius:20px;overflow:hidden;min-height:580px;}
+.phone-label{text-align:center;font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:12px;letter-spacing:.05em;}
+
+/* wireframe elements */
+.w-header{background:var(--surface);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--hair);}
+.w-header .w-logo{font-weight:800;font-size:15px;color:var(--pink);}
+.w-header .w-icons{display:flex;gap:8px;}
+.w-header .w-icon{width:20px;height:20px;background:var(--hair);border-radius:50%;}
+
+.w-chips{display:flex;gap:6px;padding:10px 16px;overflow-x:auto;}
+.w-chip{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;border:1px solid var(--hair);background:var(--surface);}
+.w-chip.active{background:var(--pink);color:#fff;border-color:var(--pink);}
+
+.w-section-label{padding:10px 16px 6px;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:space-between;}
+.w-section-label .w-count{font-family:var(--mono);font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;}
+
+.w-card{background:var(--surface);margin:4px 12px;border-radius:12px;padding:12px 14px;border:1px solid var(--hair);position:relative;}
+.w-card.w-action{border-left:3px solid var(--pink);}
+.w-card.w-motion{border-left:3px solid var(--hair);opacity:.85;}
+.w-card.w-recharge{border-left:3px solid var(--orange);background:var(--orange-bg);}
+.w-card.w-urgent{border-left:3px solid var(--red);}
+.w-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.w-card-type{font-size:10px;font-family:var(--mono);font-weight:600;letter-spacing:.08em;text-transform:uppercase;}
+.w-card-time{font-size:10px;font-family:var(--mono);color:var(--ink-3);}
+.w-card-time.urgent{color:var(--orange);font-weight:700;}
+.w-card-time.overdue{color:var(--red);font-weight:700;}
+.w-card-title{font-size:13px;font-weight:700;margin-bottom:2px;}
+.w-card-sub{font-size:11px;color:var(--ink-2);}
+.w-card-cta{display:inline-block;background:var(--pink);color:#fff;font-size:10px;font-weight:700;padding:4px 12px;border-radius:6px;margin-top:6px;}
+.w-card-cta.outline{background:transparent;color:var(--pink);border:1px solid var(--pink);}
+
+.w-batch{background:var(--surface);margin:4px 12px;border-radius:12px;padding:10px 14px;border:1px solid var(--hair);}
+.w-batch-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.w-batch-title{font-size:12px;font-weight:700;}
+.w-batch-count{font-family:var(--mono);font-size:10px;color:var(--ink-3);}
+.w-batch-row{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-top:1px solid var(--hair);font-size:10px;}
+.w-batch-row:first-of-type{border-top:none;}
+.w-batch-left{color:var(--ink-2);}
+.w-batch-left b{color:var(--ink);font-weight:600;}
+.w-batch-status{font-size:10px;color:var(--ink-3);}
+
+.w-divider{height:1px;background:var(--hair);margin:6px 16px;}
+.w-spacer{height:8px;}
+
+/* logic table */
+.logic-table{width:100%;border-collapse:collapse;font-size:13px;}
+.logic-table th{text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding:10px 14px;border-bottom:2px solid var(--hair);font-weight:600;}
+.logic-table td{padding:10px 14px;border-bottom:1px solid var(--hair);vertical-align:top;}
+.logic-table tr:last-child td{border-bottom:none;}
+.logic-table .fn{font-weight:700;white-space:nowrap;}
+.pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;margin:2px 3px 2px 0;}
+.pill-a{background:var(--pink-bg);color:var(--pink);border:1px solid var(--pink-soft);}
+.pill-m{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--hair);}
+.pill-c{background:var(--violet-soft);color:var(--violet);border:1px solid #C4A8E0;}
+
+/* arrow */
+.move-arrow{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--pink);font-weight:700;margin:4px 0;}
+.move-arrow .arr{font-size:16px;}
+
+/* decision cards */
+.decision-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;}
+.decision-card{background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:16px 18px;box-shadow:var(--shadow);}
+.decision-card h4{font-size:14px;font-weight:750;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.decision-card p{font-size:13px;color:var(--ink-2);line-height:1.5;}
+.decision-card b{color:var(--ink);font-weight:600;}
+.decision-card ul{margin:6px 0 0 16px;font-size:13px;color:var(--ink-2);}
+.decision-card li{margin-bottom:3px;}
+
+/* highlight box */
+.highlight{background:var(--pink-bg);border:1px solid var(--pink-soft);border-radius:12px;padding:16px 20px;margin:16px 0;font-size:14px;color:var(--ink-2);line-height:1.6;}
+.highlight b{color:var(--pink);font-weight:700;}
+
+.note-box{background:var(--blue-bg);border:1px solid #B3D4FF;border-radius:12px;padding:16px 20px;margin:16px 0;font-size:14px;color:var(--ink-2);line-height:1.6;}
+.note-box b{color:var(--blue);font-weight:700;}
+
+footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3);text-align:center;}
+@media(max-width:768px){
+  .phone-wrap{flex-direction:column;align-items:center;}
+  .principle-grid{grid-template-columns:1fr;}
+  .decision-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<p class="eyebrow">Wiom CSP App · Home Redesign</p>
+<h1>Action-First Home Feed</h1>
+<p class="sub">Split the home into <b>two clear zones</b> — "आज के काम" (today's tasks) on top, "चल रहा है" (in motion) below. CSP opens the app and <b>instantly knows what to do</b>.</p>
+
+<!-- ━━━━━━━━━━━━━━━━━━━ CORE PRINCIPLES ━━━━━━━━━━━━━━━━━━━ -->
+<div class="principle-grid">
+  <div class="principle">
+    <h3>1. Action first</h3>
+    <p>Everything that needs <b>CSP action right now</b> goes in the top section. If the CSP doesn't need to do anything — it's not in "आज के काम".</p>
+  </div>
+  <div class="principle">
+    <h3>2. Cards move dynamically</h3>
+    <p>When a non-action card <b>becomes actionable</b> (customer confirms slot, photo rejected), it moves up to "आज के काम". When CSP completes an action, it drops to "चल रहा है".</p>
+  </div>
+  <div class="principle">
+    <h3>3. Recharge on top, always</h3>
+    <p>ISP Recharge batch stays <b>pinned at the top</b> of action section — quickest win, highest retention impact, easiest to complete.</p>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━ LAYOUT STRUCTURE ━━━━━━━━━━━━━━━━━━━ -->
+<div class="section">
+  <div class="section-head">
+    <h2>Home page structure</h2>
+    <p>Top to bottom — what CSP sees when they open the app</p>
+  </div>
+  <div class="section-body">
+
+    <div class="phone-wrap">
+      <!-- MAIN WIREFRAME -->
+      <div>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+
+            <!-- Header -->
+            <div class="w-header">
+              <div class="w-logo">wiom</div>
+              <div class="w-icons"><div class="w-icon"></div><div class="w-icon"></div></div>
+            </div>
+
+            <!-- Assurance Chips -->
+            <div class="w-chips">
+              <div class="w-chip active">All</div>
+              <div class="w-chip">Install</div>
+              <div class="w-chip">Service</div>
+              <div class="w-chip">Pickup</div>
+            </div>
+
+            <!-- ── SECTION 1: TODAY'S ACTION ── -->
+            <div class="w-section-label" style="color:var(--pink);">
+              <span>आज के काम · Today's Action</span>
+              <span class="w-count" style="background:var(--pink-bg);color:var(--pink);">6</span>
+            </div>
+
+            <!-- Recharge batch — ALWAYS ON TOP -->
+            <div class="w-card w-recharge">
+              <div class="w-card-top">
+                <div class="w-card-type" style="color:var(--orange);">⚡ RECHARGE</div>
+                <div class="w-card-time urgent">12 pending</div>
+              </div>
+              <div class="w-card-title">12 Recharge collections due</div>
+              <div class="w-card-sub">Earliest: Rajesh K. · 2 hrs left</div>
+              <div class="w-card-cta">Recharge</div>
+            </div>
+
+            <!-- Netbox pickup INDIVIDUAL card (needs action) -->
+            <div class="w-card w-action">
+              <div class="w-card-top">
+                <div class="w-card-type" style="color:var(--pink);">📦 PICKUP</div>
+                <div class="w-card-time overdue">Overdue</div>
+              </div>
+              <div class="w-card-title">Priya M. · NB-8832</div>
+              <div class="w-card-sub">Saket · Assign technician</div>
+              <div class="w-card-cta">Assign</div>
+            </div>
+
+            <!-- Install action card -->
+            <div class="w-card w-action">
+              <div class="w-card-top">
+                <div class="w-card-type" style="color:var(--pink);">🏠 INSTALL</div>
+                <div class="w-card-time urgent">Today</div>
+              </div>
+              <div class="w-card-title">Amit P. · Dwarka</div>
+              <div class="w-card-sub">Slot confirmed · Assign technician</div>
+              <div class="w-card-cta">Assign</div>
+            </div>
+
+            <!-- Service action card -->
+            <div class="w-card w-action">
+              <div class="w-card-top">
+                <div class="w-card-type" style="color:var(--pink);">🔧 SERVICE</div>
+                <div class="w-card-time">3h ago</div>
+              </div>
+              <div class="w-card-title">Sunita D. · Rohini</div>
+              <div class="w-card-sub">New request · Accept + Start work</div>
+              <div class="w-card-cta">Start Work</div>
+            </div>
+
+            <div class="w-spacer"></div>
+
+            <!-- ── SECTION 2: IN MOTION ── -->
+            <div class="w-section-label" style="color:var(--ink-3);">
+              <span>चल रहा है · In Motion</span>
+              <span class="w-count" style="background:var(--surface-2);color:var(--ink-3);">5</span>
+            </div>
+
+            <!-- Netbox pickup BATCH (in motion items) -->
+            <div class="w-batch" style="border-left:3px solid var(--hair);">
+              <div class="w-batch-head">
+                <div class="w-batch-title">📦 Pickup · In Motion</div>
+                <div class="w-batch-count">3 items</div>
+              </div>
+              <div class="w-batch-row"><div class="w-batch-left"><b>Karan S.</b> · NB-6654</div><div class="w-batch-status">Raj working</div></div>
+              <div class="w-batch-row"><div class="w-batch-left"><b>Anita R.</b> · NB-2217</div><div class="w-batch-status">Tech assigned</div></div>
+              <div class="w-batch-row"><div class="w-batch-left"><b>Meena S.</b> · NB-4410</div><div class="w-batch-status">Sent to Wiom</div></div>
+            </div>
+
+            <!-- Install in-motion -->
+            <div class="w-card w-motion">
+              <div class="w-card-top">
+                <div class="w-card-type" style="color:var(--ink-3);">🏠 INSTALL</div>
+                <div class="w-card-time">2h ago</div>
+              </div>
+              <div class="w-card-title">Rajesh K. · Sector 12</div>
+              <div class="w-card-sub">Customer choosing slot · Waiting</div>
+            </div>
+
+            <!-- Service in-motion -->
+            <div class="w-card w-motion">
+              <div class="w-card-top">
+                <div class="w-card-type" style="color:var(--ink-3);">🔧 SERVICE</div>
+                <div class="w-card-time">1h ago</div>
+              </div>
+              <div class="w-card-title">Kiran P. · Vasant Kunj</div>
+              <div class="w-card-sub">Technician working · Raj</div>
+            </div>
+
+          </div>
+        </div>
+        <div class="phone-label">New Home Layout</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━ SECTION LOGIC ━━━━━━━━━━━━━━━━━━━ -->
+<div class="section">
+  <div class="section-head">
+    <h2>Section 1 — आज के काम · Today's Action</h2>
+    <p>Only cards where CSP must act RIGHT NOW. Priority order top to bottom.</p>
+  </div>
+  <div class="section-body">
+
+    <div class="highlight">
+      <b>Priority order inside "आज के काम":</b><br>
+      1. <b>ISP Recharge batch</b> — always pinned on top (quick, easy, retention impact)<br>
+      2. <b>NetBox Pickup cards needing action</b> — individual cards, not batch (assign tech, overdue)<br>
+      3. <b>Other action cards sorted by urgency</b> — OVERDUE first, then URGENT, then NORMAL<br>
+      4. <b>Within same urgency</b> — most recently updated card on top
+    </div>
+
+    <table class="logic-table">
+      <tr>
+        <th>Flow</th>
+        <th>Which states land here?</th>
+        <th>Card style</th>
+      </tr>
+      <tr>
+        <td class="fn">⚡ Recharge</td>
+        <td>Recharge (always) — <b>pinned at position #1</b></td>
+        <td><span class="pill pill-a">Batch card</span> with total pending count + "Recharge" CTA</td>
+      </tr>
+      <tr>
+        <td class="fn">📦 Pickup</td>
+        <td>Assign self/technician, Start pickup, Pickup due (urgent), Pickup delay (overdue)</td>
+        <td><span class="pill pill-a">Individual card</span> — each pickup needing action gets its own card with CTA</td>
+      </tr>
+      <tr>
+        <td class="fn">🏠 Install</td>
+        <td>Propose slot, Re-schedule, Assign self/tech, Start installation, Delegate overdue</td>
+        <td><span class="pill pill-a">Individual card</span></td>
+      </tr>
+      <tr>
+        <td class="fn">🔧 Service</td>
+        <td>Accept + start work, Resolve, Customer denied, Diagnose fault, Recall task, Delegate overdue</td>
+        <td><span class="pill pill-a">Individual card</span></td>
+      </tr>
+      <tr>
+        <td class="fn">🚚 Shifting</td>
+        <td>Assign self/tech, Start work, Verify, Work delay (overdue)</td>
+        <td><span class="pill pill-a">Individual card</span></td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-head">
+    <h2>Section 2 — चल रहा है · In Motion</h2>
+    <p>Cards where system/customer/technician is working. CSP just monitors.</p>
+  </div>
+  <div class="section-body">
+
+    <table class="logic-table">
+      <tr>
+        <th>Flow</th>
+        <th>Which states land here?</th>
+        <th>Card style</th>
+      </tr>
+      <tr>
+        <td class="fn">⚡ Recharge</td>
+        <td>Verification pending</td>
+        <td><span class="pill pill-m">Stays in batch</span> — row shows "Verifying" status</td>
+      </tr>
+      <tr>
+        <td class="fn">📦 Pickup</td>
+        <td>Technician assigned, Technician working, Send to Wiom, Completed</td>
+        <td><span class="pill pill-m">Batch card</span> — all in-motion pickups grouped together</td>
+      </tr>
+      <tr>
+        <td class="fn">🏠 Install</td>
+        <td>Customer choosing slot, Scheduling retry, In progress, Team assigned, Team working, Submitted, Verifying</td>
+        <td><span class="pill pill-m">Individual card</span> (greyed out, no CTA)</td>
+      </tr>
+      <tr>
+        <td class="fn">🔧 Service</td>
+        <td>Team assigned, Team working, Escalated to Wiom, Reclassified, Verifying</td>
+        <td><span class="pill pill-m">Individual card</span> (greyed out, no CTA)</td>
+      </tr>
+      <tr>
+        <td class="fn">🚚 Shifting</td>
+        <td>Technician assigned, Time left in pickup date, Verification pending</td>
+        <td><span class="pill pill-m">Individual card</span> (greyed out, no CTA)</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━ NETBOX PICKUP SPLIT LOGIC ━━━━━━━━━━━━━━━━━━━ -->
+<div class="section">
+  <div class="section-head">
+    <h2>NetBox Pickup — Split card behaviour</h2>
+    <p>Pickup cards move between individual (action) and batch (in-motion) based on state</p>
+  </div>
+  <div class="section-body">
+
+    <div class="note-box">
+      <b>The problem with current batch:</b> NetBox Pickup gets lost inside a batch card. CSP doesn't notice when a specific pickup needs their action (like assigning a technician). The action gets buried among in-motion rows.
+    </div>
+
+    <div class="phone-wrap">
+      <!-- PICKUP ACTION STATE -->
+      <div>
+        <div class="phone" style="width:280px;">
+          <div class="phone-notch"></div>
+          <div class="phone-screen" style="min-height:300px;">
+            <div class="w-section-label" style="color:var(--pink);font-size:11px;">
+              <span>आज के काम</span>
+            </div>
+            <div class="w-card w-action">
+              <div class="w-card-top">
+                <div class="w-card-type" style="color:var(--pink);">📦 PICKUP</div>
+                <div class="w-card-time overdue">2h left</div>
+              </div>
+              <div class="w-card-title">Priya M. · NB-8832</div>
+              <div class="w-card-sub">Saket · Assign technician</div>
+              <div class="w-card-cta">Assign</div>
+            </div>
+            <div class="w-card w-action">
+              <div class="w-card-top">
+                <div class="w-card-type" style="color:var(--pink);">📦 PICKUP</div>
+                <div class="w-card-time">5d left</div>
+              </div>
+              <div class="w-card-title">Ravi K. · NB-3301</div>
+              <div class="w-card-sub">Dwarka · Assign technician</div>
+              <div class="w-card-cta">Assign</div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Pickup needs action = Individual card<br>in "आज के काम"</div>
+      </div>
+
+      <!-- ARROW -->
+      <div style="display:flex;align-items:center;padding:0 8px;">
+        <div style="text-align:center;">
+          <div style="font-size:11px;color:var(--ink-3);margin-bottom:4px;">CSP assigns<br>technician</div>
+          <div style="font-size:32px;color:var(--pink);">→</div>
+          <div style="font-size:11px;color:var(--ink-3);margin-top:4px;">Card moves<br>to batch</div>
+        </div>
+      </div>
+
+      <!-- PICKUP IN MOTION STATE -->
+      <div>
+        <div class="phone" style="width:280px;">
+          <div class="phone-notch"></div>
+          <div class="phone-screen" style="min-height:300px;">
+            <div class="w-section-label" style="color:var(--ink-3);font-size:11px;">
+              <span>चल रहा है</span>
+            </div>
+            <div class="w-batch" style="border-left:3px solid var(--hair);">
+              <div class="w-batch-head">
+                <div class="w-batch-title">📦 Pickup · In Motion</div>
+                <div class="w-batch-count">4 items</div>
+              </div>
+              <div class="w-batch-row"><div class="w-batch-left"><b>Priya M.</b> · NB-8832</div><div class="w-batch-status" style="color:var(--green);">Raj assigned</div></div>
+              <div class="w-batch-row"><div class="w-batch-left"><b>Ravi K.</b> · NB-3301</div><div class="w-batch-status">Amit working</div></div>
+              <div class="w-batch-row"><div class="w-batch-left"><b>Karan S.</b> · NB-6654</div><div class="w-batch-status">Completed</div></div>
+              <div class="w-batch-row"><div class="w-batch-left"><b>Anita R.</b> · NB-2217</div><div class="w-batch-status">Sent to Wiom</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">Pickup in motion = Batch card<br>in "चल रहा है"</div>
+      </div>
+    </div>
+
+    <table class="logic-table" style="margin-top:16px;">
+      <tr>
+        <th>Pickup state</th>
+        <th>Where it appears</th>
+        <th>Card type</th>
+        <th>Why?</th>
+      </tr>
+      <tr>
+        <td class="fn">Assign self/tech</td>
+        <td><span class="pill pill-a">आज के काम</span></td>
+        <td>Individual card with CTA</td>
+        <td>CSP must decide who picks up — needs attention</td>
+      </tr>
+      <tr>
+        <td class="fn">Start pickup</td>
+        <td><span class="pill pill-a">आज के काम</span></td>
+        <td>Individual card with CTA</td>
+        <td>CSP assigned self — needs to go now</td>
+      </tr>
+      <tr>
+        <td class="fn">Pickup due / delay</td>
+        <td><span class="pill pill-a">आज के काम</span></td>
+        <td>Individual card (urgent/overdue)</td>
+        <td>Deadline pressure — needs immediate attention</td>
+      </tr>
+      <tr>
+        <td class="fn">Technician assigned</td>
+        <td><span class="pill pill-m">चल रहा है (batch)</span></td>
+        <td>Batch row — "Tech assigned"</td>
+        <td>CSP delegated — no action needed, just monitor</td>
+      </tr>
+      <tr>
+        <td class="fn">Technician working</td>
+        <td><span class="pill pill-m">चल रहा है (batch)</span></td>
+        <td>Batch row — "Working"</td>
+        <td>Tech on the job — CSP can call if needed</td>
+      </tr>
+      <tr>
+        <td class="fn">Send to Wiom</td>
+        <td><span class="pill pill-m">चल रहा है (batch)</span></td>
+        <td>Batch row — "Sent to Wiom"</td>
+        <td>Platform handling — nothing for CSP</td>
+      </tr>
+      <tr>
+        <td class="fn">Completed</td>
+        <td><span class="pill pill-m">चल रहा है (batch)</span></td>
+        <td>Batch row — auto-removes</td>
+        <td>Done — row disappears after a moment</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━ CARD MOVEMENT EXAMPLES ━━━━━━━━━━━━━━━━━━━ -->
+<div class="section">
+  <div class="section-head">
+    <h2>How cards move between sections — real examples</h2>
+    <p>Cards are living — they jump between "आज के काम" and "चल रहा है" as state changes</p>
+  </div>
+  <div class="section-body">
+
+    <div class="decision-grid">
+      <div class="decision-card">
+        <h4>🏠 Install — slot confirmed</h4>
+        <p>CSP proposed a slot → card drops to <b>"चल रहा है"</b> (waiting on customer). Customer confirms the slot → card <b>jumps back to "आज के काम"</b> with "Assign technician" CTA.</p>
+        <div class="move-arrow"><span class="pill pill-a">Action</span> <span class="arr">→</span> <span class="pill pill-m">Motion</span> <span class="arr">→</span> <span class="pill pill-a">Action</span></div>
+      </div>
+
+      <div class="decision-card">
+        <h4>🔧 Service — delegated overdue</h4>
+        <p>CSP assigns technician → card drops to <b>"चल रहा है"</b> (tech assigned). Technician misses deadline → card <b>jumps back to "आज के काम"</b> with red "Delegate overdue" urgency.</p>
+        <div class="move-arrow"><span class="pill pill-a">Action</span> <span class="arr">→</span> <span class="pill pill-m">Motion</span> <span class="arr">→</span> <span class="pill pill-a">Action (urgent)</span></div>
+      </div>
+
+      <div class="decision-card">
+        <h4>📦 Pickup — assign then delegate</h4>
+        <p>New pickup arrives as <b>individual card in "आज के काम"</b>. CSP assigns technician → card <b>moves to batch in "चल रहा है"</b>. If tech goes overdue → <b>individual card pops back into "आज के काम"</b>.</p>
+        <div class="move-arrow"><span class="pill pill-a">Individual</span> <span class="arr">→</span> <span class="pill pill-m">Batch row</span> <span class="arr">→</span> <span class="pill pill-a">Individual (overdue)</span></div>
+      </div>
+
+      <div class="decision-card">
+        <h4>⚡ Recharge — always on top</h4>
+        <p>Recharge batch card <b>never moves</b> — always pinned at position #1 in "आज के काम". Count updates as CSP completes recharges. Card disappears only when all pending = 0.</p>
+        <div class="move-arrow"><span class="pill pill-a">Pinned #1</span> <span class="arr">→</span> count decrements <span class="arr">→</span> <span class="pill pill-a">Gone when 0</span></div>
+      </div>
+
+      <div class="decision-card">
+        <h4>🚚 Shifting — verify comes back</h4>
+        <p>CSP assigns tech → card drops to <b>"चल रहा है"</b>. Work completed, needs verify → card <b>jumps back to "आज के काम"</b> with "Verify" CTA. After verify → drops to "Verification pending".</p>
+        <div class="move-arrow"><span class="pill pill-a">Action</span> <span class="arr">→</span> <span class="pill pill-m">Motion</span> <span class="arr">→</span> <span class="pill pill-a">Verify</span> <span class="arr">→</span> <span class="pill pill-m">Pending</span></div>
+      </div>
+
+      <div class="decision-card">
+        <h4>🏠 Install — resolved</h4>
+        <p>Installation verified → card shows briefly as "Resolved ✓" in "चल रहा है" → <b>auto-removes from feed</b> after ~5 seconds. Count in section header decrements.</p>
+        <div class="move-arrow"><span class="pill pill-m">Verifying</span> <span class="arr">→</span> <span style="color:var(--green);font-weight:700;">✓ Gone</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━ RECHARGE BATCH DETAIL ━━━━━━━━━━━━━━━━━━━ -->
+<div class="section">
+  <div class="section-head">
+    <h2>⚡ Recharge batch — always on top</h2>
+    <p>Why recharge gets the #1 position and how the batch card works</p>
+  </div>
+  <div class="section-body">
+
+    <div class="decision-grid">
+      <div class="decision-card" style="border:2px solid var(--orange);">
+        <h4>Why #1?</h4>
+        <ul>
+          <li><b>Quickest action</b> — collect money, tap recharge, done</li>
+          <li><b>Highest volume</b> — CSP may have 10-20 pending daily</li>
+          <li><b>Direct retention impact</b> — expired plan = customer leaves</li>
+          <li><b>Revenue impact</b> — CSP earns commission per recharge</li>
+          <li><b>Low effort, high reward</b> — phone call + collect + tap</li>
+        </ul>
+      </div>
+      <div class="decision-card">
+        <h4>Batch card behaviour</h4>
+        <ul>
+          <li><b>Always visible</b> in "आज के काम" if pending > 0</li>
+          <li><b>Shows total count</b> prominently: "12 Recharge pending"</li>
+          <li><b>Sorted by deadline</b> — most urgent customer on top</li>
+          <li><b>Orange accent</b> to stand out from pink action cards</li>
+          <li><b>Single CTA</b>: "Recharge" opens the recharge flow</li>
+          <li><b>Count decrements</b> in real-time as CSP completes</li>
+          <li><b>Disappears</b> when all recharges done (pending = 0)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━ PRIORITY ORDER LOGIC ━━━━━━━━━━━━━━━━━━━ -->
+<div class="section">
+  <div class="section-head">
+    <h2>Priority sort order — inside "आज के काम"</h2>
+    <p>How cards are ordered after the pinned recharge batch</p>
+  </div>
+  <div class="section-body">
+    <table class="logic-table">
+      <tr>
+        <th style="width:60px;">Priority</th>
+        <th>What</th>
+        <th>Logic</th>
+      </tr>
+      <tr>
+        <td class="fn" style="color:var(--orange);">#1</td>
+        <td><b>⚡ Recharge batch</b> — pinned</td>
+        <td>Always first. Never moves. Shows total pending count.</td>
+      </tr>
+      <tr>
+        <td class="fn" style="color:var(--red);">#2</td>
+        <td><b>OVERDUE cards</b> — any task type</td>
+        <td>Deadline passed. Red cards. Pickup delay, Delegate overdue, Work delay. Most overdue first.</td>
+      </tr>
+      <tr>
+        <td class="fn" style="color:var(--orange);">#3</td>
+        <td><b>URGENT cards</b> — any task type</td>
+        <td>Deadline approaching. Orange cards. "Due in X hours". Closest deadline first.</td>
+      </tr>
+      <tr>
+        <td class="fn" style="color:var(--ink-2);">#4</td>
+        <td><b>NORMAL action cards</b> — any task type</td>
+        <td>No urgency pressure. Sorted by most recently updated first — latest server update on top.</td>
+      </tr>
+    </table>
+
+    <div class="note-box" style="margin-top:16px;">
+      <b>Sort within same urgency level:</b> Most recently updated card on top. This means if a customer just confirmed a slot, that install card jumps to the top of its urgency group — CSP sees the freshest actionable item first.
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━ SECTION HEADER COUNTS ━━━━━━━━━━━━━━━━━━━ -->
+<div class="section">
+  <div class="section-head">
+    <h2>Section headers with counts</h2>
+    <p>CSP sees the total at a glance without scrolling</p>
+  </div>
+  <div class="section-body">
+    <div class="decision-grid">
+      <div class="decision-card" style="border-left:3px solid var(--pink);">
+        <h4 style="color:var(--pink);">आज के काम · 6</h4>
+        <p>Pink badge with count of all action items. <b>This number is the CSP's to-do list for today.</b> It should go down as they work through tasks. When it hits 0 — CSP's work is done.</p>
+      </div>
+      <div class="decision-card" style="border-left:3px solid var(--ink-3);">
+        <h4 style="color:var(--ink-3);">चल रहा है · 5</h4>
+        <p>Grey badge with count of in-motion items. <b>These are tasks CSP has already acted on</b> — system/tech/customer is handling. CSP can check but doesn't need to act.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━ EMPTY STATES ━━━━━━━━━━━━━━━━━━━ -->
+<div class="section">
+  <div class="section-head">
+    <h2>Empty states</h2>
+    <p>What CSP sees when sections are empty</p>
+  </div>
+  <div class="section-body">
+    <div class="decision-grid">
+      <div class="decision-card" style="text-align:center;padding:24px;">
+        <div style="font-size:32px;margin-bottom:8px;">🎉</div>
+        <h4>आज के काम · 0</h4>
+        <p>"सब काम हो गया! अभी कोई नया काम नहीं है।"<br><span style="font-size:12px;color:var(--ink-3);">(All done! No pending tasks right now.)</span></p>
+      </div>
+      <div class="decision-card" style="text-align:center;padding:24px;">
+        <div style="font-size:32px;margin-bottom:8px;">📋</div>
+        <h4>चल रहा है · 0</h4>
+        <p>"कोई काम चल नहीं रहा।"<br><span style="font-size:12px;color:var(--ink-3);">(No tasks in progress.)</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━ IMPLEMENTATION NOTES ━━━━━━━━━━━━━━━━━━━ -->
+<div class="section">
+  <div class="section-head">
+    <h2>Implementation feasibility</h2>
+    <p>What changes in the current architecture</p>
+  </div>
+  <div class="section-body">
+    <div class="decision-grid">
+      <div class="decision-card" style="border-top:3px solid var(--green);">
+        <h4 style="color:var(--green);">Server-driven — no app release needed</h4>
+        <ul>
+          <li>Section assignment (action vs motion) can be driven by existing <code>isCspActionable</code> flag from backend</li>
+          <li>Priority sort uses existing <code>ThresholdState</code> + <code>updatedAt</code> fields</li>
+          <li>Recharge pinning is a client-side sort rule — "if RECHARGE, always position 0"</li>
+          <li>Section header counts are client-side computed from feed data</li>
+        </ul>
+      </div>
+      <div class="decision-card" style="border-top:3px solid var(--orange);">
+        <h4 style="color:var(--orange);">Needs app change</h4>
+        <ul>
+          <li><b>Pickup split logic</b> — client needs to render pickup as individual card (action) or batch row (motion) based on state</li>
+          <li><b>Two-section LazyColumn</b> — replace flat feed with sectioned layout</li>
+          <li><b>Section headers</b> — new sticky header composable with count badge</li>
+          <li><b>Card movement animation</b> — optional but adds polish when cards shift between sections</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>Wiom CSP Home Redesign — Action-First Feed · Design Reference</footer>
+</div>
+</body>
+</html>
