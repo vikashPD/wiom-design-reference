@@ -695,6 +695,16 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
   ];
   var BG_COUNT=5; /* 3 cards + 2 batch rows */
 
+  /* Background ACTION cards — one per category, always visible
+     in "आज के काम" so the feed feels real */
+  var BG_ACT=[
+    {type:"INSTALL",icon:"🏠",name:"Rahul V.",loc:"Noida Sec 62",sub:"Slot confirmed · Assign technician",time:"Today",urg:"urgent"},
+    {type:"SERVICE",icon:"🔧",name:"Geeta P.",loc:"Lajpat Nagar",sub:"New complaint · Internet slow",time:"3h ago",urg:""},
+    {type:"PICKUP",icon:"📦",name:"Suresh K. · NB-5523",loc:"Mayur Vihar",sub:"Assign technician",time:"3d left",urg:""},
+    {type:"SHIFTING",icon:"🚚",name:"Manish R.",loc:"Sec 7 → Sec 21",sub:"New request · Assign technician",time:"5h ago",urg:""}
+  ];
+  var BG_RECHARGE={count:8,name:"8 Recharge collections due",loc:"Earliest: Mohan L. · 3 hrs left"};
+
   /* ══════════════════════════════════════════════════════════
      Scenario data — each action → sheet → EXACT NEXT
      non-action state from the real app (not completed!)
@@ -887,11 +897,35 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
         +'<div class="w-card-sub">'+a.loc+' · '+a.sub+'</div></div>';
     }
 
-    /* ── Assemble screen — NO filter chips ── */
+    /* ── Background action cards — one from each category ── */
+    var curType=a.type;
+    var rechargeOnTop="",otherCards="";
+    var actCount=1; /* the interactive card */
+
+    /* Recharge batch pinned #1 (unless current tab IS recharge) */
+    if(!isR){
+      rechargeOnTop='<div class="w-card w-recharge" style="opacity:.85;">'
+        +'<div class="w-card-top"><div class="w-card-type" style="color:var(--orange);">⚡ RECHARGE</div><div class="w-card-time urgent">'+BG_RECHARGE.count+' pending</div></div>'
+        +'<div class="w-card-title">'+BG_RECHARGE.name+'</div>'
+        +'<div class="w-card-sub">'+BG_RECHARGE.loc+'</div></div>';
+      actCount++;
+    }
+    /* Other category cards (skip same type as interactive card) */
+    BG_ACT.forEach(function(c){
+      if(c.type===curType)return;
+      otherCards+='<div class="w-card w-action'+(c.urg==="urgent"?" w-urgent":"")+'" style="opacity:.85;">'
+        +'<div class="w-card-top"><div class="w-card-type" style="color:var(--pink);">'+c.icon+' '+c.type+'</div><div class="w-card-time'+u(c.urg)+'">'+c.time+'</div></div>'
+        +'<div class="w-card-title">'+c.name+'</div>'
+        +'<div class="w-card-sub">'+c.loc+' · '+c.sub+'</div></div>';
+      actCount++;
+    });
+
     document.getElementById("proto-screen").innerHTML=
       '<div class="w-header"><div class="w-logo">wiom</div><div class="w-icons"><div class="w-icon"></div><div class="w-icon"></div></div></div>'
-      +'<div class="w-section-label" style="color:var(--pink);"><span>आज के काम · Today\'s Action</span><span class="w-count" style="background:var(--pink-bg);color:var(--pink);" id="p-a-cnt">'+(isR?a.count:1)+'</span></div>'
+      +'<div class="w-section-label" style="color:var(--pink);"><span>आज के काम · Today\'s Action</span><span class="w-count" style="background:var(--pink-bg);color:var(--pink);" id="p-a-cnt">'+actCount+'</span></div>'
+      +rechargeOnTop
       +acH
+      +otherCards
       +'<div class="w-spacer"></div><div class="w-divider"></div><div class="w-spacer"></div>'
       +'<div class="w-section-label" style="color:var(--ink-3);"><span>चल रहा है · In Motion</span><span class="w-count" style="background:var(--surface-2);color:var(--ink-3);" id="p-m-cnt">'+BG_COUNT+'</span></div>'
       +'<div id="p-new-motion"></div>'
@@ -953,19 +987,21 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
       card.classList.add("p-card-exit");
 
       setTimeout(function(){
+        var cntEl=document.getElementById("p-a-cnt");
+        var curAct=parseInt(cntEl.textContent)||0;
         if(isR&&m.rAfter>0){
           card.classList.remove("p-card-exit");card.style.opacity="1";
           document.getElementById("p-ac-title").textContent=m.rAfter+" Recharge collections due";
           document.getElementById("p-cnt").textContent=m.rAfter+" pending";
-          document.getElementById("p-a-cnt").textContent=m.rAfter;
           document.getElementById("p-ac-sub").textContent=m.rAfter>1?"Next: multiple customers remaining":"Next: last customer remaining";
           card.onclick=openDrill;step=0;
+          /* count stays same — card didn't leave */
         }else if(isR&&m.rAfter===0){
           card.style.display="none";
-          document.getElementById("p-a-cnt").textContent="0";
+          cntEl.textContent=Math.max(0,curAct-1);
         }else{
           card.style.display="none";
-          document.getElementById("p-a-cnt").textContent="0";
+          cntEl.textContent=Math.max(0,curAct-1);
         }
 
         var slot=document.getElementById("p-new-motion");
