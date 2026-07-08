@@ -146,10 +146,10 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
 #proto-screen{position:relative;overflow-y:auto;overflow-x:hidden;height:480px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
 #proto-screen::-webkit-scrollbar{display:none;}
 /* ── Bottom sheet overlay ── */
-.p-backdrop{position:absolute;inset:0;background:rgba(32,24,35,.4);z-index:12;opacity:0;pointer-events:none;transition:opacity .25s;border-radius:20px;}
-.p-backdrop.open{opacity:1;pointer-events:auto;}
-.p-sheet{position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:20px 20px 0 0;box-shadow:0 -4px 20px rgba(32,24,35,.18);transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);z-index:13;padding:14px 16px 18px;}
-.p-sheet.open{transform:translateY(0);}
+.p-backdrop{position:absolute;inset:0;background:rgba(32,24,35,.4);z-index:12;opacity:0;pointer-events:none;transition:opacity .25s;border-radius:20px;visibility:hidden;}
+.p-backdrop.open{visibility:visible;opacity:1;pointer-events:auto;}
+.p-sheet{position:absolute;bottom:0;left:0;right:0;background:#fff;border-radius:20px 20px 0 0;box-shadow:0 -4px 20px rgba(32,24,35,.18);transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);z-index:13;padding:14px 16px 18px;visibility:hidden;pointer-events:none;}
+.p-sheet.open{transform:translateY(0);visibility:visible;pointer-events:auto;}
 .p-sheet-handle{width:36px;height:4px;background:var(--hair);border-radius:2px;margin:0 auto 12px;}
 .p-sheet h3{font-size:14px;font-weight:750;margin-bottom:10px;}
 .p-sheet-opt{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--hair);border-radius:10px;margin-bottom:5px;font-size:11px;cursor:pointer;transition:.15s;}
@@ -171,8 +171,8 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
 .w-card.p-clickable:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(217,0,141,.12),var(--shadow);}
 .w-card.p-clickable:active{transform:scale(.98);}
 /* ── Drill-down (real app style) ── */
-.p-drill{position:absolute;inset:0;background:#fff;z-index:11;border-radius:20px;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden;}
-.p-drill.open{transform:translateX(0);}
+.p-drill{position:absolute;inset:0;background:#fff;z-index:11;border-radius:20px;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden;visibility:hidden;pointer-events:none;}
+.p-drill.open{transform:translateX(0);visibility:visible;pointer-events:auto;}
 .p-drill-hdr{display:flex;align-items:center;gap:10px;padding:12px 14px;background:linear-gradient(135deg,#3D1560,#5B2D8E);color:#fff;flex-shrink:0;}
 .p-drill-back{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:#fff;transition:.15s;flex-shrink:0;background:rgba(255,255,255,.15);}
 .p-drill-back:hover{background:rgba(255,255,255,.3);}
