@@ -168,6 +168,23 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
 .p-sheet-cta:hover{filter:brightness(1.08);}
 .p-sheet-cta:active{transform:scale(.98);}
 .p-sheet-sub{font-size:10px;color:var(--ink-3);margin-bottom:8px;}
+/* ── Clickable card (no CTA button, entire card is tappable) ── */
+.w-card.p-clickable{cursor:pointer;transition:transform .12s,box-shadow .12s;}
+.w-card.p-clickable:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(217,0,141,.12),var(--shadow);}
+.w-card.p-clickable:active{transform:scale(.98);}
+/* ── Drill-down full screen overlay ── */
+.p-drill{position:absolute;inset:0;background:#fff;z-index:11;border-radius:20px;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow:hidden;}
+.p-drill.open{transform:translateX(0);}
+.p-drill-header{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--hair);background:var(--surface);flex-shrink:0;}
+.p-drill-back{width:28px;height:28px;border-radius:50%;border:1px solid var(--hair);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--ink-2);transition:.15s;flex-shrink:0;background:var(--surface);}
+.p-drill-back:hover{border-color:var(--pink);color:var(--pink);}
+.p-drill-htitle{font-size:14px;font-weight:700;}
+.p-drill-hsub{font-size:10px;color:var(--ink-3);}
+.p-drill-body{flex:1;overflow-y:auto;padding:16px;}
+.p-drill-info{background:var(--surface-2);border-radius:10px;padding:12px 14px;margin-bottom:12px;font-size:12px;color:var(--ink-2);line-height:1.6;}
+.p-drill-info b{color:var(--ink);font-weight:650;}
+.p-drill-status{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--pink-bg);border-radius:10px;margin-bottom:14px;font-size:12px;font-weight:600;color:var(--pink);}
+.p-drill-status::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--pink);flex-shrink:0;}
 
 @media(max-width:768px){
   .phone-wrap{flex-direction:column;align-items:center;}
@@ -199,137 +216,11 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
   </div>
 </div>
 
-<!-- ━━━━━━━━━━━━━━━━━━━ LAYOUT STRUCTURE ━━━━━━━━━━━━━━━━━━━ -->
-<div class="section">
-  <div class="section-head">
-    <h2>Home page structure</h2>
-    <p>Top to bottom — what CSP sees when they open the app</p>
-  </div>
-  <div class="section-body">
-
-    <div class="phone-wrap">
-      <!-- MAIN WIREFRAME -->
-      <div>
-        <div class="phone">
-          <div class="phone-notch"></div>
-          <div class="phone-screen">
-
-            <!-- Header -->
-            <div class="w-header">
-              <div class="w-logo">wiom</div>
-              <div class="w-icons"><div class="w-icon"></div><div class="w-icon"></div></div>
-            </div>
-
-            <!-- Assurance Chips -->
-            <div class="w-chips">
-              <div class="w-chip active">All</div>
-              <div class="w-chip">Install</div>
-              <div class="w-chip">Service</div>
-              <div class="w-chip">Pickup</div>
-            </div>
-
-            <!-- ── SECTION 1: TODAY'S ACTION ── -->
-            <div class="w-section-label" style="color:var(--pink);">
-              <span>आज के काम · Today's Action</span>
-              <span class="w-count" style="background:var(--pink-bg);color:var(--pink);">6</span>
-            </div>
-
-            <!-- Recharge batch — ALWAYS ON TOP -->
-            <div class="w-card w-recharge">
-              <div class="w-card-top">
-                <div class="w-card-type" style="color:var(--orange);">⚡ RECHARGE</div>
-                <div class="w-card-time urgent">12 pending</div>
-              </div>
-              <div class="w-card-title">12 Recharge collections due</div>
-              <div class="w-card-sub">Earliest: Rajesh K. · 2 hrs left</div>
-              <div class="w-card-cta">Recharge</div>
-            </div>
-
-            <!-- Netbox pickup INDIVIDUAL card (needs action) -->
-            <div class="w-card w-action">
-              <div class="w-card-top">
-                <div class="w-card-type" style="color:var(--pink);">📦 PICKUP</div>
-                <div class="w-card-time overdue">Overdue</div>
-              </div>
-              <div class="w-card-title">Priya M. · NB-8832</div>
-              <div class="w-card-sub">Saket · Assign technician</div>
-              <div class="w-card-cta">Assign</div>
-            </div>
-
-            <!-- Install action card -->
-            <div class="w-card w-action">
-              <div class="w-card-top">
-                <div class="w-card-type" style="color:var(--pink);">🏠 INSTALL</div>
-                <div class="w-card-time urgent">Today</div>
-              </div>
-              <div class="w-card-title">Amit P. · Dwarka</div>
-              <div class="w-card-sub">Slot confirmed · Assign technician</div>
-              <div class="w-card-cta">Assign</div>
-            </div>
-
-            <!-- Service action card -->
-            <div class="w-card w-action">
-              <div class="w-card-top">
-                <div class="w-card-type" style="color:var(--pink);">🔧 SERVICE</div>
-                <div class="w-card-time">3h ago</div>
-              </div>
-              <div class="w-card-title">Sunita D. · Rohini</div>
-              <div class="w-card-sub">New request · Accept + Start work</div>
-              <div class="w-card-cta">Start Work</div>
-            </div>
-
-            <div class="w-spacer"></div>
-
-            <!-- ── SECTION 2: IN MOTION ── -->
-            <div class="w-section-label" style="color:var(--ink-3);">
-              <span>चल रहा है · In Motion</span>
-              <span class="w-count" style="background:var(--surface-2);color:var(--ink-3);">5</span>
-            </div>
-
-            <!-- Netbox pickup BATCH (in motion items) -->
-            <div class="w-batch" style="border-left:3px solid var(--hair);">
-              <div class="w-batch-head">
-                <div class="w-batch-title">📦 Pickup · In Motion</div>
-                <div class="w-batch-count">3 items</div>
-              </div>
-              <div class="w-batch-row"><div class="w-batch-left"><b>Karan S.</b> · NB-6654</div><div class="w-batch-status">Raj working</div></div>
-              <div class="w-batch-row"><div class="w-batch-left"><b>Anita R.</b> · NB-2217</div><div class="w-batch-status">Tech assigned</div></div>
-              <div class="w-batch-row"><div class="w-batch-left"><b>Meena S.</b> · NB-4410</div><div class="w-batch-status">Sent to Wiom</div></div>
-            </div>
-
-            <!-- Install in-motion -->
-            <div class="w-card w-motion">
-              <div class="w-card-top">
-                <div class="w-card-type" style="color:var(--ink-3);">🏠 INSTALL</div>
-                <div class="w-card-time">2h ago</div>
-              </div>
-              <div class="w-card-title">Rajesh K. · Sector 12</div>
-              <div class="w-card-sub">Customer choosing slot · Waiting</div>
-            </div>
-
-            <!-- Service in-motion -->
-            <div class="w-card w-motion">
-              <div class="w-card-top">
-                <div class="w-card-type" style="color:var(--ink-3);">🔧 SERVICE</div>
-                <div class="w-card-time">1h ago</div>
-              </div>
-              <div class="w-card-title">Kiran P. · Vasant Kunj</div>
-              <div class="w-card-sub">Technician working · Raj</div>
-            </div>
-
-          </div>
-        </div>
-        <div class="phone-label">New Home Layout</div>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- ━━━━━━━━━━━━━━━━━━━ INTERACTIVE PROTOTYPE ━━━━━━━━━━━━━━━━━━━ -->
 <div class="section" id="proto-section">
   <div class="section-head" style="background:linear-gradient(135deg,var(--pink-bg),var(--surface-2));">
     <h2>Interactive Prototype — Try it yourself</h2>
-    <p>Pick a task flow and case, then click the CTA on the card to watch it move from "आज के काम" to "चल रहा है"</p>
+    <p>Pick a task flow and case, then tap the card to open it — just like the real app</p>
   </div>
   <div class="section-body">
 
@@ -919,14 +810,13 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
     ]
   };
 
-  var tab="install",ci=0,step=0; /* step: 0=ready, 1=sheet open, 2=done */
+  var tab="install",ci=0,step=0; /* step: 0=ready, 1=drill open, 2=done */
 
   function u(v){return v==="urgent"?" urgent":v==="overdue"?" overdue":"";}
 
   /* ── Render background motion cards ── */
   function bgMotionHTML(){
     var h="";
-    /* Pickup batch — always present */
     h+='<div class="w-batch" style="border-left:3px solid var(--hair);">'
       +'<div class="w-batch-head"><div class="w-batch-title">📦 Pickup · In Motion</div><div class="w-batch-count" id="p-pkbc">'+BG_PICKUP.length+' items</div></div>';
     h+='<div id="p-pknr"></div>';
@@ -934,7 +824,6 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
       h+='<div class="w-batch-row"><div class="w-batch-left"><b>'+r.name+'</b> · '+r.loc+'</div><div class="w-batch-status">'+r.status+'</div></div>';
     });
     h+='</div>';
-    /* Individual cards */
     BG.forEach(function(c){
       h+='<div class="w-card w-motion">'
         +'<div class="w-card-top"><div class="w-card-type" style="color:var(--ink-3);">'+c.icon+' '+c.type+'</div><div class="w-card-time">'+c.time+'</div></div>'
@@ -944,145 +833,133 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
     return h;
   }
 
-  /* ── Render bottom sheet HTML ── */
-  function sheetHTML(sh){
-    var h='<div class="p-sheet-handle"></div><h3>'+sh.title+'</h3>';
-    if(sh.sub) h+='<div class="p-sheet-sub">'+sh.sub+'</div>';
-    if(sh.info) h+='<div class="p-sheet-info">'+sh.info.replace(/\n/g,"<br>")+'</div>';
+  /* ── Render drill-down body content ── */
+  function drillBodyHTML(sc){
+    var a=sc.a,sh=sc.sheet,h="";
+    if(sh.info) h+='<div class="p-drill-info">'+sh.info.replace(/\n/g,"<br>")+'</div>';
+    h+='<div class="p-drill-status">'+a.sub+'</div>';
+    if(sh.sub) h+='<div class="p-sheet-sub" style="margin-bottom:10px;">'+sh.sub+'</div>';
     if(sh.type==="options"){
+      h+='<div style="margin-bottom:6px;font-size:11px;font-weight:700;color:var(--ink);">'+sh.title+'</div>';
       sh.opts.forEach(function(o,i){
-        h+='<div class="p-sheet-opt'+(o.sel?" sel":"")+'" data-oi="'+i+'">'
-          +'<div class="p-sheet-radio"></div><span>'+o.l+'</span></div>';
+        h+='<div class="p-sheet-opt'+(o.sel?" sel":"")+'" data-oi="'+i+'"><div class="p-sheet-radio"></div><span>'+o.l+'</span></div>';
       });
     }else if(sh.type==="confirm"){
-      h+='<div style="font-size:12px;color:var(--ink-2);padding:4px 0 8px;">'+sh.text+'</div>';
+      h+='<div style="font-size:12px;color:var(--ink-2);padding:6px 0 8px;">'+sh.text+'</div>';
     }else if(sh.type==="check"){
+      h+='<div style="margin-bottom:6px;font-size:11px;font-weight:700;color:var(--ink);">Verification</div>';
       sh.checks.forEach(function(c){h+='<div class="p-sheet-chk">'+c+'</div>';});
     }else if(sh.type==="recharge"){
-      h+='<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--orange-bg);border-radius:8px;margin-bottom:8px;">'
-        +'<span style="font-size:12px;font-weight:700;">Amount</span>'
-        +'<span style="font-size:16px;font-weight:800;color:var(--orange);">'+sh.cta.match(/₹\d+/)[0]+'</span></div>';
+      h+='<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--orange-bg);border-radius:10px;margin-bottom:8px;">'
+        +'<span style="font-size:12px;font-weight:700;">Amount to collect</span>'
+        +'<span style="font-size:18px;font-weight:800;color:var(--orange);">'+sh.cta.match(/₹\d+/)[0]+'</span></div>';
     }
-    h+='<button class="p-sheet-cta" id="p-sheet-cta">'+sh.cta+'</button>';
+    h+='<button class="p-sheet-cta" id="p-drill-cta" style="margin-top:14px;">'+sh.cta+'</button>';
     return h;
   }
 
   /* ── Build the full screen ── */
   function buildScreen(){
     step=0;
-    var sc=S[tab][ci],a=sc.a,isR=a.isBatch,isP=a.type==="PICKUP";
+    var sc=S[tab][ci],a=sc.a,isR=a.isBatch;
 
     /* Cases row */
     var cH="";S[tab].forEach(function(c,i){cH+='<button class="proto-case'+(i===ci?" active":"")+'" data-ci="'+i+'">'+c.name+"</button>";});
     document.getElementById("proto-cases").innerHTML=cH;
     document.querySelectorAll(".proto-case").forEach(function(b){b.onclick=function(){ci=+b.dataset.ci;buildScreen();};});
 
-    /* Desc */
     document.getElementById("proto-desc").innerHTML=sc.desc;
     document.getElementById("proto-reset").style.display="none";
-    document.getElementById("proto-label").textContent='Tap "'+a.cta+'" on the card';
+    document.getElementById("proto-label").textContent="Tap the card to open it";
 
-    /* Action card */
+    /* ── Action card — NO CTA button, entire card is clickable ── */
     var acH;
     if(isR){
-      acH='<div class="w-card w-recharge" id="p-ac">'
+      acH='<div class="w-card w-recharge p-clickable" id="p-ac">'
         +'<div class="w-card-top"><div class="w-card-type" style="color:var(--orange);">'+a.icon+' '+a.type+'</div><div class="w-card-time urgent" id="p-cnt">'+a.count+' pending</div></div>'
         +'<div class="w-card-title" id="p-ac-title">'+a.name+'</div>'
-        +'<div class="w-card-sub" id="p-ac-sub">'+a.loc+'</div>'
-        +'<div class="w-card-cta proto-cta-btn" id="p-cta">'+a.cta+'</div></div>';
+        +'<div class="w-card-sub" id="p-ac-sub">'+a.loc+'</div></div>';
     }else{
       var bc=a.urg==="overdue"?" w-urgent":"";
-      acH='<div class="w-card w-action'+bc+'" id="p-ac">'
+      acH='<div class="w-card w-action'+bc+' p-clickable" id="p-ac">'
         +'<div class="w-card-top"><div class="w-card-type" style="color:var(--pink);">'+a.icon+' '+a.type+'</div><div class="w-card-time'+u(a.urg)+'">'+a.time+'</div></div>'
         +'<div class="w-card-title">'+a.name+'</div>'
-        +'<div class="w-card-sub">'+a.loc+' · '+a.sub+'</div>'
-        +'<div class="w-card-cta proto-cta-btn" id="p-cta">'+a.cta+'</div></div>';
+        +'<div class="w-card-sub">'+a.loc+' · '+a.sub+'</div></div>';
     }
 
-    /* New motion card placeholder (inserted above background cards) */
-    var newMotionSlot='<div id="p-new-motion"></div>';
-
-    /* Assemble screen */
-    var motionCount=BG_COUNT;
+    /* ── Assemble screen — NO filter chips ── */
     document.getElementById("proto-screen").innerHTML=
       '<div class="w-header"><div class="w-logo">wiom</div><div class="w-icons"><div class="w-icon"></div><div class="w-icon"></div></div></div>'
-      +'<div class="w-chips"><div class="w-chip active">All</div><div class="w-chip">Install</div><div class="w-chip">Service</div><div class="w-chip">Pickup</div></div>'
       +'<div class="w-section-label" style="color:var(--pink);"><span>आज के काम · Today\'s Action</span><span class="w-count" style="background:var(--pink-bg);color:var(--pink);" id="p-a-cnt">'+(isR?a.count:1)+'</span></div>'
       +acH
       +'<div class="w-spacer"></div><div class="w-divider"></div><div class="w-spacer"></div>'
-      +'<div class="w-section-label" style="color:var(--ink-3);"><span>चल रहा है · In Motion</span><span class="w-count" style="background:var(--surface-2);color:var(--ink-3);" id="p-m-cnt">'+motionCount+'</span></div>'
-      +newMotionSlot
+      +'<div class="w-section-label" style="color:var(--ink-3);"><span>चल रहा है · In Motion</span><span class="w-count" style="background:var(--surface-2);color:var(--ink-3);" id="p-m-cnt">'+BG_COUNT+'</span></div>'
+      +'<div id="p-new-motion"></div>'
       +bgMotionHTML()
       +'<div class="w-spacer"></div>'
-      +'<div class="p-backdrop" id="p-backdrop"></div>'
-      +'<div class="p-sheet" id="p-sheet"></div>';
+      +'<div class="p-drill" id="p-drill"></div>';
 
-    document.getElementById("p-cta").onclick=openSheet;
+    document.getElementById("p-ac").onclick=openDrill;
   }
 
-  /* ── Step 1: Open bottom sheet ── */
-  function openSheet(){
+  /* ── Step 1: Tap card → drill-down slides in from right ── */
+  function openDrill(){
     if(step!==0)return;
     step=1;
-    var sc=S[tab][ci];
-    var sh=document.getElementById("p-sheet");
-    var bd=document.getElementById("p-backdrop");
+    var sc=S[tab][ci],a=sc.a,isR=a.isBatch;
+    var drill=document.getElementById("p-drill");
 
-    sh.innerHTML=sheetHTML(sc.sheet);
-    document.getElementById("proto-label").textContent="Complete the action in the sheet below";
+    var hTitle=isR?(a.icon+" "+a.name):(a.icon+" "+a.name);
+    var hSub=a.type+" · "+(isR?"":a.loc);
+
+    drill.innerHTML=
+      '<div class="p-drill-header">'
+        +'<div class="p-drill-back" id="p-drill-back">←</div>'
+        +'<div><div class="p-drill-htitle">'+hTitle+'</div>'
+        +'<div class="p-drill-hsub">'+hSub+'</div></div></div>'
+      +'<div class="p-drill-body">'+drillBodyHTML(sc)+'</div>';
+
+    document.getElementById("proto-label").textContent="Complete the action inside the detail screen";
 
     /* Make options clickable */
-    sh.querySelectorAll(".p-sheet-opt").forEach(function(o){
+    drill.querySelectorAll(".p-sheet-opt").forEach(function(o){
       o.onclick=function(){
-        sh.querySelectorAll(".p-sheet-opt").forEach(function(x){x.classList.remove("sel");});
+        drill.querySelectorAll(".p-sheet-opt").forEach(function(x){x.classList.remove("sel");});
         o.classList.add("sel");
       };
     });
 
-    /* Open with animation */
-    requestAnimationFrame(function(){
-      bd.classList.add("open");
-      sh.classList.add("open");
-    });
+    requestAnimationFrame(function(){drill.classList.add("open");});
 
-    /* Sheet CTA → complete the action */
-    document.getElementById("p-sheet-cta").onclick=completeAction;
+    document.getElementById("p-drill-cta").onclick=completeAction;
 
-    /* Backdrop tap closes sheet (cancel) */
-    bd.onclick=function(){
-      sh.classList.remove("open");bd.classList.remove("open");
+    document.getElementById("p-drill-back").onclick=function(){
+      drill.classList.remove("open");
       step=0;
-      document.getElementById("proto-label").textContent='Tap "'+sc.a.cta+'" on the card';
+      document.getElementById("proto-label").textContent="Tap the card to open it";
     };
   }
 
-  /* ── Step 2: Complete action — close sheet, move card ── */
+  /* ── Step 2: Complete action → drill closes, card moves ── */
   function completeAction(){
     if(step!==1)return;
     step=2;
     var sc=S[tab][ci],a=sc.a,m=sc.m,isR=a.isBatch,isP=a.type==="PICKUP";
 
-    /* Close sheet */
-    var sh=document.getElementById("p-sheet"),bd=document.getElementById("p-backdrop");
-    sh.classList.remove("open");bd.classList.remove("open");
-
-    /* Animate action card out */
-    var card=document.getElementById("p-ac");
-    var cta=document.getElementById("p-cta");
-    cta.classList.add("done");
+    document.getElementById("p-drill").classList.remove("open");
 
     setTimeout(function(){
+      var card=document.getElementById("p-ac");
       card.classList.add("p-card-exit");
 
       setTimeout(function(){
-        /* Update action section */
         if(isR&&m.rAfter>0){
           card.classList.remove("p-card-exit");card.style.opacity="1";
           document.getElementById("p-ac-title").textContent=m.rAfter+" Recharge collections due";
           document.getElementById("p-cnt").textContent=m.rAfter+" pending";
           document.getElementById("p-a-cnt").textContent=m.rAfter;
           document.getElementById("p-ac-sub").textContent=m.rAfter>1?"Next: multiple customers remaining":"Next: last customer remaining";
-          cta.classList.remove("done");
+          card.onclick=openDrill;step=0;
         }else if(isR&&m.rAfter===0){
           card.style.display="none";
           document.getElementById("p-a-cnt").textContent="0";
@@ -1091,12 +968,10 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
           document.getElementById("p-a-cnt").textContent="0";
         }
 
-        /* Add new card to motion section */
         var slot=document.getElementById("p-new-motion");
         var mCnt=BG_COUNT;
 
         if(isP){
-          /* Add to pickup batch */
           var nr=document.getElementById("p-pknr");
           nr.innerHTML='<div class="w-batch-row p-card-enter p-flash" style="background:var(--green-bg);">'
             +'<div class="w-batch-left"><b>'+m.name+'</b> · '+m.loc+'</div>'
@@ -1104,14 +979,12 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
           document.getElementById("p-pkbc").textContent=(BG_PICKUP.length+1)+" items";
           mCnt=BG_COUNT+1;
         }else if(isR){
-          /* Add recharge verification row */
           slot.innerHTML='<div class="w-batch p-card-enter p-flash" style="border-left:3px solid var(--green);background:var(--green-bg);">'
             +'<div class="w-batch-head"><div class="w-batch-title">⚡ Recharge · Verifying</div><div class="w-batch-count">1 item</div></div>'
             +'<div class="w-batch-row"><div class="w-batch-left"><b>'+m.name+'</b> · '+m.loc+'</div>'
             +'<div class="w-batch-status" style="color:var(--green);font-weight:600;">'+m.sub+'</div></div></div>';
           mCnt=BG_COUNT+1;
         }else{
-          /* Add individual card */
           slot.innerHTML='<div class="w-card w-motion p-card-enter p-flash" style="border-left:3px solid var(--green);background:var(--green-bg);">'
             +'<div class="w-card-top"><div class="w-card-type" style="color:var(--green);">'+a.icon+' '+a.type+'</div><div class="w-card-time" style="color:var(--green);">Just now</div></div>'
             +'<div class="w-card-title">'+m.name+'</div>'
@@ -1123,7 +996,7 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
         document.getElementById("proto-label").textContent='Card moved to "चल रहा है" → '+m.sub;
         document.getElementById("proto-reset").style.display="inline-block";
       },450);
-    },300);
+    },350);
   }
 
   /* ── Tab clicks ── */
