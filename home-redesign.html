@@ -209,10 +209,64 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
 .p-drill-exit{text-align:center;padding:8px 0 2px;font-size:12px;color:var(--ink-3);cursor:pointer;}
 .p-drill-exit:hover{color:var(--pink);}
 
+/* ── Step label ── */
+.step-label{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--pink);font-weight:700;margin-bottom:10px;}
+
+/* ── JTBD cards ── */
+.jtbd-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-top:8px;}
+.jtbd-card{background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:22px 20px;box-shadow:var(--shadow);position:relative;overflow:hidden;}
+.jtbd-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;}
+.jtbd-card.jtbd-func::before{background:var(--pink);}
+.jtbd-card.jtbd-emot::before{background:var(--pink);}
+.jtbd-card.jtbd-soc::before{background:var(--violet);}
+.jtbd-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px;}
+.jtbd-func .jtbd-icon{background:var(--pink-bg);color:var(--pink);}
+.jtbd-emot .jtbd-icon{background:var(--pink-bg);color:var(--pink);}
+.jtbd-soc .jtbd-icon{background:var(--violet-soft);color:var(--violet);}
+.jtbd-type{font-family:var(--mono);font-size:11px;letter-spacing:.12em;font-weight:600;margin-bottom:2px;}
+.jtbd-func .jtbd-type{color:var(--pink);}
+.jtbd-emot .jtbd-type{color:var(--pink);}
+.jtbd-soc .jtbd-type{color:var(--violet);}
+.jtbd-sub{font-size:13px;color:var(--ink-3);margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--hair);}
+.jtbd-body{font-size:14px;color:var(--ink);line-height:1.6;}
+.jtbd-body b{color:var(--pink);font-weight:700;font-style:italic;}
+.jtbd-soc .jtbd-body b{color:var(--pink);}
+
+/* ── Problem section ── */
+.problem-layout{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:center;}
+.problem-text h3{font-size:clamp(22px,3.5vw,30px);font-weight:800;line-height:1.2;margin-bottom:16px;}
+.problem-text h3 span{color:var(--pink);}
+.problem-text p{font-size:15px;color:var(--ink-2);line-height:1.7;}
+.problem-text p b{color:var(--ink);font-weight:650;}
+.problem-feed{background:var(--surface);border:1px solid var(--hair);border-radius:16px;padding:20px;box-shadow:var(--shadow);}
+.problem-feed-hdr{font-family:var(--mono);font-size:10px;letter-spacing:.15em;font-weight:600;color:var(--ink-3);margin-bottom:14px;}
+.problem-card{padding:10px 14px;border-radius:10px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:600;}
+.problem-card.fyi{background:#FFFBF0;border-left:3px solid #E8C547;color:var(--ink-2);}
+.problem-card.action{background:var(--red-bg);border-left:3px solid var(--red);color:var(--ink);}
+.problem-card .problem-tag{font-family:var(--mono);font-size:9px;letter-spacing:.08em;font-weight:700;padding:3px 8px;border-radius:6px;}
+.problem-card.fyi .problem-tag{background:#FFF3D0;color:#9A7B00;}
+.problem-card.action .problem-tag{background:var(--red-bg);color:var(--red);border:1px solid var(--red);}
+.problem-divider{text-align:center;padding:8px 0;font-family:var(--mono);font-size:10px;color:var(--pink);font-weight:600;letter-spacing:.05em;}
+
+/* ── Updates / Pink dot logic ── */
+.update-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:12px;}
+.update-col{background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:16px 18px;box-shadow:var(--shadow);}
+.update-col h4{font-size:14px;font-weight:750;margin-bottom:4px;display:flex;align-items:center;gap:8px;}
+.update-col p{font-size:13px;color:var(--ink-2);line-height:1.5;margin-bottom:10px;}
+.update-example{font-size:12px;padding:8px 12px;border-radius:8px;margin-bottom:4px;display:flex;align-items:center;gap:8px;}
+.update-example .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.update-example.act{background:var(--pink-bg);color:var(--pink);font-weight:600;}
+.update-example.act .dot{background:var(--pink);}
+.update-example.fyi{background:var(--surface-2);color:var(--ink-2);}
+.update-example.fyi .dot{background:var(--ink-3);}
+
 @media(max-width:768px){
   .phone-wrap{flex-direction:column;align-items:center;}
   .principle-grid{grid-template-columns:1fr;}
   .decision-grid{grid-template-columns:1fr;}
+  .jtbd-grid{grid-template-columns:1fr;}
+  .problem-layout{grid-template-columns:1fr;}
+  .update-grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -222,6 +276,62 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
 <p class="eyebrow">Wiom CSP App · Home Redesign</p>
 <h1>Action-First Home Feed</h1>
 <p class="sub">Split the home into <b>two clear zones</b> — "आज के काम" (today's tasks) on top, "चल रहा है" (in motion) below. CSP opens the app and <b>instantly knows what to do</b>.</p>
+
+<!-- ━━━━━━━━━━━━━━━━━━━ STEP 1: JTBD ━━━━━━━━━━━━━━━━━━━ -->
+<div class="section">
+  <div class="section-head" style="background:var(--ground);border-bottom:none;padding-bottom:0;">
+    <div class="step-label">Step 1 · Job to be done</div>
+    <h2 style="font-size:clamp(22px,4vw,32px);">What the partner really wants</h2>
+    <p>As the partner works through the day, these are the three underlying jobs — <b style="color:var(--ink);">functional, emotional and social</b>. (In the partner's own Hinglish.)</p>
+  </div>
+  <div class="section-body" style="padding-top:8px;">
+    <div class="jtbd-grid">
+      <div class="jtbd-card jtbd-func">
+        <div class="jtbd-icon">◎</div>
+        <div class="jtbd-type">FUNCTIONAL</div>
+        <div class="jtbd-sub">kaam kya karna hai</div>
+        <div class="jtbd-body">Jab main subah app kholta hoon, main chahta hoon ki <b>ek nazar mein pata chal jaaye ki abhi mujhe khud kya-kya karna hai aur kaunsa kaam pehle</b> — taaki koi zaroori kaam miss na ho aur sab time (SLA) ke andar pura ho jaaye.</div>
+      </div>
+      <div class="jtbd-card jtbd-emot">
+        <div class="jtbd-icon">♡</div>
+        <div class="jtbd-type">EMOTIONAL</div>
+        <div class="jtbd-sub">kaisa feel karna hai</div>
+        <div class="jtbd-body">Jab din bhar bahut saare kaam aur updates ek saath saamne aate hain, main chahta hoon ki main <b>overwhelmed ya confused feel na karun</b> — taaki main calm aur in-control reh kar kaam kar sakun.</div>
+      </div>
+      <div class="jtbd-card jtbd-soc">
+        <div class="jtbd-icon">👥</div>
+        <div class="jtbd-type">SOCIAL</div>
+        <div class="jtbd-sub">dusron ke saamne kaisa dikhna hai</div>
+        <div class="jtbd-body">Main chahta hoon ki main apne customers aur Wiom ke saamne ek <b>reliable, time-pe-kaam-karne-wala partner</b> dikhun — taaki mera trust, rating aur earning/bonus bana rahe.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━ STEP 2: THE PROBLEM ━━━━━━━━━━━━━━━━━━━ -->
+<div class="section">
+  <div class="section-head" style="background:var(--ground);border-bottom:none;padding-bottom:0;">
+    <div class="step-label">Step 2 · The problem</div>
+    <h2 style="font-size:clamp(22px,4vw,32px);">The important work gets buried</h2>
+  </div>
+  <div class="section-body">
+    <div class="problem-layout">
+      <div class="problem-text">
+        <h3>The feed shows whatever was <span>updated last</span> at the top.</h3>
+        <p>So cards that are only information (like <b>"booking sent to technician"</b>) float up — while the tasks that actually need the partner's <b>action</b> get pushed down.</p>
+      </div>
+      <div class="problem-feed">
+        <div class="problem-feed-hdr">TODAY · SORTED BY RECENT UPDATE</div>
+        <div class="problem-card fyi"><span>टेक्निशियन को भेज दिया</span><span class="problem-tag">FYI</span></div>
+        <div class="problem-card fyi"><span>ग्राहक स्लॉट चुन रहे</span><span class="problem-tag">FYI</span></div>
+        <div class="problem-card fyi"><span>वेरिफाई हो रहा है</span><span class="problem-tag">FYI</span></div>
+        <div class="problem-divider">↓ action tasks pushed down to here ↓</div>
+        <div class="problem-card action"><span>समय चुनना बाकी</span><span class="problem-tag">ACTION</span></div>
+        <div class="problem-card action"><span>डिवाइस वापस लेना</span><span class="problem-tag">ACTION</span></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- ━━━━━━━━━━━━━━━━━━━ CORE PRINCIPLES ━━━━━━━━━━━━━━━━━━━ -->
 <div class="principle-grid">
@@ -633,6 +743,48 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
         <p>Grey badge with count of in-motion items. <b>These are tasks CSP has already acted on</b> — system/tech/customer is handling. CSP can check but doesn't need to act.</p>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━ PINK DOT / UPDATES BEHAVIOUR ━━━━━━━━━━━━━━━━━━━ -->
+<div class="section">
+  <div class="section-head">
+    <h2>Pink dot (updates) — action vs FYI</h2>
+    <p>How notification updates are routed between the two sections</p>
+  </div>
+  <div class="section-body">
+
+    <div class="highlight">
+      <b>Core rule:</b> Every update that arrives on the home feed is classified as either <b>Action</b> (CSP must do something) or <b>FYI</b> (just information, no action needed). Action updates go to "आज के काम". FYI updates go to "चल रहा है". The pink dot count only reflects action updates — so the CSP knows exactly how many things need their attention.
+    </div>
+
+    <div class="update-grid">
+      <div class="update-col" style="border-top:3px solid var(--pink);">
+        <h4 style="color:var(--pink);"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--pink);"></span> Action updates → आज के काम</h4>
+        <p>These updates need the CSP to <b>do something right now</b>. They appear in the action section and increment the pink dot count.</p>
+        <div class="update-example act"><span class="dot"></span>New booking — propose slot</div>
+        <div class="update-example act"><span class="dot"></span>Customer confirmed — assign tech</div>
+        <div class="update-example act"><span class="dot"></span>Work done — verify & resolve</div>
+        <div class="update-example act"><span class="dot"></span>Overdue — reassign now</div>
+        <div class="update-example act"><span class="dot"></span>Recharge due — collect & recharge</div>
+        <div class="update-example act"><span class="dot"></span>Pickup created — assign technician</div>
+      </div>
+      <div class="update-col" style="border-top:3px solid var(--ink-3);">
+        <h4 style="color:var(--ink-3);"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--ink-3);"></span> FYI updates → चल रहा है</h4>
+        <p>These updates are <b>just information</b> — something happened but CSP doesn't need to act. They go to the motion section silently.</p>
+        <div class="update-example fyi"><span class="dot"></span>टेक्निशियन को भेज दिया (Tech assigned)</div>
+        <div class="update-example fyi"><span class="dot"></span>ग्राहक स्लॉट चुन रहे (Customer choosing)</div>
+        <div class="update-example fyi"><span class="dot"></span>वेरिफाई हो रहा है (Verification in progress)</div>
+        <div class="update-example fyi"><span class="dot"></span>Team working (Tech on the job)</div>
+        <div class="update-example fyi"><span class="dot"></span>Sent to Wiom (Platform processing)</div>
+        <div class="update-example fyi"><span class="dot"></span>Scheduling retry (System retrying)</div>
+      </div>
+    </div>
+
+    <div class="note-box" style="margin-top:16px;">
+      <b>Pink dot count = action updates only.</b> If 3 new updates arrive and 2 are FYI + 1 is action, the pink dot shows <b>1</b> (not 3). This prevents the CSP from seeing a scary "5 new" badge that turns out to be mostly FYI noise. The number always means "this many things need YOUR hands".
+    </div>
+
   </div>
 </div>
 
