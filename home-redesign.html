@@ -394,6 +394,11 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
       <b>Core rule:</b> The home feed is a <b>single sorted list</b>. Every card lives here in one of 5 states. Cards with <b>action + urgency sort to the top</b>. Cards with no updates naturally drift down. The <b>server drives all state changes</b> — the app only renders.
     </div>
 
+    <!-- BATCH CARD BEHAVIOUR -->
+    <div class="note-box" style="margin-bottom:20px;">
+      <b>Batch cards (NetBox Pickup & ISP Recharge) behave like all other cards.</b> They are no longer pinned at the top or grouped into batch rows. Each Pickup and each Recharge is an <b>individual card</b> in the feed — it receives updates, moves to the top when updated, shows a red dot when action is needed, escalates through Overdue Soon → Action Delayed like any other card, and drifts down when idle. The same 5 states below apply to <b>all card types equally</b> — Install, Service, Pickup, Shifting, and Recharge.
+    </div>
+
     <!-- STATE 1 -->
     <div style="background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow);border-left:4px solid var(--ink-3);">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
