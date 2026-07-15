@@ -382,6 +382,110 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
   </div>
 </div>
 
+<!-- ━━━━━━━━━━━━━━━━━━━ HOME FEED SEQUENCE LOGIC ━━━━━━━━━━━━━━━━━━━ -->
+<div class="section">
+  <div class="section-head">
+    <h2>Home Feed — Sequence Logic</h2>
+    <p>How cards are ordered, when they move, and how long they stay</p>
+  </div>
+  <div class="section-body">
+
+    <div class="highlight">
+      <b>Core rule:</b> The home feed is a <b>single sorted list</b>. Every card — pending, in-process, or completed — lives here. The card with the <b>most recent update moves to the top</b>. Cards with no new updates naturally drift down as other cards get updated above them.
+    </div>
+
+    <div class="decision-grid" style="margin-bottom:20px;">
+      <div class="decision-card" style="border-top:3px solid var(--pink);">
+        <h4>1. Latest update = top position</h4>
+        <p>Whenever a card receives a new update (state change, customer action, system event), it <b>jumps to the top</b> of the feed. This applies to <b>all card types equally</b> — Install, Service, Pickup, Shifting, and Recharge.</p>
+      </div>
+      <div class="decision-card" style="border-top:3px solid var(--red);">
+        <h4 style="display:flex;align-items:center;gap:6px;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--red);"></span> 2. Red dot = action needed</h4>
+        <p>If the update requires CSP action (assign tech, propose slot, verify, recharge), the card shows a <b>red dot</b>. The red dot stays until the CSP completes the action. Cards without a red dot are FYI — CSP can see them but doesn't need to act.</p>
+      </div>
+      <div class="decision-card" style="border-top:3px solid var(--blue);">
+        <h4>3. 7-day retention</h4>
+        <p>All cards stay on the home feed for <b>7 days</b> from creation. After 7 days, the card is removed automatically. This duration is <b>controlled by the backend</b> and can be changed without an app update.</p>
+      </div>
+      <div class="decision-card" style="border-top:3px solid var(--green);">
+        <h4>4. Natural decay</h4>
+        <p>Completed and in-process cards with <b>no new updates</b> automatically drift down the feed over time — because other cards with fresh updates keep pushing above them. No manual sorting needed.</p>
+      </div>
+    </div>
+
+    <div class="note-box">
+      <b>Batch cards (NetBox Pickup & ISP Recharge) behave like all other cards.</b> They are no longer pinned or treated specially. They receive updates, move to the top when updated, show a red dot when action is needed, and drift down when idle — exactly like Install, Service, and Shifting cards.
+    </div>
+
+    <table class="logic-table" style="margin-top:20px;">
+      <tr>
+        <th>Event</th>
+        <th>What happens</th>
+        <th>Red dot?</th>
+      </tr>
+      <tr>
+        <td class="fn">New booking arrives</td>
+        <td>Card appears at <b>top of feed</b> with latest timestamp</td>
+        <td><span style="color:var(--red);font-weight:700;">Yes</span> — CSP must propose slot</td>
+      </tr>
+      <tr>
+        <td class="fn">Customer confirms slot</td>
+        <td>Card <b>jumps to top</b> — new update received</td>
+        <td><span style="color:var(--red);font-weight:700;">Yes</span> — CSP must assign tech</td>
+      </tr>
+      <tr>
+        <td class="fn">Tech assigned by CSP</td>
+        <td>Card <b>jumps to top</b> — state changed</td>
+        <td><span style="color:var(--ink-3);">No</span> — waiting on tech, FYI</td>
+      </tr>
+      <tr>
+        <td class="fn">Tech starts work</td>
+        <td>Card <b>jumps to top</b> — update from field</td>
+        <td><span style="color:var(--ink-3);">No</span> — work in progress, FYI</td>
+      </tr>
+      <tr>
+        <td class="fn">Work done, verify needed</td>
+        <td>Card <b>jumps to top</b> — needs CSP attention</td>
+        <td><span style="color:var(--red);font-weight:700;">Yes</span> — CSP must verify</td>
+      </tr>
+      <tr>
+        <td class="fn">Recharge due for customer</td>
+        <td>Recharge card <b>jumps to top</b></td>
+        <td><span style="color:var(--red);font-weight:700;">Yes</span> — CSP must collect & recharge</td>
+      </tr>
+      <tr>
+        <td class="fn">Pickup ticket created</td>
+        <td>Pickup card <b>jumps to top</b></td>
+        <td><span style="color:var(--red);font-weight:700;">Yes</span> — CSP must assign tech</td>
+      </tr>
+      <tr>
+        <td class="fn">Verification complete</td>
+        <td>Card <b>jumps to top</b> briefly, then drifts down</td>
+        <td><span style="color:var(--ink-3);">No</span> — done, will expire in 7 days</td>
+      </tr>
+      <tr>
+        <td class="fn">No updates for days</td>
+        <td>Card <b>stays but drifts down</b> — no new timestamp</td>
+        <td>Unchanged — keeps whatever state it had</td>
+      </tr>
+      <tr>
+        <td class="fn">7 days since creation</td>
+        <td>Card <b>removed from feed</b> automatically</td>
+        <td>N/A — card gone</td>
+      </tr>
+    </table>
+
+    <div class="highlight" style="margin-top:20px;">
+      <b>Visual summary:</b><br>
+      📍 <b>Top of feed</b> = card that was updated most recently<br>
+      🔴 <b>Red dot</b> = CSP must take action on this card<br>
+      ⬇️ <b>Drifting down</b> = no new updates, other cards pushing above<br>
+      🗓️ <b>7 days</b> = card auto-removed after this (backend-controlled)
+    </div>
+
+  </div>
+</div>
+
 <!-- ━━━━━━━━━━━━━━━━━━━ SECTION LOGIC ━━━━━━━━━━━━━━━━━━━ -->
 <div class="section">
   <div class="section-head">
