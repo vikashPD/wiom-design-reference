@@ -382,131 +382,258 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
   </div>
 </div>
 
-<!-- ━━━━━━━━━━━━━━━━━━━ HOME FEED SEQUENCE LOGIC ━━━━━━━━━━━━━━━━━━━ -->
+<!-- ━━━━━━━━━━━━━━━━━━━ HOME FEED — 5 CARD STATES ━━━━━━━━━━━━━━━━━━━ -->
 <div class="section">
   <div class="section-head">
-    <h2>Home Feed — Sequence Logic</h2>
-    <p>How cards are ordered, when they move, and how long they stay</p>
+    <h2>Home Feed — 5 Card States</h2>
+    <p>Every card on the home feed is always in one of these 5 states</p>
   </div>
   <div class="section-body">
 
     <div class="highlight">
-      <b>Core rule:</b> The home feed is a <b>single sorted list</b>. Every card — pending, in-process, or completed — lives here. The card with the <b>most recent update moves to the top</b>. Cards with no new updates naturally drift down as other cards get updated above them.
+      <b>Core rule:</b> The home feed is a <b>single sorted list</b>. Every card lives here in one of 5 states. Cards with <b>action + urgency sort to the top</b>. Cards with no updates naturally drift down. The <b>server drives all state changes</b> — the app only renders.
     </div>
 
-    <div class="decision-grid" style="margin-bottom:20px;">
-      <div class="decision-card" style="border-top:3px solid var(--pink);">
-        <h4>1. Latest update = top position</h4>
-        <p>Whenever a card receives a new update (state change, customer action, system event), it <b>jumps to the top</b> of the feed. This applies to <b>all card types equally</b> — Install, Service, Pickup, Shifting, and Recharge.</p>
+    <!-- STATE 1 -->
+    <div style="background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow);border-left:4px solid var(--ink-3);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <span style="font-size:18px;">1</span>
+        <div>
+          <h3 style="font-size:16px;font-weight:800;margin-bottom:2px;">Normal Update</h3>
+          <div style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--ink-3);">FYI — NO ACTION NEEDED</div>
+        </div>
       </div>
-      <div class="decision-card" style="border-top:3px solid var(--red);">
-        <h4 style="display:flex;align-items:center;gap:6px;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--red);"></span> 2. Red dot = action needed</h4>
-        <p>If the update requires CSP action (assign tech, propose slot, verify, recharge), the card shows a <b>red dot</b>. The red dot stays until the CSP completes the action. Cards without a red dot are FYI — CSP can see them but doesn't need to act.</p>
-      </div>
-      <div class="decision-card" style="border-top:3px solid var(--blue);">
-        <h4>3. 7-day retention</h4>
-        <p>All cards stay on the home feed for <b>7 days</b> from creation. After 7 days, the card is removed automatically. This duration is <b>controlled by the backend</b> and can be changed without an app update.</p>
-      </div>
-      <div class="decision-card" style="border-top:3px solid var(--green);">
-        <h4>4. Natural decay</h4>
-        <p>Completed and in-process cards with <b>no new updates</b> automatically drift down the feed over time — because other cards with fresh updates keep pushing above them. No manual sorting needed.</p>
-      </div>
+      <table class="logic-table" style="margin:0;">
+        <tr><td style="width:140px;font-weight:600;border-bottom:1px solid var(--hair);">Red dot</td><td style="border-bottom:1px solid var(--hair);">No</td></tr>
+        <tr><td style="font-weight:600;border-bottom:1px solid var(--hair);">Server sends</td><td style="border-bottom:1px solid var(--hair);"><code>isCspActionable: false</code>, <code>thresholdState: NORMAL</code></td></tr>
+        <tr><td style="font-weight:600;border-bottom:1px solid var(--hair);">Position</td><td style="border-bottom:1px solid var(--hair);">Jumps to top when updated, then drifts down as other cards get updates above it</td></tr>
+        <tr><td style="font-weight:600;border-bottom:1px solid var(--hair);">Visual</td><td style="border-bottom:1px solid var(--hair);">Grey type label, standard border, no urgency badge</td></tr>
+        <tr><td style="font-weight:600;border-bottom:none;">Examples</td><td style="border-bottom:none;">"टेक्निशियन को भेज दिया" (Tech assigned), "ग्राहक स्लॉट चुन रहे" (Customer choosing slot), "वेरिफाई हो रहा है" (Verification in progress), "Team working"</td></tr>
+      </table>
+      <div style="margin-top:10px;font-size:13px;color:var(--ink-2);padding:8px 12px;background:var(--surface-2);border-radius:8px;">CSP sees: <b style="color:var(--ink);">"Something happened, but I don't need to do anything"</b></div>
     </div>
 
-    <div class="note-box">
-      <b>Batch cards (NetBox Pickup & ISP Recharge) behave like all other cards.</b> They are no longer pinned or treated specially. They receive updates, move to the top when updated, show a red dot when action is needed, and drift down when idle — exactly like Install, Service, and Shifting cards.
+    <!-- STATE 2 -->
+    <div style="background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow);border-left:4px solid var(--red);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <span style="font-size:18px;">2</span>
+        <div style="flex:1;">
+          <h3 style="font-size:16px;font-weight:800;margin-bottom:2px;">Update with an Action</h3>
+          <div style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--red);">CSP MUST ACT</div>
+        </div>
+        <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--red);"></span>
+      </div>
+      <table class="logic-table" style="margin:0;">
+        <tr><td style="width:140px;font-weight:600;border-bottom:1px solid var(--hair);">Red dot</td><td style="border-bottom:1px solid var(--hair);"><b style="color:var(--red);">Yes</b> — stays until CSP completes the action</td></tr>
+        <tr><td style="font-weight:600;border-bottom:1px solid var(--hair);">Server sends</td><td style="border-bottom:1px solid var(--hair);"><code>isCspActionable: true</code>, <code>thresholdState: NORMAL</code></td></tr>
+        <tr><td style="font-weight:600;border-bottom:1px solid var(--hair);">Position</td><td style="border-bottom:1px solid var(--hair);">Sorts above all non-action cards. Within action group: most recently updated first.</td></tr>
+        <tr><td style="font-weight:600;border-bottom:1px solid var(--hair);">Visual</td><td style="border-bottom:1px solid var(--hair);">Pink type label, pink left border, red dot visible</td></tr>
+        <tr><td style="font-weight:600;border-bottom:none;">Examples</td><td style="border-bottom:none;">New booking — propose slot, Customer confirmed — assign tech, Work done — verify & resolve, Recharge due — collect & recharge, Pickup created — assign technician</td></tr>
+      </table>
+      <div style="margin-top:10px;font-size:13px;color:var(--ink-2);padding:8px 12px;background:var(--red-bg);border-radius:8px;">CSP sees: <b style="color:var(--red);">"I need to act on this now"</b></div>
     </div>
 
-    <table class="logic-table" style="margin-top:20px;">
-      <tr>
-        <th>Event</th>
-        <th>What happens</th>
-        <th>Red dot?</th>
-      </tr>
-      <tr>
-        <td class="fn">New booking arrives</td>
-        <td>Card appears at <b>top of feed</b> with latest timestamp</td>
-        <td><span style="color:var(--red);font-weight:700;">Yes</span> — CSP must propose slot</td>
-      </tr>
-      <tr>
-        <td class="fn">Customer confirms slot</td>
-        <td>Card <b>jumps to top</b> — new update received</td>
-        <td><span style="color:var(--red);font-weight:700;">Yes</span> — CSP must assign tech</td>
-      </tr>
-      <tr>
-        <td class="fn">Tech assigned by CSP</td>
-        <td>Card <b>jumps to top</b> — state changed</td>
-        <td><span style="color:var(--ink-3);">No</span> — waiting on tech, FYI</td>
-      </tr>
-      <tr>
-        <td class="fn">Tech starts work</td>
-        <td>Card <b>jumps to top</b> — update from field</td>
-        <td><span style="color:var(--ink-3);">No</span> — work in progress, FYI</td>
-      </tr>
-      <tr>
-        <td class="fn">Work done, verify needed</td>
-        <td>Card <b>jumps to top</b> — needs CSP attention</td>
-        <td><span style="color:var(--red);font-weight:700;">Yes</span> — CSP must verify</td>
-      </tr>
-      <tr>
-        <td class="fn">Recharge due for customer</td>
-        <td>Recharge card <b>jumps to top</b></td>
-        <td><span style="color:var(--red);font-weight:700;">Yes</span> — CSP must collect & recharge</td>
-      </tr>
-      <tr>
-        <td class="fn">Pickup ticket created</td>
-        <td>Pickup card <b>jumps to top</b></td>
-        <td><span style="color:var(--red);font-weight:700;">Yes</span> — CSP must assign tech</td>
-      </tr>
-      <tr>
-        <td class="fn">Verification complete</td>
-        <td>Card <b>jumps to top</b> briefly, then drifts down</td>
-        <td><span style="color:var(--ink-3);">No</span> — done, will expire in 7 days</td>
-      </tr>
-      <tr>
-        <td class="fn">No updates for days</td>
-        <td>Card <b>stays but drifts down</b> — no new timestamp</td>
-        <td>Unchanged — keeps whatever state it had</td>
-      </tr>
-      <tr>
-        <td class="fn">7 days since creation</td>
-        <td>Card <b>removed from feed</b> automatically</td>
-        <td>N/A — card gone</td>
-      </tr>
-    </table>
+    <!-- STATE 3 -->
+    <div style="background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow);border-left:4px solid var(--orange);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <span style="font-size:18px;">3</span>
+        <div style="flex:1;">
+          <h3 style="font-size:16px;font-weight:800;margin-bottom:2px;">Action Overdue Soon</h3>
+          <div style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--orange);">URGENT — DEADLINE APPROACHING</div>
+        </div>
+        <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--red);"></span>
+      </div>
+      <table class="logic-table" style="margin:0;">
+        <tr><td style="width:140px;font-weight:600;border-bottom:1px solid var(--hair);">Red dot</td><td style="border-bottom:1px solid var(--hair);"><b style="color:var(--red);">Yes</b> (already there from Action state)</td></tr>
+        <tr><td style="font-weight:600;border-bottom:1px solid var(--hair);">Server sends</td><td style="border-bottom:1px solid var(--hair);"><code>isCspActionable: true</code>, <code>thresholdState: URGENT</code>, <code>deadlineAt</code> timestamp</td></tr>
+        <tr><td style="font-weight:600;border-bottom:1px solid var(--hair);">Position</td><td style="border-bottom:1px solid var(--hair);">Sorts above normal action cards. Closest deadline first.</td></tr>
+        <tr><td style="font-weight:600;border-bottom:1px solid var(--hair);">Visual</td><td style="border-bottom:1px solid var(--hair);">Red dot + <b style="color:var(--orange);">amber/orange live countdown</b> (e.g., "2h 15m left" ticking every second). Text <code>#B85C00</code> on <code>#FFF2BF</code> background — matches existing app style.</td></tr>
+        <tr><td style="font-weight:600;border-bottom:1px solid var(--hair);">Live countdown</td><td style="border-bottom:1px solid var(--hair);">Client ticks 1-second loop against <code>deadlineAt</code> — this is already built into the app architecture. Display updates in real-time.</td></tr>
+        <tr><td style="font-weight:600;border-bottom:1px solid var(--hair);">Trigger</td><td style="border-bottom:1px solid var(--hair);">Server sets <code>thresholdState: URGENT</code> when &lt; 4 hours remaining on SLA deadline</td></tr>
+        <tr><td style="font-weight:600;border-bottom:none;">Examples</td><td style="border-bottom:none;">"Pickup due in 2h 15m", "Installation SLA ending in 3h 42m", "Recharge expiring today"</td></tr>
+      </table>
+      <div style="margin-top:10px;font-size:13px;color:var(--ink-2);padding:8px 12px;background:var(--orange-bg);border-radius:8px;">CSP sees: <b style="color:#8B5A00;">"This is getting urgent, I should act before the deadline"</b></div>
+    </div>
 
-    <div class="highlight" style="margin-top:20px;">
-      <b>Visual summary:</b><br>
-      📍 <b>Top of feed</b> = card that was updated most recently<br>
-      🔴 <b>Red dot</b> = CSP must take action on this card<br>
-      ⬇️ <b>Drifting down</b> = no new updates, other cards pushing above<br>
-      🗓️ <b>7 days</b> = card auto-removed after this (backend-controlled)
+    <!-- STATE 4 -->
+    <div style="background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow);border-left:4px solid var(--red);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <span style="font-size:18px;">4</span>
+        <div style="flex:1;">
+          <h3 style="font-size:16px;font-weight:800;margin-bottom:2px;">Action Delayed</h3>
+          <div style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--red);">OVERDUE — SLA BREACHED</div>
+        </div>
+        <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--red);"></span>
+      </div>
+      <table class="logic-table" style="margin:0;">
+        <tr><td style="width:140px;font-weight:600;border-bottom:1px solid var(--hair);">Red dot</td><td style="border-bottom:1px solid var(--hair);"><b style="color:var(--red);">Yes</b></td></tr>
+        <tr><td style="font-weight:600;border-bottom:1px solid var(--hair);">Server sends</td><td style="border-bottom:1px solid var(--hair);"><code>isCspActionable: true</code>, <code>thresholdState: OVERDUE</code></td></tr>
+        <tr><td style="font-weight:600;border-bottom:1px solid var(--hair);">Position</td><td style="border-bottom:1px solid var(--hair);"><b>Highest priority in feed</b> — sorts above everything. Most overdue first.</td></tr>
+        <tr><td style="font-weight:600;border-bottom:1px solid var(--hair);">Visual</td><td style="border-bottom:1px solid var(--hair);">Red dot + <b style="color:var(--red);">red overdue badge</b> "देरी हो गई" (OVERDUE). Text <code>#D92130</code> on <code>#FFE5E7</code> background. Red left stripe. The countdown does NOT disappear — it stays as a permanent red warning.</td></tr>
+        <tr><td style="font-weight:600;border-bottom:1px solid var(--hair);">Trigger</td><td style="border-bottom:1px solid var(--hair);">Server sets <code>thresholdState: OVERDUE</code> when SLA deadline has passed</td></tr>
+        <tr><td style="font-weight:600;border-bottom:none;">Examples</td><td style="border-bottom:none;">"Pickup delay — deadline passed", "Delegate overdue — tech missed window", "Work delay — SLA breached"</td></tr>
+      </table>
+      <div style="margin-top:10px;font-size:13px;color:var(--ink-2);padding:8px 12px;background:var(--red-bg);border-radius:8px;">CSP sees: <b style="color:var(--red);">"This is critical, I must act immediately"</b></div>
+    </div>
+
+    <!-- STATE 5 -->
+    <div style="background:var(--surface);border:1px solid var(--hair);border-radius:14px;padding:20px 22px;margin-bottom:16px;box-shadow:var(--shadow);border-left:4px solid var(--ink-3);opacity:.85;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <span style="font-size:18px;">5</span>
+        <div>
+          <h3 style="font-size:16px;font-weight:800;margin-bottom:2px;">Card Removed</h3>
+          <div style="font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--ink-3);">TERMINAL — NO LONGER ACTIVE</div>
+        </div>
+      </div>
+      <table class="logic-table" style="margin:0;">
+        <tr><td style="width:140px;font-weight:600;border-bottom:1px solid var(--hair);">Red dot</td><td style="border-bottom:1px solid var(--hair);">No</td></tr>
+        <tr><td style="font-weight:600;border-bottom:1px solid var(--hair);">Server sends</td><td style="border-bottom:1px solid var(--hair);">Terminal state — card is no longer active</td></tr>
+        <tr><td style="font-weight:600;border-bottom:1px solid var(--hair);">Position</td><td style="border-bottom:1px solid var(--hair);">Drifts to bottom naturally (no updates). Removed from feed after 7-day retention (backend-controlled).</td></tr>
+        <tr><td style="font-weight:600;border-bottom:1px solid var(--hair);">Visual</td><td style="border-bottom:1px solid var(--hair);">Greyed out card, no action possible, terminal status message visible</td></tr>
+        <tr><td style="font-weight:600;border-bottom:1px solid var(--hair);">Card does NOT vanish</td><td style="border-bottom:1px solid var(--hair);">Card stays visible with a terminal state message. CSP can see what happened to the ticket. Examples:<br>• "यह टिकट अब Wiom संभाल रहा है" (This ticket is now handled by Wiom)<br>• "यह टिकट बंद हो गई — समय पर एक्शन नहीं हुआ" (Ticket closed — no action taken in time)</td></tr>
+        <tr><td style="font-weight:600;border-bottom:none;">Trigger</td><td style="border-bottom:none;">Ticket handled by Wiom, ticket cancelled, no action taken and system resolved it, 7-day retention expired</td></tr>
+      </table>
+      <div style="margin-top:10px;font-size:13px;color:var(--ink-2);padding:8px 12px;background:var(--surface-2);border-radius:8px;">CSP sees: <b style="color:var(--ink);">"This ticket is closed / handled by someone else"</b></div>
     </div>
 
   </div>
 </div>
 
-<!-- ━━━━━━━━━━━━━━━━━━━ PER-STATE REFERENCE ━━━━━━━━━━━━━━━━━━━ -->
+<!-- ━━━━━━━━━━━━━━━━━━━ STATE TRANSITIONS ━━━━━━━━━━━━━━━━━━━ -->
 <div class="section">
   <div class="section-head">
-    <h2>Per-flow state reference — red dot mapping</h2>
-    <p>Which states show a red dot (action needed) and which don't (FYI)</p>
+    <h2>State Transitions</h2>
+    <p>How cards move between the 5 states</p>
   </div>
   <div class="section-body">
 
-    <div class="highlight">
-      <b>All card types live in the same feed.</b> The only visual distinction is the <b style="color:var(--red);">red dot</b> — it tells the CSP "you need to act on this card". Cards without a red dot are FYI — visible but no action required.
+    <table class="logic-table">
+      <tr>
+        <th>From</th>
+        <th>To</th>
+        <th>What triggers it</th>
+      </tr>
+      <tr>
+        <td class="fn" style="color:var(--ink-3);">New card arrives</td>
+        <td><span class="pill pill-m">Normal Update</span> or <span class="pill pill-a">Update with Action</span></td>
+        <td>Depends on whether CSP action is needed</td>
+      </tr>
+      <tr>
+        <td class="fn"><span class="pill pill-a" style="font-size:10px;">Action</span></td>
+        <td><span class="pill pill-m">Normal Update</span></td>
+        <td>CSP completed the action → red dot removed, card shifts down</td>
+      </tr>
+      <tr>
+        <td class="fn"><span class="pill pill-a" style="font-size:10px;">Action</span></td>
+        <td><span class="pill" style="background:var(--orange-bg);color:var(--orange);border:1px solid #F0D4A8;font-size:10px;">Overdue Soon</span></td>
+        <td>Server sends <code>thresholdState: URGENT</code> — &lt; 4 hours remaining on SLA</td>
+      </tr>
+      <tr>
+        <td class="fn"><span class="pill" style="background:var(--orange-bg);color:var(--orange);border:1px solid #F0D4A8;font-size:10px;">Overdue Soon</span></td>
+        <td><span class="pill pill-m">Normal Update</span></td>
+        <td>CSP acted in time → red dot removed</td>
+      </tr>
+      <tr>
+        <td class="fn"><span class="pill" style="background:var(--orange-bg);color:var(--orange);border:1px solid #F0D4A8;font-size:10px;">Overdue Soon</span></td>
+        <td><span class="pill" style="background:var(--red-bg);color:var(--red);border:1px solid var(--red);font-size:10px;">Action Delayed</span></td>
+        <td>Deadline passed → server sends <code>thresholdState: OVERDUE</code></td>
+      </tr>
+      <tr>
+        <td class="fn"><span class="pill" style="background:var(--red-bg);color:var(--red);border:1px solid var(--red);font-size:10px;">Delayed</span></td>
+        <td><span class="pill pill-m">Normal Update</span></td>
+        <td>CSP finally acted → red dot removed</td>
+      </tr>
+      <tr>
+        <td class="fn"><span class="pill" style="background:var(--red-bg);color:var(--red);border:1px solid var(--red);font-size:10px;">Delayed</span></td>
+        <td><span class="pill" style="background:var(--surface-2);color:var(--ink-3);border:1px solid var(--hair);font-size:10px;">Card Removed</span></td>
+        <td>Wiom took over / ticket closed due to no action</td>
+      </tr>
+      <tr>
+        <td class="fn"><span class="pill pill-m" style="font-size:10px;">Normal Update</span></td>
+        <td><span class="pill pill-a">Update with Action</span></td>
+        <td>New update needs CSP action again (e.g., customer confirms slot → assign tech)</td>
+      </tr>
+      <tr>
+        <td class="fn" style="color:var(--ink-3);">Any state</td>
+        <td><span class="pill" style="background:var(--surface-2);color:var(--ink-3);border:1px solid var(--hair);font-size:10px;">Card Removed</span></td>
+        <td>7-day retention expired / ticket cancelled / system resolved</td>
+      </tr>
+    </table>
+
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━ SORT PRIORITY ━━━━━━━━━━━━━━━━━━━ -->
+<div class="section">
+  <div class="section-head">
+    <h2>Sort Priority — top to bottom</h2>
+    <p>How cards are ordered in the feed at any given moment</p>
+  </div>
+  <div class="section-body">
+
+    <table class="logic-table">
+      <tr>
+        <th style="width:50px;">#</th>
+        <th>Card State</th>
+        <th>Server signal</th>
+        <th>Visual indicator</th>
+      </tr>
+      <tr>
+        <td class="fn" style="color:var(--red);">1st</td>
+        <td><b>Action Delayed</b> (overdue)</td>
+        <td><code>OVERDUE</code> + <code>isCspActionable</code></td>
+        <td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);"></span> Red dot + red badge "देरी हो गई"</td>
+      </tr>
+      <tr>
+        <td class="fn" style="color:var(--orange);">2nd</td>
+        <td><b>Action Overdue Soon</b> (urgent)</td>
+        <td><code>URGENT</code> + <code>deadlineAt</code></td>
+        <td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);"></span> Red dot + amber countdown ticking</td>
+      </tr>
+      <tr>
+        <td class="fn" style="color:var(--pink);">3rd</td>
+        <td><b>Update with Action</b> (normal)</td>
+        <td><code>NORMAL</code> + <code>isCspActionable</code></td>
+        <td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);"></span> Red dot, no urgency badge</td>
+      </tr>
+      <tr>
+        <td class="fn" style="color:var(--ink-3);">4th</td>
+        <td><b>Normal Update</b> (FYI)</td>
+        <td><code>NORMAL</code>, no action</td>
+        <td>No red dot, sorted by recency</td>
+      </tr>
+      <tr>
+        <td class="fn" style="color:var(--ink-3);">5th</td>
+        <td><b>Card Removed</b> (terminal)</td>
+        <td>Terminal state</td>
+        <td>Greyed out, drifting to bottom</td>
+      </tr>
+    </table>
+
+    <div class="note-box" style="margin-top:16px;">
+      <b>Within each priority level:</b> most recently updated card comes first. This means if two cards are both "Action Delayed", the one that was updated most recently sits higher.
     </div>
+
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━ PER-FLOW STATE MAPPING ━━━━━━━━━━━━━━━━━━━ -->
+<div class="section">
+  <div class="section-head">
+    <h2>Per-flow state mapping</h2>
+    <p>Which task states map to which card state — across all 5 flows</p>
+  </div>
+  <div class="section-body">
 
     <table class="logic-table">
       <tr>
         <th>Flow</th>
-        <th>States with red dot (action needed)</th>
-        <th>States without red dot (FYI)</th>
+        <th><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);margin-right:4px;"></span> Action (red dot)</th>
+        <th>Normal Update (no dot)</th>
       </tr>
       <tr>
         <td class="fn">⚡ Recharge</td>
-        <td><span class="pill pill-a">Recharge due</span> — CSP must collect & recharge</td>
+        <td><span class="pill pill-a">Recharge due</span></td>
         <td><span class="pill pill-m">Verification pending</span></td>
       </tr>
       <tr>
@@ -530,47 +657,61 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
         <td><span class="pill pill-m">Tech assigned</span> <span class="pill pill-m">Verification pending</span></td>
       </tr>
     </table>
+
+    <div class="note-box" style="margin-top:16px;">
+      <b>Overdue Soon and Action Delayed are not separate states in this table</b> — they are urgency escalations of the Action state. The same "Assign self/tech" state can be Normal Action, Overdue Soon (< 4h left), or Action Delayed (deadline passed) depending on the server's <code>thresholdState</code> value.
+    </div>
+
   </div>
 </div>
 
-<!-- ━━━━━━━━━━━━━━━━━━━ RED DOT BEHAVIOUR ━━━━━━━━━━━━━━━━━━━ -->
+<!-- ━━━━━━━━━━━━━━━━━━━ SERVER SIGNALS ━━━━━━━━━━━━━━━━━━━ -->
 <div class="section">
   <div class="section-head">
-    <h2>Red dot — action vs FYI updates</h2>
-    <p>How updates on a card affect the red dot indicator</p>
+    <h2>Server signals — what drives each state</h2>
+    <p>All state determination is backend-driven. The app only renders.</p>
   </div>
   <div class="section-body">
 
-    <div class="highlight">
-      <b>Core rule:</b> Every update that arrives on a card is classified as either <b>Action</b> (CSP must do something) or <b>FYI</b> (just information). Action updates add a <b style="color:var(--red);">red dot</b> to the card. FYI updates move the card to the top (latest update) but show <b>no red dot</b>. The red dot stays until the CSP completes the action.
-    </div>
+    <table class="logic-table">
+      <tr>
+        <th>Server field</th>
+        <th>Values</th>
+        <th>What it controls</th>
+      </tr>
+      <tr>
+        <td class="fn"><code>isCspActionable</code></td>
+        <td><code>true</code> / <code>false</code></td>
+        <td>Whether to show the <b>red dot</b>. <code>true</code> = action needed. <code>false</code> = FYI.</td>
+      </tr>
+      <tr>
+        <td class="fn"><code>thresholdState</code></td>
+        <td><code>NORMAL</code> / <code>URGENT</code> / <code>OVERDUE</code></td>
+        <td>Urgency level. <code>NORMAL</code> = no urgency. <code>URGENT</code> = &lt; 4h left, amber. <code>OVERDUE</code> = deadline passed, red.</td>
+      </tr>
+      <tr>
+        <td class="fn"><code>accentType</code></td>
+        <td>normal / warning / negative</td>
+        <td>Left stripe color on the card.</td>
+      </tr>
+      <tr>
+        <td class="fn"><code>deadlineAt</code></td>
+        <td>ISO timestamp</td>
+        <td>SLA deadline. Client ticks a <b>1-second countdown loop</b> against this for the live timer display.</td>
+      </tr>
+      <tr>
+        <td class="fn"><code>updatedAt</code></td>
+        <td>ISO timestamp</td>
+        <td>Last update time. Determines <b>card position</b> in the feed — most recent on top.</td>
+      </tr>
+    </table>
 
-    <div class="update-grid">
-      <div class="update-col" style="border-top:3px solid var(--red);">
-        <h4 style="color:var(--red);"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--red);"></span> Action updates — red dot on card</h4>
-        <p>These updates need the CSP to <b>do something</b>. Card jumps to top of feed with a red dot.</p>
-        <div class="update-example act"><span class="dot"></span>New booking — propose slot</div>
-        <div class="update-example act"><span class="dot"></span>Customer confirmed — assign tech</div>
-        <div class="update-example act"><span class="dot"></span>Work done — verify & resolve</div>
-        <div class="update-example act"><span class="dot"></span>Overdue — reassign now</div>
-        <div class="update-example act"><span class="dot"></span>Recharge due — collect & recharge</div>
-        <div class="update-example act"><span class="dot"></span>Pickup created — assign technician</div>
-      </div>
-      <div class="update-col" style="border-top:3px solid var(--ink-3);">
-        <h4 style="color:var(--ink-3);"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--ink-3);"></span> FYI updates — no red dot</h4>
-        <p>These updates are <b>just information</b> — card jumps to top but CSP doesn't need to act.</p>
-        <div class="update-example fyi"><span class="dot"></span>टेक्निशियन को भेज दिया (Tech assigned)</div>
-        <div class="update-example fyi"><span class="dot"></span>ग्राहक स्लॉट चुन रहे (Customer choosing)</div>
-        <div class="update-example fyi"><span class="dot"></span>वेरिफाई हो रहा है (Verification in progress)</div>
-        <div class="update-example fyi"><span class="dot"></span>Team working (Tech on the job)</div>
-        <div class="update-example fyi"><span class="dot"></span>Sent to Wiom (Platform processing)</div>
-        <div class="update-example fyi"><span class="dot"></span>Scheduling retry (System retrying)</div>
-      </div>
+    <div class="highlight" style="margin-top:16px;">
+      <b>Key insight from codebase:</b> The two signals (stripe via <code>accentType</code> and urgency via <code>thresholdState</code>) are set <b>independently by the server</b>. A card can have a grey stripe with an urgent line. The app never calculates urgency — it receives the state and renders it.
     </div>
 
   </div>
 </div>
-
 
 <!-- ━━━━━━━━━━━━━━━━━━━ IMPLEMENTATION NOTES ━━━━━━━━━━━━━━━━━━━ -->
 <div class="section">
@@ -581,21 +722,24 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
   <div class="section-body">
     <div class="decision-grid">
       <div class="decision-card" style="border-top:3px solid var(--green);">
-        <h4 style="color:var(--green);">Server-driven — no app release needed</h4>
+        <h4 style="color:var(--green);">Already available from server</h4>
         <ul>
-          <li>Feed sorting by <code>updatedAt</code> — cards already have this field from backend</li>
-          <li>Red dot driven by existing <code>isCspActionable</code> flag from backend</li>
-          <li>7-day retention is backend-controlled — remove cards from API response after 7 days</li>
-          <li>All card types (Install, Service, Pickup, Recharge, Shifting) use the same sort logic</li>
+          <li><code>isCspActionable</code> — drives red dot (exists today)</li>
+          <li><code>thresholdState</code> — NORMAL / URGENT / OVERDUE (exists today)</li>
+          <li><code>accentType</code> — left stripe color (exists today)</li>
+          <li><code>deadlineAt</code> — SLA deadline timestamp (exists today)</li>
+          <li><code>updatedAt</code> — last update timestamp (exists today)</li>
+          <li>1-second client-side countdown loop (exists today)</li>
         </ul>
       </div>
       <div class="decision-card" style="border-top:3px solid var(--orange);">
         <h4 style="color:var(--orange);">Needs app change</h4>
         <ul>
-          <li><b>Red dot indicator</b> — small red dot on card when <code>isCspActionable = true</code></li>
-          <li><b>Sort by updatedAt</b> — single flat LazyColumn sorted by most recent update timestamp</li>
-          <li><b>Card reorder animation</b> — optional, animate card moving to new position when updated</li>
-          <li><b>Batch cards simplified</b> — Pickup and Recharge behave like individual cards, no special batch rendering</li>
+          <li><b>Red dot indicator</b> — render red dot on card when <code>isCspActionable = true</code></li>
+          <li><b>Sort by priority + recency</b> — OVERDUE first → URGENT → NORMAL action → FYI, then by <code>updatedAt</code></li>
+          <li><b>Terminal state rendering</b> — greyed out card with "Wiom संभाल रहा है" / "टिकट बंद" message</li>
+          <li><b>Batch cards simplified</b> — Pickup and Recharge behave like individual cards</li>
+          <li><b>Card reorder animation</b> — optional, animate card moving to new position</li>
         </ul>
       </div>
     </div>
