@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wiom CSP — Home Page Redesign · Action-First Feed</title>
+<title>Wiom CSP — Home Page Redesign · Single Feed</title>
 <style>
 :root{
   --pink:#D9008D;--pink-soft:#F5D6EA;--pink-bg:#FFF0F8;
@@ -275,7 +275,7 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
 
 <p class="eyebrow">Wiom CSP App · Home Redesign</p>
 <h1>Action-First Home Feed</h1>
-<p class="sub">Split the home into <b>two clear zones</b> — "आज के काम" (today's tasks) on top, "चल रहा है" (in motion) below. CSP opens the app and <b>instantly knows what to do</b>.</p>
+<p class="sub">One feed, <b>sorted by most recent update</b>. Cards that need action show a <b>red dot</b>. No sections, no guessing — CSP opens the app and <b>instantly knows what to act on</b>.</p>
 
 <!-- ━━━━━━━━━━━━━━━━━━━ STEP 1: JTBD ━━━━━━━━━━━━━━━━━━━ -->
 <div class="section">
@@ -337,26 +337,26 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
 <div class="section" id="proto-section">
   <div class="section-head" style="background:linear-gradient(135deg,var(--pink-bg),var(--surface-2));">
     <div class="step-label">Step 3 · The solution</div>
-    <h2 style="font-size:clamp(22px,4vw,32px);">Action-first home feed — "आज के काम" on top</h2>
-    <p>Split the home into two clear sections. <b style="color:var(--ink);">"आज के काम"</b> (action needed) stays on top — <b style="color:var(--ink);">"चल रहा है"</b> (in motion, no action) goes below. CSP opens the app and instantly knows what to do first. Cards move between sections as state changes.</p>
+    <h2 style="font-size:clamp(22px,4vw,32px);">Single feed — latest update on top, red dot for action</h2>
+    <p>One unified feed sorted by <b style="color:var(--ink);">most recent update</b>. Cards needing CSP action show a <b style="color:var(--red);">red dot</b> — the dot stays until the CSP acts. All cards (pending, in-process, completed) live in the same feed and naturally drift down when they have no new updates.</p>
     <div style="margin-top:12px;padding:8px 14px;background:rgba(217,0,141,.08);border:1px solid var(--pink-soft);border-radius:8px;font-size:12px;color:var(--ink-2);display:inline-block;">
-      <b style="color:var(--pink);">Interactive prototype below</b> — tap any card to open the detail screen, take action, and watch the card move between sections.
+      <b style="color:var(--pink);">Interactive prototype below</b> — tap any card to open the detail screen, take action, and watch the red dot disappear.
     </div>
   </div>
   <div class="section-body">
 
     <div class="principle-grid" style="margin-bottom:24px;">
       <div class="principle">
-        <h3>1. Action first</h3>
-        <p>Everything that needs <b>CSP action right now</b> goes in the top section. If the CSP doesn't need to do anything — it's not in "आज के काम".</p>
+        <h3>1. Latest update = top</h3>
+        <p>Whenever a card gets a new update (state change, customer action, system event), it <b>jumps to the top</b> of the feed. The freshest information is always first.</p>
       </div>
       <div class="principle">
-        <h3>2. Cards move dynamically</h3>
-        <p>When a non-action card <b>becomes actionable</b> (customer confirms slot, photo rejected), it moves up to "आज के काम". When CSP completes an action, it drops to "चल रहा है".</p>
+        <h3>2. Red dot = action needed</h3>
+        <p>Cards needing CSP action show a <b style="color:var(--red);">red dot</b>. The dot stays until the CSP acts. No dot = FYI, CSP can see it but doesn't need to do anything.</p>
       </div>
       <div class="principle">
-        <h3>3. Recharge on top, always</h3>
-        <p>ISP Recharge batch stays <b>pinned at the top</b> of action section — quickest win, highest retention impact, easiest to complete.</p>
+        <h3>3. Natural decay</h3>
+        <p>Cards with <b>no new updates drift down</b> as other cards with fresh updates push above them. After 7 days, cards auto-remove (backend-controlled).</p>
       </div>
     </div>
 
@@ -486,389 +486,69 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
   </div>
 </div>
 
-<!-- ━━━━━━━━━━━━━━━━━━━ SECTION LOGIC ━━━━━━━━━━━━━━━━━━━ -->
+<!-- ━━━━━━━━━━━━━━━━━━━ PER-STATE REFERENCE ━━━━━━━━━━━━━━━━━━━ -->
 <div class="section">
   <div class="section-head">
-    <h2>Section 1 — आज के काम · Today's Action</h2>
-    <p>Only cards where CSP must act RIGHT NOW. Priority order top to bottom.</p>
+    <h2>Per-flow state reference — red dot mapping</h2>
+    <p>Which states show a red dot (action needed) and which don't (FYI)</p>
   </div>
   <div class="section-body">
 
     <div class="highlight">
-      <b>Priority order inside "आज के काम":</b><br>
-      1. <b>ISP Recharge batch</b> — always pinned on top (quick, easy, retention impact)<br>
-      2. <b>NetBox Pickup cards needing action</b> — individual cards, not batch (assign tech, overdue)<br>
-      3. <b>Other action cards sorted by urgency</b> — OVERDUE first, then URGENT, then NORMAL<br>
-      4. <b>Within same urgency</b> — most recently updated card on top
+      <b>All card types live in the same feed.</b> The only visual distinction is the <b style="color:var(--red);">red dot</b> — it tells the CSP "you need to act on this card". Cards without a red dot are FYI — visible but no action required.
     </div>
 
     <table class="logic-table">
       <tr>
         <th>Flow</th>
-        <th>Which states land here?</th>
-        <th>Card style</th>
+        <th>States with red dot (action needed)</th>
+        <th>States without red dot (FYI)</th>
       </tr>
       <tr>
         <td class="fn">⚡ Recharge</td>
-        <td>Recharge (always) — <b>pinned at position #1</b></td>
-        <td><span class="pill pill-a">Batch card</span> with total pending count + "Recharge" CTA</td>
+        <td><span class="pill pill-a">Recharge due</span> — CSP must collect & recharge</td>
+        <td><span class="pill pill-m">Verification pending</span></td>
       </tr>
       <tr>
         <td class="fn">📦 Pickup</td>
-        <td>Assign self/technician, Start pickup, Pickup due (urgent), Pickup delay (overdue)</td>
-        <td><span class="pill pill-a">Individual card</span> — each pickup needing action gets its own card with CTA</td>
+        <td><span class="pill pill-a">Assign self/tech</span> <span class="pill pill-a">Start pickup</span> <span class="pill pill-a">Pickup due/delay</span></td>
+        <td><span class="pill pill-m">Tech assigned</span> <span class="pill pill-m">Tech working</span> <span class="pill pill-m">Sent to Wiom</span> <span class="pill pill-m">Completed</span></td>
       </tr>
       <tr>
         <td class="fn">🏠 Install</td>
-        <td>Propose slot, Re-schedule, Assign self/tech, Start installation, Delegate overdue</td>
-        <td><span class="pill pill-a">Individual card</span></td>
+        <td><span class="pill pill-a">Propose slot</span> <span class="pill pill-a">Re-schedule</span> <span class="pill pill-a">Assign self/tech</span> <span class="pill pill-a">Start installation</span> <span class="pill pill-a">Delegate overdue</span></td>
+        <td><span class="pill pill-m">Customer choosing slot</span> <span class="pill pill-m">Scheduling retry</span> <span class="pill pill-m">In progress</span> <span class="pill pill-m">Team working</span> <span class="pill pill-m">Verifying</span></td>
       </tr>
       <tr>
         <td class="fn">🔧 Service</td>
-        <td>Accept + start work, Resolve, Customer denied, Diagnose fault, Recall task, Delegate overdue</td>
-        <td><span class="pill pill-a">Individual card</span></td>
+        <td><span class="pill pill-a">Accept + start</span> <span class="pill pill-a">Resolve</span> <span class="pill pill-a">Diagnose fault</span> <span class="pill pill-a">Recall task</span> <span class="pill pill-a">Delegate overdue</span></td>
+        <td><span class="pill pill-m">Team assigned</span> <span class="pill pill-m">Team working</span> <span class="pill pill-m">Escalated</span> <span class="pill pill-m">Verifying</span></td>
       </tr>
       <tr>
         <td class="fn">🚚 Shifting</td>
-        <td>Assign self/tech, Start work, Verify, Work delay (overdue)</td>
-        <td><span class="pill pill-a">Individual card</span></td>
+        <td><span class="pill pill-a">Assign self/tech</span> <span class="pill pill-a">Start work</span> <span class="pill pill-a">Verify</span> <span class="pill pill-a">Work delay</span></td>
+        <td><span class="pill pill-m">Tech assigned</span> <span class="pill pill-m">Verification pending</span></td>
       </tr>
     </table>
   </div>
 </div>
 
+<!-- ━━━━━━━━━━━━━━━━━━━ RED DOT BEHAVIOUR ━━━━━━━━━━━━━━━━━━━ -->
 <div class="section">
   <div class="section-head">
-    <h2>Section 2 — चल रहा है · In Motion</h2>
-    <p>Cards where system/customer/technician is working. CSP just monitors.</p>
-  </div>
-  <div class="section-body">
-
-    <table class="logic-table">
-      <tr>
-        <th>Flow</th>
-        <th>Which states land here?</th>
-        <th>Card style</th>
-      </tr>
-      <tr>
-        <td class="fn">⚡ Recharge</td>
-        <td>Verification pending</td>
-        <td><span class="pill pill-m">Stays in batch</span> — row shows "Verifying" status</td>
-      </tr>
-      <tr>
-        <td class="fn">📦 Pickup</td>
-        <td>Technician assigned, Technician working, Send to Wiom, Completed</td>
-        <td><span class="pill pill-m">Batch card</span> — all in-motion pickups grouped together</td>
-      </tr>
-      <tr>
-        <td class="fn">🏠 Install</td>
-        <td>Customer choosing slot, Scheduling retry, In progress, Team assigned, Team working, Submitted, Verifying</td>
-        <td><span class="pill pill-m">Individual card</span> (greyed out, no CTA)</td>
-      </tr>
-      <tr>
-        <td class="fn">🔧 Service</td>
-        <td>Team assigned, Team working, Escalated to Wiom, Reclassified, Verifying</td>
-        <td><span class="pill pill-m">Individual card</span> (greyed out, no CTA)</td>
-      </tr>
-      <tr>
-        <td class="fn">🚚 Shifting</td>
-        <td>Technician assigned, Time left in pickup date, Verification pending</td>
-        <td><span class="pill pill-m">Individual card</span> (greyed out, no CTA)</td>
-      </tr>
-    </table>
-  </div>
-</div>
-
-<!-- ━━━━━━━━━━━━━━━━━━━ NETBOX PICKUP SPLIT LOGIC ━━━━━━━━━━━━━━━━━━━ -->
-<div class="section">
-  <div class="section-head">
-    <h2>NetBox Pickup — Split card behaviour</h2>
-    <p>Pickup cards move between individual (action) and batch (in-motion) based on state</p>
-  </div>
-  <div class="section-body">
-
-    <div class="note-box">
-      <b>The problem with current batch:</b> NetBox Pickup gets lost inside a batch card. CSP doesn't notice when a specific pickup needs their action (like assigning a technician). The action gets buried among in-motion rows.
-    </div>
-
-    <div class="phone-wrap">
-      <!-- PICKUP ACTION STATE -->
-      <div>
-        <div class="phone phone-sm" style="width:280px;">
-          <div class="phone-notch"></div>
-          <div class="phone-screen" style="min-height:300px;">
-            <div class="w-section-label" style="color:var(--pink);font-size:11px;">
-              <span>आज के काम</span>
-            </div>
-            <div class="w-card w-action">
-              <div class="w-card-top">
-                <div class="w-card-type" style="color:var(--pink);">📦 PICKUP</div>
-                <div class="w-card-time overdue">2h left</div>
-              </div>
-              <div class="w-card-title">Priya M. · NB-8832</div>
-              <div class="w-card-sub">Saket · Assign technician</div>
-              <div class="w-card-cta">Assign</div>
-            </div>
-            <div class="w-card w-action">
-              <div class="w-card-top">
-                <div class="w-card-type" style="color:var(--pink);">📦 PICKUP</div>
-                <div class="w-card-time">5d left</div>
-              </div>
-              <div class="w-card-title">Ravi K. · NB-3301</div>
-              <div class="w-card-sub">Dwarka · Assign technician</div>
-              <div class="w-card-cta">Assign</div>
-            </div>
-          </div>
-        </div>
-        <div class="phone-label">Pickup needs action = Individual card<br>in "आज के काम"</div>
-      </div>
-
-      <!-- ARROW -->
-      <div style="display:flex;align-items:center;padding:0 8px;">
-        <div style="text-align:center;">
-          <div style="font-size:11px;color:var(--ink-3);margin-bottom:4px;">CSP assigns<br>technician</div>
-          <div style="font-size:32px;color:var(--pink);">→</div>
-          <div style="font-size:11px;color:var(--ink-3);margin-top:4px;">Card moves<br>to batch</div>
-        </div>
-      </div>
-
-      <!-- PICKUP IN MOTION STATE -->
-      <div>
-        <div class="phone phone-sm" style="width:280px;">
-          <div class="phone-notch"></div>
-          <div class="phone-screen" style="min-height:300px;">
-            <div class="w-section-label" style="color:var(--ink-3);font-size:11px;">
-              <span>चल रहा है</span>
-            </div>
-            <div class="w-batch" style="border-left:3px solid var(--hair);">
-              <div class="w-batch-head">
-                <div class="w-batch-title">📦 Pickup · In Motion</div>
-                <div class="w-batch-count">4 items</div>
-              </div>
-              <div class="w-batch-row"><div class="w-batch-left"><b>Priya M.</b> · NB-8832</div><div class="w-batch-status" style="color:var(--green);">Raj assigned</div></div>
-              <div class="w-batch-row"><div class="w-batch-left"><b>Ravi K.</b> · NB-3301</div><div class="w-batch-status">Amit working</div></div>
-              <div class="w-batch-row"><div class="w-batch-left"><b>Karan S.</b> · NB-6654</div><div class="w-batch-status">Completed</div></div>
-              <div class="w-batch-row"><div class="w-batch-left"><b>Anita R.</b> · NB-2217</div><div class="w-batch-status">Sent to Wiom</div></div>
-            </div>
-          </div>
-        </div>
-        <div class="phone-label">Pickup in motion = Batch card<br>in "चल रहा है"</div>
-      </div>
-    </div>
-
-    <table class="logic-table" style="margin-top:16px;">
-      <tr>
-        <th>Pickup state</th>
-        <th>Where it appears</th>
-        <th>Card type</th>
-        <th>Why?</th>
-      </tr>
-      <tr>
-        <td class="fn">Assign self/tech</td>
-        <td><span class="pill pill-a">आज के काम</span></td>
-        <td>Individual card with CTA</td>
-        <td>CSP must decide who picks up — needs attention</td>
-      </tr>
-      <tr>
-        <td class="fn">Start pickup</td>
-        <td><span class="pill pill-a">आज के काम</span></td>
-        <td>Individual card with CTA</td>
-        <td>CSP assigned self — needs to go now</td>
-      </tr>
-      <tr>
-        <td class="fn">Pickup due / delay</td>
-        <td><span class="pill pill-a">आज के काम</span></td>
-        <td>Individual card (urgent/overdue)</td>
-        <td>Deadline pressure — needs immediate attention</td>
-      </tr>
-      <tr>
-        <td class="fn">Technician assigned</td>
-        <td><span class="pill pill-m">चल रहा है (batch)</span></td>
-        <td>Batch row — "Tech assigned"</td>
-        <td>CSP delegated — no action needed, just monitor</td>
-      </tr>
-      <tr>
-        <td class="fn">Technician working</td>
-        <td><span class="pill pill-m">चल रहा है (batch)</span></td>
-        <td>Batch row — "Working"</td>
-        <td>Tech on the job — CSP can call if needed</td>
-      </tr>
-      <tr>
-        <td class="fn">Send to Wiom</td>
-        <td><span class="pill pill-m">चल रहा है (batch)</span></td>
-        <td>Batch row — "Sent to Wiom"</td>
-        <td>Platform handling — nothing for CSP</td>
-      </tr>
-      <tr>
-        <td class="fn">Completed</td>
-        <td><span class="pill pill-m">चल रहा है (batch)</span></td>
-        <td>Batch row — auto-removes</td>
-        <td>Done — row disappears after a moment</td>
-      </tr>
-    </table>
-  </div>
-</div>
-
-<!-- ━━━━━━━━━━━━━━━━━━━ CARD MOVEMENT EXAMPLES ━━━━━━━━━━━━━━━━━━━ -->
-<div class="section">
-  <div class="section-head">
-    <h2>How cards move between sections — real examples</h2>
-    <p>Cards are living — they jump between "आज के काम" and "चल रहा है" as state changes</p>
-  </div>
-  <div class="section-body">
-
-    <div class="decision-grid">
-      <div class="decision-card">
-        <h4>🏠 Install — slot confirmed</h4>
-        <p>CSP proposed a slot → card drops to <b>"चल रहा है"</b> (waiting on customer). Customer confirms the slot → card <b>jumps back to "आज के काम"</b> with "Assign technician" CTA.</p>
-        <div class="move-arrow"><span class="pill pill-a">Action</span> <span class="arr">→</span> <span class="pill pill-m">Motion</span> <span class="arr">→</span> <span class="pill pill-a">Action</span></div>
-      </div>
-
-      <div class="decision-card">
-        <h4>🔧 Service — delegated overdue</h4>
-        <p>CSP assigns technician → card drops to <b>"चल रहा है"</b> (tech assigned). Technician misses deadline → card <b>jumps back to "आज के काम"</b> with red "Delegate overdue" urgency.</p>
-        <div class="move-arrow"><span class="pill pill-a">Action</span> <span class="arr">→</span> <span class="pill pill-m">Motion</span> <span class="arr">→</span> <span class="pill pill-a">Action (urgent)</span></div>
-      </div>
-
-      <div class="decision-card">
-        <h4>📦 Pickup — assign then delegate</h4>
-        <p>New pickup arrives as <b>individual card in "आज के काम"</b>. CSP assigns technician → card <b>moves to batch in "चल रहा है"</b>. If tech goes overdue → <b>individual card pops back into "आज के काम"</b>.</p>
-        <div class="move-arrow"><span class="pill pill-a">Individual</span> <span class="arr">→</span> <span class="pill pill-m">Batch row</span> <span class="arr">→</span> <span class="pill pill-a">Individual (overdue)</span></div>
-      </div>
-
-      <div class="decision-card">
-        <h4>⚡ Recharge — always on top</h4>
-        <p>Recharge batch card <b>never moves</b> — always pinned at position #1 in "आज के काम". Count updates as CSP completes recharges. Card disappears only when all pending = 0.</p>
-        <div class="move-arrow"><span class="pill pill-a">Pinned #1</span> <span class="arr">→</span> count decrements <span class="arr">→</span> <span class="pill pill-a">Gone when 0</span></div>
-      </div>
-
-      <div class="decision-card">
-        <h4>🚚 Shifting — verify comes back</h4>
-        <p>CSP assigns tech → card drops to <b>"चल रहा है"</b>. Work completed, needs verify → card <b>jumps back to "आज के काम"</b> with "Verify" CTA. After verify → drops to "Verification pending".</p>
-        <div class="move-arrow"><span class="pill pill-a">Action</span> <span class="arr">→</span> <span class="pill pill-m">Motion</span> <span class="arr">→</span> <span class="pill pill-a">Verify</span> <span class="arr">→</span> <span class="pill pill-m">Pending</span></div>
-      </div>
-
-      <div class="decision-card">
-        <h4>🏠 Install — resolved</h4>
-        <p>Installation verified → card shows briefly as "Resolved ✓" in "चल रहा है" → <b>auto-removes from feed</b> after ~5 seconds. Count in section header decrements.</p>
-        <div class="move-arrow"><span class="pill pill-m">Verifying</span> <span class="arr">→</span> <span style="color:var(--green);font-weight:700;">✓ Gone</span></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ━━━━━━━━━━━━━━━━━━━ RECHARGE BATCH DETAIL ━━━━━━━━━━━━━━━━━━━ -->
-<div class="section">
-  <div class="section-head">
-    <h2>⚡ Recharge batch — always on top</h2>
-    <p>Why recharge gets the #1 position and how the batch card works</p>
-  </div>
-  <div class="section-body">
-
-    <div class="decision-grid">
-      <div class="decision-card" style="border:2px solid var(--orange);">
-        <h4>Why #1?</h4>
-        <ul>
-          <li><b>Quickest action</b> — collect money, tap recharge, done</li>
-          <li><b>Highest volume</b> — CSP may have 10-20 pending daily</li>
-          <li><b>Direct retention impact</b> — expired plan = customer leaves</li>
-          <li><b>Revenue impact</b> — CSP earns commission per recharge</li>
-          <li><b>Low effort, high reward</b> — phone call + collect + tap</li>
-        </ul>
-      </div>
-      <div class="decision-card">
-        <h4>Batch card behaviour</h4>
-        <ul>
-          <li><b>Always visible</b> in "आज के काम" if pending > 0</li>
-          <li><b>Shows total count</b> prominently: "12 Recharge pending"</li>
-          <li><b>Sorted by deadline</b> — most urgent customer on top</li>
-          <li><b>Orange accent</b> to stand out from pink action cards</li>
-          <li><b>Single CTA</b>: "Recharge" opens the recharge flow</li>
-          <li><b>Count decrements</b> in real-time as CSP completes</li>
-          <li><b>Disappears</b> when all recharges done (pending = 0)</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ━━━━━━━━━━━━━━━━━━━ PRIORITY ORDER LOGIC ━━━━━━━━━━━━━━━━━━━ -->
-<div class="section">
-  <div class="section-head">
-    <h2>Priority sort order — inside "आज के काम"</h2>
-    <p>How cards are ordered after the pinned recharge batch</p>
-  </div>
-  <div class="section-body">
-    <table class="logic-table">
-      <tr>
-        <th style="width:60px;">Priority</th>
-        <th>What</th>
-        <th>Logic</th>
-      </tr>
-      <tr>
-        <td class="fn" style="color:var(--orange);">#1</td>
-        <td><b>⚡ Recharge batch</b> — pinned</td>
-        <td>Always first. Never moves. Shows total pending count.</td>
-      </tr>
-      <tr>
-        <td class="fn" style="color:var(--red);">#2</td>
-        <td><b>OVERDUE cards</b> — any task type</td>
-        <td>Deadline passed. Red cards. Pickup delay, Delegate overdue, Work delay. Most overdue first.</td>
-      </tr>
-      <tr>
-        <td class="fn" style="color:var(--orange);">#3</td>
-        <td><b>URGENT cards</b> — any task type</td>
-        <td>Deadline approaching. Orange cards. "Due in X hours". Closest deadline first.</td>
-      </tr>
-      <tr>
-        <td class="fn" style="color:var(--ink-2);">#4</td>
-        <td><b>NORMAL action cards</b> — any task type</td>
-        <td>No urgency pressure. Sorted by most recently updated first — latest server update on top.</td>
-      </tr>
-    </table>
-
-    <div class="note-box" style="margin-top:16px;">
-      <b>Sort within same urgency level:</b> Most recently updated card on top. This means if a customer just confirmed a slot, that install card jumps to the top of its urgency group — CSP sees the freshest actionable item first.
-    </div>
-  </div>
-</div>
-
-<!-- ━━━━━━━━━━━━━━━━━━━ SECTION HEADER COUNTS ━━━━━━━━━━━━━━━━━━━ -->
-<div class="section">
-  <div class="section-head">
-    <h2>Section headers with counts</h2>
-    <p>CSP sees the total at a glance without scrolling</p>
-  </div>
-  <div class="section-body">
-    <div class="decision-grid">
-      <div class="decision-card" style="border-left:3px solid var(--pink);">
-        <h4 style="color:var(--pink);">आज के काम · 6</h4>
-        <p>Pink badge with count of all action items. <b>This number is the CSP's to-do list for today.</b> It should go down as they work through tasks. When it hits 0 — CSP's work is done.</p>
-      </div>
-      <div class="decision-card" style="border-left:3px solid var(--ink-3);">
-        <h4 style="color:var(--ink-3);">चल रहा है · 5</h4>
-        <p>Grey badge with count of in-motion items. <b>These are tasks CSP has already acted on</b> — system/tech/customer is handling. CSP can check but doesn't need to act.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ━━━━━━━━━━━━━━━━━━━ PINK DOT / UPDATES BEHAVIOUR ━━━━━━━━━━━━━━━━━━━ -->
-<div class="section">
-  <div class="section-head">
-    <h2>Pink dot (updates) — action vs FYI</h2>
-    <p>How notification updates are routed between the two sections</p>
+    <h2>Red dot — action vs FYI updates</h2>
+    <p>How updates on a card affect the red dot indicator</p>
   </div>
   <div class="section-body">
 
     <div class="highlight">
-      <b>Core rule:</b> Every update that arrives on the home feed is classified as either <b>Action</b> (CSP must do something) or <b>FYI</b> (just information, no action needed). Action updates go to "आज के काम". FYI updates go to "चल रहा है". The pink dot count only reflects action updates — so the CSP knows exactly how many things need their attention.
+      <b>Core rule:</b> Every update that arrives on a card is classified as either <b>Action</b> (CSP must do something) or <b>FYI</b> (just information). Action updates add a <b style="color:var(--red);">red dot</b> to the card. FYI updates move the card to the top (latest update) but show <b>no red dot</b>. The red dot stays until the CSP completes the action.
     </div>
 
     <div class="update-grid">
-      <div class="update-col" style="border-top:3px solid var(--pink);">
-        <h4 style="color:var(--pink);"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--pink);"></span> Action updates → आज के काम</h4>
-        <p>These updates need the CSP to <b>do something right now</b>. They appear in the action section and increment the pink dot count.</p>
+      <div class="update-col" style="border-top:3px solid var(--red);">
+        <h4 style="color:var(--red);"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--red);"></span> Action updates — red dot on card</h4>
+        <p>These updates need the CSP to <b>do something</b>. Card jumps to top of feed with a red dot.</p>
         <div class="update-example act"><span class="dot"></span>New booking — propose slot</div>
         <div class="update-example act"><span class="dot"></span>Customer confirmed — assign tech</div>
         <div class="update-example act"><span class="dot"></span>Work done — verify & resolve</div>
@@ -877,8 +557,8 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
         <div class="update-example act"><span class="dot"></span>Pickup created — assign technician</div>
       </div>
       <div class="update-col" style="border-top:3px solid var(--ink-3);">
-        <h4 style="color:var(--ink-3);"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--ink-3);"></span> FYI updates → चल रहा है</h4>
-        <p>These updates are <b>just information</b> — something happened but CSP doesn't need to act. They go to the motion section silently.</p>
+        <h4 style="color:var(--ink-3);"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--ink-3);"></span> FYI updates — no red dot</h4>
+        <p>These updates are <b>just information</b> — card jumps to top but CSP doesn't need to act.</p>
         <div class="update-example fyi"><span class="dot"></span>टेक्निशियन को भेज दिया (Tech assigned)</div>
         <div class="update-example fyi"><span class="dot"></span>ग्राहक स्लॉट चुन रहे (Customer choosing)</div>
         <div class="update-example fyi"><span class="dot"></span>वेरिफाई हो रहा है (Verification in progress)</div>
@@ -888,30 +568,26 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
       </div>
     </div>
 
-    <div class="note-box" style="margin-top:16px;">
-      <b>Pink dot count = action updates only.</b> If 3 new updates arrive and 2 are FYI + 1 is action, the pink dot shows <b>1</b> (not 3). This prevents the CSP from seeing a scary "5 new" badge that turns out to be mostly FYI noise. The number always means "this many things need YOUR hands".
-    </div>
-
   </div>
 </div>
 
-<!-- ━━━━━━━━━━━━━━━━━━━ EMPTY STATES ━━━━━━━━━━━━━━━━━━━ -->
+<!-- ━━━━━━━━━━━━━━━━━━━ EMPTY STATE ━━━━━━━━━━━━━━━━━━━ -->
 <div class="section">
   <div class="section-head">
-    <h2>Empty states</h2>
-    <p>What CSP sees when sections are empty</p>
+    <h2>Empty state</h2>
+    <p>What CSP sees when there are no cards</p>
   </div>
   <div class="section-body">
     <div class="decision-grid">
       <div class="decision-card" style="text-align:center;padding:24px;">
         <div style="font-size:32px;margin-bottom:8px;">🎉</div>
-        <h4>आज के काम · 0</h4>
-        <p>"सब काम हो गया! अभी कोई नया काम नहीं है।"<br><span style="font-size:12px;color:var(--ink-3);">(All done! No pending tasks right now.)</span></p>
+        <h4>No cards on the feed</h4>
+        <p>"सब काम हो गया! अभी कोई नया काम नहीं है।"<br><span style="font-size:12px;color:var(--ink-3);">(All done! No tasks right now.)</span></p>
       </div>
       <div class="decision-card" style="text-align:center;padding:24px;">
         <div style="font-size:32px;margin-bottom:8px;">📋</div>
-        <h4>चल रहा है · 0</h4>
-        <p>"कोई काम चल नहीं रहा।"<br><span style="font-size:12px;color:var(--ink-3);">(No tasks in progress.)</span></p>
+        <h4>No red dots</h4>
+        <p>"कोई एक्शन बाकी नहीं। बस ट्रैक करो।"<br><span style="font-size:12px;color:var(--ink-3);">(No actions pending. Just monitor.)</span></p>
       </div>
     </div>
   </div>
@@ -928,19 +604,19 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
       <div class="decision-card" style="border-top:3px solid var(--green);">
         <h4 style="color:var(--green);">Server-driven — no app release needed</h4>
         <ul>
-          <li>Section assignment (action vs motion) can be driven by existing <code>isCspActionable</code> flag from backend</li>
-          <li>Priority sort uses existing <code>ThresholdState</code> + <code>updatedAt</code> fields</li>
-          <li>Recharge pinning is a client-side sort rule — "if RECHARGE, always position 0"</li>
-          <li>Section header counts are client-side computed from feed data</li>
+          <li>Feed sorting by <code>updatedAt</code> — cards already have this field from backend</li>
+          <li>Red dot driven by existing <code>isCspActionable</code> flag from backend</li>
+          <li>7-day retention is backend-controlled — remove cards from API response after 7 days</li>
+          <li>All card types (Install, Service, Pickup, Recharge, Shifting) use the same sort logic</li>
         </ul>
       </div>
       <div class="decision-card" style="border-top:3px solid var(--orange);">
         <h4 style="color:var(--orange);">Needs app change</h4>
         <ul>
-          <li><b>Pickup split logic</b> — client needs to render pickup as individual card (action) or batch row (motion) based on state</li>
-          <li><b>Two-section LazyColumn</b> — replace flat feed with sectioned layout</li>
-          <li><b>Section headers</b> — new sticky header composable with count badge</li>
-          <li><b>Card movement animation</b> — optional but adds polish when cards shift between sections</li>
+          <li><b>Red dot indicator</b> — small red dot on card when <code>isCspActionable = true</code></li>
+          <li><b>Sort by updatedAt</b> — single flat LazyColumn sorted by most recent update timestamp</li>
+          <li><b>Card reorder animation</b> — optional, animate card moving to new position when updated</li>
+          <li><b>Batch cards simplified</b> — Pickup and Recharge behave like individual cards, no special batch rendering</li>
         </ul>
       </div>
     </div>
@@ -953,26 +629,14 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
 <script>
 (function(){
   /* ══════════════════════════════════════════════════════════
-     Background motion cards — always visible in चल रहा है
+     Single feed — all cards in one list, sorted by recency.
+     Action-needed cards show a red dot.
      ══════════════════════════════════════════════════════════ */
-  var BG=[
-    {type:"INSTALL",icon:"🏠",name:"Vikram S.",loc:"Lajpat Nagar",sub:"Customer choosing slot",time:"2h ago"},
-    {type:"SERVICE",icon:"🔧",name:"Neha T.",loc:"Vasant Kunj",sub:"Team working",time:"45m ago"},
-    {type:"SHIFTING",icon:"🚚",name:"Renu P.",loc:"Sec 4 → Sec 18",sub:"Technician assigned",time:"1d ago"}
-  ];
-  var BG_PICKUP=[
-    {name:"Anita R.",loc:"NB-2217",status:"Sent to Wiom"},
-    {name:"Karan S.",loc:"NB-6654",status:"Technician working"}
-  ];
-  var BG_COUNT=5;
 
-  /* ══════════════════════════════════════════════════════════
-     5 interactive cards — one per task type, ALL clickable
-     Each has: card data, drill-down content, sheet, motion result
-     ══════════════════════════════════════════════════════════ */
+  /* ALL cards in the feed — action + FYI together, sorted by most recent update */
   var CARDS=[
-    {id:"recharge",type:"RECHARGE",icon:"⚡",isBatch:true,count:8,
-     name:"8 Recharge collections due",loc:"Earliest: Mohan L. · 3 hrs left",urg:"urgent",
+    /* 0 — action */ {id:"recharge",type:"RECHARGE",icon:"⚡",isBatch:true,count:8,action:true,
+     name:"8 Recharge collections due",loc:"Earliest: Mohan L. · 3 hrs left",urg:"urgent",time:"10m ago",
      drill:{hdr:"रीचार्ज",hdrId:"#RC-2201",
        ban:{title:"8 रीचार्ज बाकी",sub:"सबसे पहले: Mohan L. · 3 घंटे बाकी"},
        secs:[
@@ -984,7 +648,25 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
        cta:"₹399 जमा करें और रीचार्ज करें"},
      motion:{name:"Mohan L.",loc:"Plan ₹399",sub:"Verification pending",rAfter:7}},
 
-    {id:"install",type:"INSTALL",icon:"🏠",
+    /* 1 — FYI */ {id:"install-fyi",type:"INSTALL",icon:"🏠",action:false,
+     name:"Vikram S.",loc:"Lajpat Nagar",sub:"Customer choosing slot",time:"25m ago",urg:""},
+
+    /* 2 — action */ {id:"service",type:"SERVICE",icon:"🔧",action:true,
+     name:"Priya M.",loc:"Saket",sub:"New complaint · Assign team",time:"40m ago",urg:"urgent",
+     drill:{hdr:"सर्विस",hdrId:"#2205",
+       ban:{title:"टीम असाइन करो",sub:"ग्राहक इंतज़ार में है"},
+       secs:[
+         {type:"timeline",title:"अपडेट",items:[{text:"शिकायत दर्ज हुई",active:true,time:"40m ago"},{text:"टीम असाइन बाकी",active:false}]},
+         {type:"info",title:"ज़रूरी जानकारी",rows:[["Ticket","#2205"],["Issue","Internet slow"],["Since","Today morning"]]},
+         {type:"addr",title:"कहाँ जाना है?",addr:"H-45, Saket, New Delhi 110017"},
+         {type:"contact",title:"संपर्क कैसे करें?",text:"Priya M. · 99XXXXXX45"}
+       ],cta:"टीम असाइन करें",exit:"नहीं कर पाएँगे"},
+     sheet:{title:"टीम मेंबर असाइन करें",type:"options",
+       opts:[{l:"Amit Singh — Available",sel:true},{l:"Raj Kumar — On task"},{l:"खुद जाएँगे"}],
+       cta:"Amit Singh को असाइन करें"},
+     motion:{name:"Priya M.",loc:"Saket",sub:"Team assigned"}},
+
+    /* 3 — action */ {id:"install",type:"INSTALL",icon:"🏠",action:true,
      name:"Amit P.",loc:"Dwarka Sec 12",sub:"New booking · Propose slot",time:"2h ago",urg:"",
      drill:{hdr:"इंस्टॉल",hdrId:"#1100",
        ban:{title:"समय चुनना बाकी है",sub:"जल्दी करें, टिकट हट जाएगी"},
@@ -997,29 +679,17 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
      sheet:{title:"एक समय भेजें",type:"options",
        opts:[{l:"कल, 10:00 AM – 12:00 PM",sel:true},{l:"कल, 2:00 PM – 4:00 PM"},{l:"10 Jul, 10:00 AM – 12:00 PM"}],
        cta:"समय भेजें"},
-     motion:{name:"Amit P.",loc:"Dwarka Sec 12",sub:"Customer choosing slot",time:"Just now"}},
+     motion:{name:"Amit P.",loc:"Dwarka Sec 12",sub:"Customer choosing slot"}},
 
-    {id:"service",type:"SERVICE",icon:"🔧",
-     name:"Priya M.",loc:"Saket",sub:"New complaint · Assign team",time:"3h ago",urg:"urgent",
-     drill:{hdr:"सर्विस",hdrId:"#2205",
-       ban:{title:"टीम असाइन करो",sub:"ग्राहक इंतज़ार में है"},
-       secs:[
-         {type:"timeline",title:"अपडेट",items:[{text:"शिकायत दर्ज हुई",active:true,time:"3h ago"},{text:"टीम असाइन बाकी",active:false}]},
-         {type:"info",title:"ज़रूरी जानकारी",rows:[["Ticket","#2205"],["Issue","Internet slow"],["Since","Today morning"]]},
-         {type:"addr",title:"कहाँ जाना है?",addr:"H-45, Saket, New Delhi 110017"},
-         {type:"contact",title:"संपर्क कैसे करें?",text:"Priya M. · 99XXXXXX45"}
-       ],cta:"टीम असाइन करें",exit:"नहीं कर पाएँगे"},
-     sheet:{title:"टीम मेंबर असाइन करें",type:"options",
-       opts:[{l:"Amit Singh — Available",sel:true},{l:"Raj Kumar — On task"},{l:"खुद जाएँगे"}],
-       cta:"Amit Singh को असाइन करें"},
-     motion:{name:"Priya M.",loc:"Saket",sub:"Team assigned",time:"Just now"}},
+    /* 4 — FYI */ {id:"service-fyi",type:"SERVICE",icon:"🔧",action:false,
+     name:"Neha T.",loc:"Vasant Kunj",sub:"Team working",time:"3h ago",urg:""},
 
-    {id:"pickup",type:"PICKUP",icon:"📦",
-     name:"Ravi K. · NB-3301",loc:"Dwarka",sub:"Assign technician for pickup",time:"5d left",urg:"",
+    /* 5 — action */ {id:"pickup",type:"PICKUP",icon:"📦",action:true,
+     name:"Ravi K. · NB-3301",loc:"Dwarka",sub:"Assign technician for pickup",time:"5h ago",urg:"",
      drill:{hdr:"पिकअप",hdrId:"NB-3301",
        ban:{title:"टेक्नीशियन असाइन करो",sub:"पिकअप 5 दिन में"},
        secs:[
-         {type:"timeline",title:"अपडेट",items:[{text:"पिकअप टिकट बनी",active:true,time:"1d ago"},{text:"टेक्नीशियन असाइन बाकी",active:false}]},
+         {type:"timeline",title:"अपडेट",items:[{text:"पिकअप टिकट बनी",active:true,time:"5h ago"},{text:"टेक्नीशियन असाइन बाकी",active:false}]},
          {type:"info",title:"ज़रूरी जानकारी",rows:[["NetBox","NB-3301"],["Customer","Ravi K."],["Due","5 दिन बाकी"]]},
          {type:"addr",title:"कहाँ जाना है?",addr:"C-22, Dwarka Sec 7, New Delhi 110077"},
          {type:"contact",title:"संपर्क कैसे करें?",text:"Ravi K. · 98XXXXXX55"}
@@ -1027,14 +697,14 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
      sheet:{title:"पिकअप असाइन करें",type:"options",
        opts:[{l:"Amit Singh — Available",sel:true},{l:"Raj Kumar — Available"},{l:"खुद पिकअप करें"}],
        cta:"Amit Singh को असाइन करें"},
-     motion:{name:"Ravi K.",loc:"NB-3301",sub:"Technician assigned",batch:true}},
+     motion:{name:"Ravi K.",loc:"NB-3301",sub:"Technician assigned"}},
 
-    {id:"shifting",type:"SHIFTING",icon:"🚚",
-     name:"Deepak M.",loc:"Sec 22 → Sec 15",sub:"New request · Assign technician",time:"4h ago",urg:"",
+    /* 6 — action */ {id:"shifting",type:"SHIFTING",icon:"🚚",action:true,
+     name:"Deepak M.",loc:"Sec 22 → Sec 15",sub:"New request · Assign technician",time:"6h ago",urg:"",
      drill:{hdr:"शिफ्टिंग",hdrId:"#3401",
        ban:{title:"टीम असाइन करो",sub:"नई शिफ्टिंग रिक्वेस्ट"},
        secs:[
-         {type:"timeline",title:"अपडेट",items:[{text:"शिफ्टिंग रिक्वेस्ट आई",active:true,time:"4h ago"},{text:"टीम असाइन बाकी",active:false}]},
+         {type:"timeline",title:"अपडेट",items:[{text:"शिफ्टिंग रिक्वेस्ट आई",active:true,time:"6h ago"},{text:"टीम असाइन बाकी",active:false}]},
          {type:"info",title:"ज़रूरी जानकारी",rows:[["Ticket","#3401"],["From","Sec 22, Gurgaon"],["To","Sec 15, Gurgaon"],["NetBox","NB-7721"]]},
          {type:"addr",title:"कहाँ जाना है?",addr:"H-112, Sec 22, Gurgaon 122018"},
          {type:"contact",title:"संपर्क कैसे करें?",text:"Deepak M. · 97XXXXXX88"}
@@ -1042,44 +712,35 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
      sheet:{title:"टीम मेंबर असाइन करें",type:"options",
        opts:[{l:"Raj Kumar — Available",sel:true},{l:"Amit Singh — On task"},{l:"खुद करें"}],
        cta:"Raj Kumar को असाइन करें"},
-     motion:{name:"Deepak M.",loc:"Sec 22 → Sec 15",sub:"Technician assigned",time:"Just now"}}
+     motion:{name:"Deepak M.",loc:"Sec 22 → Sec 15",sub:"Technician assigned"}},
+
+    /* 7 — FYI */ {id:"shifting-fyi",type:"SHIFTING",icon:"🚚",action:false,
+     name:"Renu P.",loc:"Sec 4 → Sec 18",sub:"Technician assigned",time:"1d ago",urg:""}
   ];
 
-  var done={},activeIdx=-1,pkExtra=0;
+  var done={},activeIdx=-1;
   function u(v){return v==="urgent"?" urgent":v==="overdue"?" overdue":"";}
-
-  /* ── Background motion cards ── */
-  function bgMotionHTML(){
-    var h='<div class="w-batch" style="border-left:3px solid var(--hair);">'
-      +'<div class="w-batch-head"><div class="w-batch-title">📦 Pickup · In Motion</div><div class="w-batch-count" id="p-pkbc">'+BG_PICKUP.length+' items</div></div>'
-      +'<div id="p-pknr"></div>';
-    BG_PICKUP.forEach(function(r){
-      h+='<div class="w-batch-row"><div class="w-batch-left"><b>'+r.name+'</b> · '+r.loc+'</div><div class="w-batch-status">'+r.status+'</div></div>';
-    });
-    h+='</div>';
-    BG.forEach(function(c){
-      h+='<div class="w-card w-motion">'
-        +'<div class="w-card-top"><div class="w-card-type" style="color:var(--ink-3);">'+c.icon+' '+c.type+'</div><div class="w-card-time">'+c.time+'</div></div>'
-        +'<div class="w-card-title">'+c.name+'</div>'
-        +'<div class="w-card-sub">'+c.loc+' · '+c.sub+'</div></div>';
-    });
-    return h;
-  }
 
   /* ── Render one card ── */
   function cardHTML(c,idx){
     if(done[idx])return"";
+    var isAction=c.action;
+    var dot=isAction?'<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;" id="p-dot-'+idx+'"></span>':"";
+
     if(c.isBatch){
       return'<div class="w-card w-recharge p-clickable" data-idx="'+idx+'" id="p-card-'+idx+'">'
-        +'<div class="w-card-top"><div class="w-card-type" style="color:var(--orange);">'+c.icon+' '+c.type+'</div><div class="w-card-time urgent" id="p-cnt-'+idx+'">'+c.count+' pending</div></div>'
+        +'<div class="w-card-top"><div class="w-card-type" style="color:var(--orange);display:flex;align-items:center;gap:6px;">'+dot+c.icon+' '+c.type+'</div><div class="w-card-time'+u(c.urg)+'" id="p-cnt-'+idx+'">'+c.count+' pending · '+c.time+'</div></div>'
         +'<div class="w-card-title" id="p-title-'+idx+'">'+c.name+'</div>'
         +'<div class="w-card-sub" id="p-sub-'+idx+'">'+c.loc+'</div></div>';
     }
+
     var bc=c.urg==="overdue"?" w-urgent":"";
-    return'<div class="w-card w-action'+bc+' p-clickable" data-idx="'+idx+'" id="p-card-'+idx+'">'
-      +'<div class="w-card-top"><div class="w-card-type" style="color:var(--pink);">'+c.icon+' '+c.type+'</div><div class="w-card-time'+u(c.urg)+'">'+c.time+'</div></div>'
+    var cardCls=isAction?"w-action":"w-motion";
+    var typeClr=isAction?"var(--pink)":"var(--ink-3)";
+    return'<div class="w-card '+cardCls+bc+(isAction?" p-clickable":"")+'" data-idx="'+idx+'" id="p-card-'+idx+'">'
+      +'<div class="w-card-top"><div class="w-card-type" style="color:'+typeClr+';display:flex;align-items:center;gap:6px;">'+dot+c.icon+' '+c.type+'</div><div class="w-card-time'+u(c.urg)+'">'+c.time+'</div></div>'
       +'<div class="w-card-title">'+c.name+'</div>'
-      +'<div class="w-card-sub">'+c.loc+' · '+c.sub+'</div></div>';
+      +'<div class="w-card-sub">'+c.loc+(c.sub?' · '+c.sub:'')+'</div></div>';
   }
 
   /* ── Drill-down section renderer ── */
@@ -1112,25 +773,20 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
     return h;
   }
 
-  /* ── Build the full screen ── */
+  /* ── Build the full screen — single feed ── */
   function buildScreen(){
-    done={};activeIdx=-1;pkExtra=0;
-    var actCount=CARDS.length;
+    done={};activeIdx=-1;
     var cardsH="";
     for(var i=0;i<CARDS.length;i++){cardsH+=cardHTML(CARDS[i],i);}
 
     var screen=document.getElementById("proto-screen");
     screen.innerHTML=
       '<div class="w-header"><div class="w-logo">wiom</div><div class="w-icons"><div class="w-icon"></div><div class="w-icon"></div></div></div>'
-      +'<div class="w-section-label" style="color:var(--pink);"><span>आज के काम · Today\'s Action</span><span class="w-count" style="background:var(--pink-bg);color:var(--pink);" id="p-a-cnt">'+actCount+'</span></div>'
+      +'<div class="w-section-label" style="color:var(--ink);"><span>Home Feed</span><span class="w-count" style="background:var(--red-bg);color:var(--red);" id="p-dot-cnt" title="Cards needing action">🔴 '+CARDS.filter(function(c){return c.action;}).length+'</span></div>'
       +cardsH
-      +'<div class="w-spacer"></div><div class="w-divider"></div><div class="w-spacer"></div>'
-      +'<div class="w-section-label" style="color:var(--ink-3);"><span>चल रहा है · In Motion</span><span class="w-count" style="background:var(--surface-2);color:var(--ink-3);" id="p-m-cnt">'+BG_COUNT+'</span></div>'
-      +'<div id="p-new-motion"></div>'
-      +bgMotionHTML()
       +'<div class="w-scroll-pad"></div>';
 
-    /* Reset overlays (they live outside #proto-screen now) */
+    /* Reset overlays */
     document.getElementById("p-drill").className="p-drill";
     document.getElementById("p-drill").innerHTML="";
     document.getElementById("p-backdrop").className="p-backdrop";
@@ -1141,14 +797,16 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
       el.onclick=function(){openDrill(+el.dataset.idx);};
     });
     document.getElementById("proto-reset").style.display="none";
-    document.getElementById("proto-label").textContent="Tap any card to open it";
+    document.getElementById("proto-label").textContent="Tap any card with a red dot to take action";
   }
 
   /* ── Open app-style drill-down ── */
   function openDrill(idx){
     if(done[idx]||activeIdx>=0)return;
+    var c=CARDS[idx];
+    if(!c.action||!c.drill)return;
     activeIdx=idx;
-    var c=CARDS[idx],d=c.drill;
+    var d=c.drill;
     var drill=document.getElementById("p-drill");
 
     var bodyH="";
@@ -1172,7 +830,7 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
     document.getElementById("p-drill-cta").onclick=function(){openSheet(idx);};
     document.getElementById("p-drill-back").onclick=function(){
       drill.classList.remove("open");activeIdx=-1;
-      document.getElementById("proto-label").textContent="Tap any card to open it";
+      document.getElementById("proto-label").textContent="Tap any card with a red dot to take action";
     };
   }
 
@@ -1213,9 +871,9 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
     };
   }
 
-  /* ── Complete action → close everything, card moves ── */
+  /* ── Complete action → red dot disappears, card updates in place ── */
   function completeAction(idx){
-    var c=CARDS[idx],m=c.motion,isR=c.isBatch,isP=c.type==="PICKUP";
+    var c=CARDS[idx],m=c.motion,isR=c.isBatch;
 
     document.getElementById("p-sheet").classList.remove("open");
     document.getElementById("p-backdrop").classList.remove("open");
@@ -1225,60 +883,52 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
     setTimeout(function(){
       var card=document.getElementById("p-card-"+idx);
       if(!card)return;
-      card.classList.add("p-card-exit");
 
-      setTimeout(function(){
-        var cntEl=document.getElementById("p-a-cnt");
-        var curAct=parseInt(cntEl.textContent)||0;
+      /* Remove the red dot */
+      var dot=document.getElementById("p-dot-"+idx);
+      if(dot)dot.style.display="none";
+      CARDS[idx].action=false;
 
-        if(isR&&m.rAfter>0){
-          card.classList.remove("p-card-exit");card.style.opacity="1";
-          document.getElementById("p-title-"+idx).textContent=m.rAfter+" Recharge collections due";
-          document.getElementById("p-cnt-"+idx).textContent=m.rAfter+" pending";
-          document.getElementById("p-sub-"+idx).textContent=m.rAfter>1?"Next: multiple customers remaining":"Next: last customer remaining";
-          CARDS[idx].count=m.rAfter;CARDS[idx].name=m.rAfter+" Recharge collections due";
-          CARDS[idx].motion.rAfter=m.rAfter-1;
-          card.onclick=function(){openDrill(idx);};
-        }else if(isR&&m.rAfter===0){
-          card.style.display="none";done[idx]=true;
-          cntEl.textContent=Math.max(0,curAct-1);
-        }else{
-          card.style.display="none";done[idx]=true;
-          cntEl.textContent=Math.max(0,curAct-1);
-        }
+      /* Update action count */
+      var cntEl=document.getElementById("p-dot-cnt");
+      var remaining=0;
+      for(var i=0;i<CARDS.length;i++){if(CARDS[i].action&&!done[i])remaining++;}
+      cntEl.innerHTML='🔴 '+remaining;
 
-        var slot=document.getElementById("p-new-motion");
-        var mCnt=parseInt(document.getElementById("p-m-cnt").textContent)||BG_COUNT;
+      if(isR&&m.rAfter>0){
+        /* Recharge: decrement count, keep card */
+        document.getElementById("p-title-"+idx).textContent=m.rAfter+" Recharge collections due";
+        document.getElementById("p-cnt-"+idx).textContent=m.rAfter+" pending · Just now";
+        document.getElementById("p-sub-"+idx).textContent=m.rAfter>1?"Next: multiple customers remaining":"Next: last customer remaining";
+        CARDS[idx].count=m.rAfter;CARDS[idx].name=m.rAfter+" Recharge collections due";
+        CARDS[idx].action=true;CARDS[idx].motion.rAfter=m.rAfter-1;
+        /* Restore red dot for remaining recharges */
+        if(dot)dot.style.display="";
+        remaining++;cntEl.innerHTML='🔴 '+remaining;
+        card.onclick=function(){openDrill(idx);};
+        card.classList.add("p-flash");
+        setTimeout(function(){card.classList.remove("p-flash");},600);
+      }else if(isR&&m.rAfter===0){
+        /* Last recharge done — remove card */
+        card.classList.add("p-card-exit");
+        setTimeout(function(){card.style.display="none";done[idx]=true;},450);
+      }else{
+        /* Non-batch: update card in-place — status changes, no red dot, card flashes green */
+        card.classList.remove("w-action");card.classList.add("w-motion");
+        card.classList.remove("p-clickable");card.onclick=null;
+        card.style.borderLeft="3px solid var(--green)";card.style.background="var(--green-bg)";
+        var sub=card.querySelector(".w-card-sub");
+        if(sub)sub.textContent=(m.loc?m.loc+" · ":"")+m.sub;
+        var timeEl=card.querySelector(".w-card-time");
+        if(timeEl){timeEl.textContent="Just now";timeEl.className="w-card-time";timeEl.style.color="var(--green)";}
+        var typeEl=card.querySelector(".w-card-type");
+        if(typeEl)typeEl.style.color="var(--green)";
+        card.classList.add("p-flash");
+        setTimeout(function(){card.classList.remove("p-flash");card.style.background="";card.style.borderLeft="3px solid var(--hair)";},1200);
+      }
 
-        if(isP){
-          var nr=document.getElementById("p-pknr");
-          pkExtra++;
-          nr.insertAdjacentHTML("afterbegin",
-            '<div class="w-batch-row p-card-enter p-flash" style="background:var(--green-bg);">'
-            +'<div class="w-batch-left"><b>'+m.name+'</b> · '+m.loc+'</div>'
-            +'<div class="w-batch-status" style="color:var(--green);font-weight:600;">'+m.sub+'</div></div>');
-          document.getElementById("p-pkbc").textContent=(BG_PICKUP.length+pkExtra)+" items";
-          mCnt++;
-        }else if(isR){
-          slot.insertAdjacentHTML("afterbegin",
-            '<div class="w-batch p-card-enter p-flash" style="border-left:3px solid var(--green);background:var(--green-bg);">'
-            +'<div class="w-batch-head"><div class="w-batch-title">⚡ Recharge · Verifying</div><div class="w-batch-count">1 item</div></div>'
-            +'<div class="w-batch-row"><div class="w-batch-left"><b>'+m.name+'</b> · '+m.loc+'</div>'
-            +'<div class="w-batch-status" style="color:var(--green);font-weight:600;">'+m.sub+'</div></div></div>');
-          mCnt++;
-        }else{
-          slot.insertAdjacentHTML("afterbegin",
-            '<div class="w-card w-motion p-card-enter p-flash" style="border-left:3px solid var(--green);background:var(--green-bg);">'
-            +'<div class="w-card-top"><div class="w-card-type" style="color:var(--green);">'+c.icon+' '+c.type+'</div><div class="w-card-time" style="color:var(--green);">Just now</div></div>'
-            +'<div class="w-card-title">'+m.name+'</div>'
-            +'<div class="w-card-sub">'+(m.loc?m.loc+" · ":"")+m.sub+'</div></div>');
-          mCnt++;
-        }
-
-        document.getElementById("p-m-cnt").textContent=mCnt;
-        document.getElementById("proto-label").textContent='Card moved to "चल रहा है" → '+m.sub;
-        document.getElementById("proto-reset").style.display="inline-block";
-      },450);
+      document.getElementById("proto-label").textContent='Red dot removed — '+m.sub;
+      document.getElementById("proto-reset").style.display="inline-block";
     },350);
   }
 
