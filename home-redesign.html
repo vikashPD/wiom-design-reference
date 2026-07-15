@@ -700,11 +700,22 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
   var done={},activeIdx=-1;
   function u(v){return v==="urgent"?" urgent":v==="overdue"?" overdue":"";}
 
+  /* ── Get sorted order: action cards first, then non-action ── */
+  function getSortedIndices(){
+    var actionIdx=[],fyiIdx=[];
+    for(var i=0;i<CARDS.length;i++){
+      if(done[i])continue;
+      if(CARDS[i].action)actionIdx.push(i);
+      else fyiIdx.push(i);
+    }
+    return {action:actionIdx,fyi:fyiIdx};
+  }
+
   /* ── Render one card ── */
   function cardHTML(c,idx){
     if(done[idx])return"";
     var isAction=c.action;
-    var dot=isAction?'<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;" id="p-dot-'+idx+'"></span>':"";
+    var dot=isAction?'<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;"></span>':"";
 
     if(c.isBatch){
       return'<div class="w-card w-recharge p-clickable" data-idx="'+idx+'" id="p-card-'+idx+'">'
@@ -752,16 +763,27 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
     return h;
   }
 
-  /* ── Build the full screen — single feed ── */
-  function buildScreen(){
-    done={};activeIdx=-1;
+  /* ── Build the full screen — single feed, action cards on top ── */
+  function renderFeed(keepReset){
+    var sorted=getSortedIndices();
+    var actionCount=sorted.action.length;
     var cardsH="";
-    for(var i=0;i<CARDS.length;i++){cardsH+=cardHTML(CARDS[i],i);}
+
+    /* Action cards first */
+    for(var a=0;a<sorted.action.length;a++){cardsH+=cardHTML(CARDS[sorted.action[a]],sorted.action[a]);}
+
+    /* Subtle divider between action and non-action if both exist */
+    if(sorted.action.length>0&&sorted.fyi.length>0){
+      cardsH+='<div class="w-spacer"></div><div class="w-divider"></div><div class="w-spacer"></div>';
+    }
+
+    /* Non-action cards below */
+    for(var f=0;f<sorted.fyi.length;f++){cardsH+=cardHTML(CARDS[sorted.fyi[f]],sorted.fyi[f]);}
 
     var screen=document.getElementById("proto-screen");
     screen.innerHTML=
       '<div class="w-header"><div class="w-logo">wiom</div><div class="w-icons"><div class="w-icon"></div><div class="w-icon"></div></div></div>'
-      +'<div class="w-section-label" style="color:var(--ink);"><span>Home Feed</span><span class="w-count" style="background:var(--red-bg);color:var(--red);" id="p-dot-cnt" title="Cards needing action">🔴 '+CARDS.filter(function(c){return c.action;}).length+'</span></div>'
+      +'<div class="w-section-label" style="color:var(--ink);"><span>Home Feed</span><span class="w-count" style="background:var(--red-bg);color:var(--red);" id="p-dot-cnt" title="Cards needing action">🔴 '+actionCount+'</span></div>'
       +cardsH
       +'<div class="w-scroll-pad"></div>';
 
@@ -775,8 +797,25 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
     screen.querySelectorAll(".p-clickable").forEach(function(el){
       el.onclick=function(){openDrill(+el.dataset.idx);};
     });
-    document.getElementById("proto-reset").style.display="none";
-    document.getElementById("proto-label").textContent="Tap any card with a red dot to take action";
+    if(!keepReset){
+      document.getElementById("proto-reset").style.display="none";
+      document.getElementById("proto-label").textContent="Tap any card with a red dot to take action";
+    }
+  }
+
+  function buildScreen(){
+    done={};activeIdx=-1;
+    /* Reset card data to original action states */
+    CARDS[0].action=true;CARDS[0].count=8;CARDS[0].name="8 Recharge collections due";
+    CARDS[0].loc="Earliest: Mohan L. · 3 hrs left";CARDS[0].time="10m ago";CARDS[0].motion.rAfter=7;
+    CARDS[1].action=false;CARDS[1].time="25m ago";CARDS[1].sub="Customer choosing slot";
+    CARDS[2].action=true;CARDS[2].time="40m ago";CARDS[2].sub="New complaint · Assign team";
+    CARDS[3].action=true;CARDS[3].time="2h ago";CARDS[3].sub="New booking · Propose slot";
+    CARDS[4].action=false;CARDS[4].time="3h ago";CARDS[4].sub="Team working";
+    CARDS[5].action=true;CARDS[5].time="5h ago";CARDS[5].sub="Assign technician for pickup";
+    CARDS[6].action=true;CARDS[6].time="6h ago";CARDS[6].sub="New request · Assign technician";
+    CARDS[7].action=false;CARDS[7].time="1d ago";CARDS[7].sub="Technician assigned";
+    renderFeed(false);
   }
 
   /* ── Open app-style drill-down ── */
@@ -850,7 +889,7 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
     };
   }
 
-  /* ── Complete action → red dot disappears, card updates in place ── */
+  /* ── Complete action → red dot gone, card shifts down below action cards ── */
   function completeAction(idx){
     var c=CARDS[idx],m=c.motion,isR=c.isBatch;
 
@@ -863,51 +902,66 @@ footer{margin-top:36px;font-family:var(--mono);font-size:11px;color:var(--ink-3)
       var card=document.getElementById("p-card-"+idx);
       if(!card)return;
 
-      /* Remove the red dot */
-      var dot=document.getElementById("p-dot-"+idx);
-      if(dot)dot.style.display="none";
-      CARDS[idx].action=false;
-
-      /* Update action count */
-      var cntEl=document.getElementById("p-dot-cnt");
-      var remaining=0;
-      for(var i=0;i<CARDS.length;i++){if(CARDS[i].action&&!done[i])remaining++;}
-      cntEl.innerHTML='🔴 '+remaining;
-
       if(isR&&m.rAfter>0){
-        /* Recharge: decrement count, keep card */
-        document.getElementById("p-title-"+idx).textContent=m.rAfter+" Recharge collections due";
-        document.getElementById("p-cnt-"+idx).textContent=m.rAfter+" pending · Just now";
-        document.getElementById("p-sub-"+idx).textContent=m.rAfter>1?"Next: multiple customers remaining":"Next: last customer remaining";
-        CARDS[idx].count=m.rAfter;CARDS[idx].name=m.rAfter+" Recharge collections due";
-        CARDS[idx].action=true;CARDS[idx].motion.rAfter=m.rAfter-1;
-        /* Restore red dot for remaining recharges */
-        if(dot)dot.style.display="";
-        remaining++;cntEl.innerHTML='🔴 '+remaining;
-        card.onclick=function(){openDrill(idx);};
-        card.classList.add("p-flash");
-        setTimeout(function(){card.classList.remove("p-flash");},600);
-      }else if(isR&&m.rAfter===0){
-        /* Last recharge done — remove card */
-        card.classList.add("p-card-exit");
-        setTimeout(function(){card.style.display="none";done[idx]=true;},450);
-      }else{
-        /* Non-batch: update card in-place — status changes, no red dot, card flashes green */
-        card.classList.remove("w-action");card.classList.add("w-motion");
-        card.classList.remove("p-clickable");card.onclick=null;
-        card.style.borderLeft="3px solid var(--green)";card.style.background="var(--green-bg)";
-        var sub=card.querySelector(".w-card-sub");
-        if(sub)sub.textContent=(m.loc?m.loc+" · ":"")+m.sub;
-        var timeEl=card.querySelector(".w-card-time");
-        if(timeEl){timeEl.textContent="Just now";timeEl.className="w-card-time";timeEl.style.color="var(--green)";}
-        var typeEl=card.querySelector(".w-card-type");
-        if(typeEl)typeEl.style.color="var(--green)";
-        card.classList.add("p-flash");
-        setTimeout(function(){card.classList.remove("p-flash");card.style.background="";card.style.borderLeft="3px solid var(--hair)";},1200);
+        /* Recharge: decrement count, keep card as action, flash it */
+        CARDS[idx].count=m.rAfter;
+        CARDS[idx].name=m.rAfter+" Recharge collections due";
+        CARDS[idx].loc=m.rAfter>1?"Next: multiple customers remaining":"Next: last customer remaining";
+        CARDS[idx].time="Just now";
+        CARDS[idx].motion.rAfter=m.rAfter-1;
+        /* Still action — re-render feed (card stays on top, count same) */
+        document.getElementById("proto-label").textContent='Recharge done — '+m.rAfter+' remaining';
+        document.getElementById("proto-reset").style.display="inline-block";
+        renderFeed(true);
+        /* Flash the recharge card */
+        var rc=document.getElementById("p-card-"+idx);
+        if(rc){rc.classList.add("p-flash");setTimeout(function(){rc.classList.remove("p-flash");},600);}
+        return;
       }
 
-      document.getElementById("proto-label").textContent='Red dot removed — '+m.sub;
-      document.getElementById("proto-reset").style.display="inline-block";
+      if(isR&&m.rAfter===0){
+        /* Last recharge — card exits */
+        CARDS[idx].action=false;
+        done[idx]=true;
+        card.classList.add("p-card-exit");
+        setTimeout(function(){
+          document.getElementById("proto-label").textContent='All recharges done!';
+          document.getElementById("proto-reset").style.display="inline-block";
+          renderFeed(true);
+        },450);
+        return;
+      }
+
+      /* Non-batch: animate card out, update data, re-render with card shifted down */
+      card.classList.add("p-card-exit");
+      setTimeout(function(){
+        /* Update card data: no longer action, new status, "Just now" */
+        CARDS[idx].action=false;
+        CARDS[idx].sub=m.sub;
+        CARDS[idx].time="Just now";
+        CARDS[idx].urg="";
+
+        document.getElementById("proto-label").textContent='Red dot removed · card shifted down — '+m.sub;
+        document.getElementById("proto-reset").style.display="inline-block";
+        renderFeed(true);
+
+        /* Flash the moved card green briefly */
+        var movedCard=document.getElementById("p-card-"+idx);
+        if(movedCard){
+          movedCard.classList.add("p-card-enter");
+          movedCard.style.borderLeft="3px solid var(--green)";movedCard.style.background="var(--green-bg)";
+          var typeEl=movedCard.querySelector(".w-card-type");
+          if(typeEl)typeEl.style.color="var(--green)";
+          var timeEl=movedCard.querySelector(".w-card-time");
+          if(timeEl)timeEl.style.color="var(--green)";
+          setTimeout(function(){
+            movedCard.classList.remove("p-card-enter");
+            movedCard.style.background="";movedCard.style.borderLeft="3px solid var(--hair)";
+            if(typeEl)typeEl.style.color="var(--ink-3)";
+            if(timeEl)timeEl.style.color="";
+          },1200);
+        }
+      },450);
     },350);
   }
 
